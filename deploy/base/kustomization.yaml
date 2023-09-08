@@ -1,0 +1,10 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - deployment-catalog-view-api.yaml
+  - service-catalog-view-api.yaml
+images:
+  - name: catalog-view-api
+    newName: eu.gcr.io/digdir-fdk-infra/catalog-view-api
+    newTag: $(GIT_COMMIT_SHA)

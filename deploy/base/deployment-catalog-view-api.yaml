@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-view-api
+  labels:
+    app: catalog-view-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog-view-api
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: catalog-view-api
+      annotations:
+        prometheus.io/scrape: "false"
+    spec:
+      containers:
+        - name: catalog-view-api
+          image: catalog-view-api
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+          resources:
+            requests:
+              memory: 100Mi
