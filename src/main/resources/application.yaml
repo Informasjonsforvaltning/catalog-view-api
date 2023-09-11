@@ -5,3 +5,15 @@ logging:
   level.org.springframework.web: WARN
 server:
   port: 8080
+application:
+  scope: ${MASKINPORTEN_SCOPE:datanorge:test/catalog.read}
+spring:
+  security.oauth2.resourceserver.jwt:
+    jwk-set-uri: ${MASKINPORTEN_JWK:https://test.maskinporten.no/jwk}
+    issuer-uri: ${MASKINPORTEN_ISSUER:https://test.maskinporten.no/}
+---
+spring:
+  config.activate.on-profile: test
+  security.oauth2.resourceserver.jwt:
+    jwk-set-uri: http://localhost:5050/jwk
+    issuer-uri: http://localhost:5050/
