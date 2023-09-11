@@ -1,23 +1,16 @@
 package no.digdir.catalog_view_api.utils
 
-import java.io.BufferedReader
-import java.io.File
-import java.net.HttpURLConnection
-import java.net.URL
-import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
+import java.io.BufferedReader
+import java.net.HttpURLConnection
+import java.net.URL
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
-import org.springframework.util.LinkedMultiValueMap
-import org.springframework.util.MultiValueMap
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
-import java.io.InputStreamReader
-import java.io.Reader
-import java.nio.charset.StandardCharsets
 
 
 fun apiGet(port: Int, endpoint: String, acceptHeader: String?): Map<String, Any> {
@@ -41,6 +34,44 @@ fun apiGet(port: Int, endpoint: String, acceptHeader: String?): Map<String, Any>
                 "body" to " "
             )
         }
+    } catch (e: Exception) {
+        mapOf(
+            "status" to e.toString(),
+            "header" to " ",
+            "body" to " "
+        )
+    }
+}
+
+fun apiAuthorizedRequest(
+    path: String, port: Int, body: String?, token: String?, httpMethod: HttpMethod,
+    accept: MediaType = MediaType.APPLICATION_JSON
+): Map<String, Any> {
+
+
+    val request = RestTemplate()
+    request.requestFactory = HttpComponentsClientHttpRequestFactory()
+    val url = "http://localhost:$port$path"
+    val headers = HttpHeaders()
+    headers.accept = listOf(accept)
+    token?.let { headers.setBearerAuth(it) }
+    headers.contentType = MediaType.APPLICATION_JSON
+    val entity: HttpEntity<String> = HttpEntity(body, headers)
+
+    return try {
+        val response = request.exchange(url, httpMethod, entity, String::class.java)
+        mapOf(
+            "body" to response.body,
+            "header" to response.headers,
+            "status" to response.statusCode.value()
+        )
+
+    } catch (e: HttpClientErrorException) {
+        mapOf(
+            "status" to e.statusCode.value(),
+            "header" to " ",
+            "body" to e.toString()
+        )
     } catch (e: Exception) {
         mapOf(
             "status" to e.toString(),

@@ -1,6 +1,7 @@
 package no.digdir.catalog_view_api.integration
 
 
+import no.digdir.catalog_view_api.utils.ApiTestContext
 import no.digdir.catalog_view_api.utils.apiGet
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Tag
@@ -12,14 +13,11 @@ import org.springframework.http.HttpStatus
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(
+    properties = ["spring.profiles.active=test"],
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @Tag("integration")
-
-class StatusTest {
-
-    @LocalServerPort
-    var port = 0
+class StatusTest: ApiTestContext() {
 
     @Test
     fun ping() {
