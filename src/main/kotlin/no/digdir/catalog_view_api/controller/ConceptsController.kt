@@ -37,9 +37,7 @@ class ConceptsController(
         @PathVariable id: String
     ): ResponseEntity<Concept> =
         if (permissionService.hasOrgReadPermission(jwt, catalog)) {
-            conceptsService.getConceptById(catalog, id)
-                ?.let { ResponseEntity(it, HttpStatus.OK) }
-                ?: ResponseEntity(HttpStatus.NOT_FOUND)
+            ResponseEntity(conceptsService.getConceptById(catalog, id), HttpStatus.OK)
         } else {
             ResponseEntity(HttpStatus.FORBIDDEN)
         }

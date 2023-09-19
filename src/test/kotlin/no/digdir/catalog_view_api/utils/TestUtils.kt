@@ -1,5 +1,13 @@
 package no.digdir.catalog_view_api.utils
 
+import com.mongodb.ConnectionString
+import com.mongodb.MongoClientSettings
+import com.mongodb.client.MongoClient
+import com.mongodb.client.MongoClients
+import no.digdir.catalog_view_api.utils.ApiTestContext.Companion.mongoContainer
+import org.bson.Document
+import org.bson.codecs.configuration.CodecRegistries
+import org.bson.codecs.pojo.PojoCodecProvider
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -84,3 +92,35 @@ fun apiAuthorizedRequest(
 private fun isOK(response: Int?): Boolean =
     if (response == null) false
     else HttpStatus.resolve(response)?.is2xxSuccessful == true
+
+private fun internalConceptDBO(id: String, orgId: String): Document {
+    val org = Document()
+    org.append("_id", orgId)
+    val semver = Document()
+    semver.append("major", 1)
+    semver.append("minor", 1)
+    semver.append("patch", 1)
+    val concept = Document()
+    concept.append("_id", id)
+    concept.append("originaltBegrep", id)
+    concept.append("ansvarligVirksomhet", org)
+    concept.append("versjonsnr", semver)
+    concept.append("erPublisert", false)
+
+    return concept
+}
+
+fun populateDB() {
+    val connectionString = ConnectionString("mongodb://${MONGO_USER}:${MONGO_PASSWORD}@localhost:${mongoContainer.getMappedPort(MONGO_PORT)}/?authSource=admin&authMechanism=SCRAM-SHA-1")
+    val pojoCodecRegistry = CodecRegistries.fromRegistries(
+        MongoClientSettings.getDefaultCodecRegistry(), CodecRegistries.fromProviders(
+            PojoCodecProvider.builder().automatic(true).build()))
+
+    val client: MongoClient = MongoClients.create(connectionString)
+
+    val conceptCatalogDatabase = client.getDatabase("concept-catalogue").withCodecRegistry(pojoCodecRegistry)
+    val conceptCatalogCollection = conceptCatalogDatabase.getCollection("begrep")
+    conceptCatalogCollection.insertOne(internalConceptDBO("123", "111222333"))
+
+    client.close()
+}
