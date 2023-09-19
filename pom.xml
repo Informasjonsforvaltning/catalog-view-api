@@ -27,6 +27,7 @@
         <maven.exec.skip>false</maven.exec.skip>
 
         <kotlin.version>1.9.10</kotlin.version>
+        <testcontainers.version>1.19.0</testcontainers.version>
     </properties>
 
     <dependencies>
@@ -37,6 +38,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
 
         <dependency>
@@ -89,6 +94,18 @@
             <groupId>org.wiremock</groupId>
             <artifactId>wiremock</artifactId>
             <version>3.0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
 

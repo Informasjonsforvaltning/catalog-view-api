@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  catalog-view-api:
+    image: eu.gcr.io/digdir-fdk-infra/catalog-view-api:test
+    build: .
+    environment:
+      - MONGO_USERNAME=admin
+      - MONGO_PASSWORD=admin
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    ports:
+      - "27017:27017"

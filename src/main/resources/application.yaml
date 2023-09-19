@@ -7,13 +7,17 @@ server:
   port: 8080
 application:
   scope: ${MASKINPORTEN_SCOPE:datanorge:test/catalog.read}
+  databases:
+    conceptCatalog: concept-catalogue
 spring:
+  data.mongodb.uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/?authSource=admin&authMechanism=SCRAM-SHA-1
   security.oauth2.resourceserver.jwt:
     jwk-set-uri: ${MASKINPORTEN_JWK:https://test.maskinporten.no/jwk}
     issuer-uri: ${MASKINPORTEN_ISSUER:https://test.maskinporten.no/}
 ---
 spring:
   config.activate.on-profile: test
+  data.mongodb.uri: mongodb://admin:admin@localhost:27017/?authSource=admin&authMechanism=SCRAM-SHA-1
   security.oauth2.resourceserver.jwt:
     jwk-set-uri: http://localhost:5050/jwk
     issuer-uri: http://localhost:5050/
