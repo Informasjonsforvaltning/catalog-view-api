@@ -1,0 +1,155 @@
+openapi: 3.0.2
+info:
+  version: 1.0.0
+  title: Catalog View API
+  contact:
+    name: Digitaliseringsdirektoratet
+    url: 'https://fellesdatakatalog.digdir.no'
+    email: fellesdatakatalog@digdir.no
+  license:
+    name: License of API
+    url: 'http://data.norge.no/nlod/no/2.0'
+servers:
+  - url: 'https://catalog-view-api.fellesdatakatalog.digdir.no'
+    description: Production
+  - url: 'https://catalog-view-api.demo.fellesdatakatalog.digdir.no'
+    description: Demo
+  - url: 'https://catalog-view-api.staging.fellesdatakatalog.digdir.no'
+    description: Test
+paths:
+  /{catalogId}/concepts:
+    get:
+      description: Returns all concepts in the collection
+      operationId: getConcepts
+      parameters:
+        - name: catalogId
+          in: path
+          description: Catalog id, usually id of publishing organization
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Concept'
+  /{catalogId}/concepts/{id}:
+    get:
+      description: Returns single concept
+      operationId: getConceptById
+      parameters:
+        - name: catalogId
+          in: path
+          description: Catalog id, usually id of publishing organization
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Concept id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Concept"
+
+components:
+  schemas:
+
+    Concept:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Concept id (GUID)
+        idOfOriginalVersion:
+          type: string
+          description: The id of the original version of the concept, equals id when original
+        version:
+          $ref: "#/components/schemas/SemVer"
+        publisher:
+          type: string
+          description: Organization id of publisher
+        status:
+          type: string
+          description: Status of concept, full uri if part of EU published concept statuses
+        preferredTerm:
+          $ref: "#/components/schemas/LanguageValues"
+        definition:
+          $ref: "#/components/schemas/Definition"
+        note:
+          $ref: "#/components/schemas/LanguageValues"
+        example:
+          $ref: "#/components/schemas/LanguageValues"
+        dateValidFrom:
+          type: string
+          format: date
+          description: date (inclusive) from which the concept is valid
+        dateValidThrough:
+          type: string
+          format: date
+          description: date (inclusively) through which the concept is valid
+
+    Definition:
+      type: object
+      properties:
+        text:
+          $ref: "#/components/schemas/LanguageValues"
+        sourceDescription:
+          $ref: "#/components/schemas/SourceDescription"
+
+    SemVer:
+      type: object
+      required:
+        - major
+        - minor
+        - patch
+      properties:
+        major:
+          type: integer
+          minimum: 0
+        minor:
+          type: integer
+          minimum: 0
+        patch:
+          type: integer
+          minimum: 0
+
+    LanguageValues:
+      type: object
+      properties:
+        nb:
+          type: string
+          description: Norsk bokmål
+        nn:
+          type: string
+          description: Nynorsk
+        en:
+          type: string
+          description: English
+
+    SourceDescription:
+      type: object
+      properties:
+        relationshipWithSource:
+          type: string
+          description: Relationship between the definition and the source, as complete uri from a controlled vocabulary
+        source:
+          $ref: "#/components/schemas/URIText"
+
+    URIText:
+      type: object
+      properties:
+        uri:
+          type: string
+        text:
+          type: string

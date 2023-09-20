@@ -50,7 +50,7 @@ data class InternalConcept(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Term (
-    val navn: Map<String, Any>? = HashMap()
+    val navn: Map<String, String> = HashMap()
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
