@@ -1,14 +1,6 @@
 package no.digdir.catalog_view_api.service
 
-import no.digdir.catalog_view_api.model.Concept
-import no.digdir.catalog_view_api.model.Definisjon
-import no.digdir.catalog_view_api.model.Definition
-import no.digdir.catalog_view_api.model.ForholdTilKildeEnum
-import no.digdir.catalog_view_api.model.InternalConcept
-import no.digdir.catalog_view_api.model.LanguageValues
-import no.digdir.catalog_view_api.model.SourceDescription
-import no.digdir.catalog_view_api.model.URITekst
-import no.digdir.catalog_view_api.model.URIText
+import no.digdir.catalog_view_api.model.*
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.find
 import org.springframework.data.mongodb.core.findById
@@ -48,6 +40,9 @@ fun InternalConcept.toExternalDTO(): Concept =
         preferredTerm = anbefaltTerm?.navn?.toLangValueObject(),
         definition = definisjon?.toDefinition(),
         note = merknad?.toLangValueObject(),
+        valueRange = omfang?.toURIText(),
+        contactPoint = kontaktpunkt?.let { ContactPoint(email = it.harEpost, telephone = it.harTelefon) },
+        abbreviatedLabel = abbreviatedLabel,
         example = eksempel?.toLangValueObject(),
         dateValidFrom = gyldigFom,
         dateValidThrough = gyldigTom

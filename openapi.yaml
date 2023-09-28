@@ -88,6 +88,12 @@ components:
           $ref: "#/components/schemas/Definition"
         note:
           $ref: "#/components/schemas/LanguageValues"
+        valueRange:
+          $ref: "#/components/schemas/URIText"
+        contactPoint:
+          $ref: "#/components/schemas/ContactPoint"
+        abbreviatedLabel:
+          type: string
         example:
           $ref: "#/components/schemas/LanguageValues"
         dateValidFrom:
@@ -152,4 +158,12 @@ components:
         uri:
           type: string
         text:
+          type: string
+
+    ContactPoint:
+      type: object
+      properties:
+        email:
+          type: string
+        telephone:
           type: string
