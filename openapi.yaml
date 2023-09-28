@@ -76,6 +76,9 @@ components:
           description: The id of the original version of the concept, equals id when original
         version:
           $ref: "#/components/schemas/SemVer"
+        isPublished:
+          type: boolean
+          description: The concept is published to felles datakatalog
         publisher:
           type: string
           description: Organization id of publisher
@@ -84,7 +87,15 @@ components:
           description: Status of concept, full uri if part of EU published concept statuses
         preferredTerm:
           $ref: "#/components/schemas/LocalizedStrings"
+        admittedTerm:
+          $ref: "#/components/schemas/LanguageListValues"
+        deprecatedTerm:
+          $ref: "#/components/schemas/LanguageListValues"
         definition:
+          $ref: "#/components/schemas/Definition"
+        publicDefinition:
+          $ref: "#/components/schemas/Definition"
+        specialistDefinition:
           $ref: "#/components/schemas/Definition"
         note:
           $ref: "#/components/schemas/LocalizedStrings"
@@ -156,6 +167,25 @@ components:
         en:
           type: string
           description: English
+
+    LanguageListValues:
+      type: object
+      properties:
+        nb:
+          type: array
+          description: Norsk bokmål
+          items:
+            type: string
+        nn:
+          type: array
+          description: Nynorsk
+          items:
+            type: string
+        en:
+          type: array
+          description: English
+          items:
+            type: string
 
     SourceDescription:
       type: object
