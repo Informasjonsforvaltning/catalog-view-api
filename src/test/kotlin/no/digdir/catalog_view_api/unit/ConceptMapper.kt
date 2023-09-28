@@ -1,14 +1,6 @@
 package no.digdir.catalog_view_api.unit
 
-import no.digdir.catalog_view_api.model.Definisjon
-import no.digdir.catalog_view_api.model.Definition
-import no.digdir.catalog_view_api.model.ForholdTilKildeEnum
-import no.digdir.catalog_view_api.model.Kildebeskrivelse
-import no.digdir.catalog_view_api.model.LanguageValues
-import no.digdir.catalog_view_api.model.SourceDescription
-import no.digdir.catalog_view_api.model.Term
-import no.digdir.catalog_view_api.model.URITekst
-import no.digdir.catalog_view_api.model.URIText
+import no.digdir.catalog_view_api.model.*
 import no.digdir.catalog_view_api.service.toExternalDTO
 import no.digdir.catalog_view_api.utils.EMPTY_CONCEPT
 import no.digdir.catalog_view_api.utils.EMPTY_INTERNAL_CONCEPT
@@ -136,6 +128,32 @@ class ConceptMapper {
         val result = EMPTY_INTERNAL_CONCEPT.copy(
             gyldigFom = LocalDate.of(2021, 7, 11),
             gyldigTom = LocalDate.of(2027, 10, 22)
+        ).toExternalDTO()
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map value range`() {
+        val expected = EMPTY_CONCEPT.copy(
+            valueRange = URIText(uri = "https://omfang.com", text = "Omfang")
+        )
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(
+            omfang = URITekst(uri = "https://omfang.com", tekst = "Omfang")
+        ).toExternalDTO()
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map contact point`() {
+        val expected = EMPTY_CONCEPT.copy(
+            contactPoint = ContactPoint(email = "epost@asdf.no", telephone = "11122233")
+        )
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(
+            kontaktpunkt = Kontaktpunkt(harEpost = "epost@asdf.no", harTelefon = "11122233")
         ).toExternalDTO()
 
         assertEquals(expected = expected, actual = result)

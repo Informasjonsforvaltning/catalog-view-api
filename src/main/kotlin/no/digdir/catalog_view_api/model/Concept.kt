@@ -13,6 +13,9 @@ data class Concept(
     val preferredTerm: LanguageValues?,
     val definition: Definition?,
     val note: LanguageValues?,
+    val valueRange: URIText?,
+    val contactPoint: ContactPoint?,
+    val abbreviatedLabel: String?,
     val example: LanguageValues?,
     val dateValidFrom: LocalDate?,
     val dateValidThrough: LocalDate?
@@ -41,4 +44,10 @@ data class SourceDescription (
 data class URIText (
     val uri: String?,
     val text: String?
+)
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class ContactPoint (
+    val email: String?,
+    val telephone: String?
 )
