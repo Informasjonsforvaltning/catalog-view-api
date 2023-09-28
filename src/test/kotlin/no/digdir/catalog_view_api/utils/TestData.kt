@@ -29,7 +29,11 @@ val EMPTY_CONCEPT = Concept(
     abbreviatedLabel = null,
     example = null,
     dateValidFrom = null,
-    dateValidThrough = null
+    dateValidThrough = null,
+    created = null,
+    createdBy = null,
+    lastChanged = null,
+    lastChangedBy = null
 )
 
 val EMPTY_INTERNAL_CONCEPT = InternalConcept(

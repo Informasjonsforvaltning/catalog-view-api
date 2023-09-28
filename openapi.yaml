@@ -104,6 +104,20 @@ components:
           type: string
           format: date
           description: date (inclusively) through which the concept is valid
+        created:
+          type: string
+          format: date-time
+          description: Date and time this version was created, pattern yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+        createdBy:
+          type: string
+          description: Name of user who created the concept
+        lastChanged:
+          type: string
+          format: date-time
+          description: Date and time this version was last changed, pattern yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+        lastChangedBy:
+          type: string
+          description: Name of user who last changed the concept
 
     Definition:
       type: object

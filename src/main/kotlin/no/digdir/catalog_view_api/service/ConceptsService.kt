@@ -45,7 +45,11 @@ fun InternalConcept.toExternalDTO(): Concept =
         abbreviatedLabel = abbreviatedLabel,
         example = eksempel?.toLangValueObject(),
         dateValidFrom = gyldigFom,
-        dateValidThrough = gyldigTom
+        dateValidThrough = gyldigTom,
+        created = opprettet,
+        createdBy = opprettetAv,
+        lastChanged = endringslogelement?.endringstidspunkt,
+        lastChangedBy = endringslogelement?.endretAv
     )
 
 private fun Map<String, String>.toLangValueObject(): LanguageValues? {
