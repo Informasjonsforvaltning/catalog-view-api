@@ -68,6 +68,9 @@ fun InternalConcept.toExternalDTO(adminData: CatalogAdminData): Concept =
         valueRange = omfang?.toURIText(),
         contactPoint = kontaktpunkt?.let { ContactPoint(email = it.harEpost, telephone = it.harTelefon) },
         abbreviatedLabel = abbreviatedLabel,
+        seeAlso = seOgså,
+        conceptRelations = begrepsRelasjon?.map { it.toConceptRelations() },
+        replacedBy = erstattesAv,
         example = eksempel?.toLangValueObject(),
         domainCodes = fagområdeKoder?.mapNotNull { adminData.getDomainCode(it.safeToInt(), ansvarligVirksomhet.id) }
             ?.ifEmpty { null },
@@ -212,3 +215,46 @@ private fun Field.toUserField(value: String, catalogId: String, users: Map<Strin
             value = it.toDTO()
         )
     }
+
+private enum class RelationType {
+    ASSOCIATIVE, HAS_PARTITIVE, HAS_COMPREHENSIVE, HAS_GENERIC, HAS_SPECIFIC
+}
+
+private fun String?.toRelationType(subType: String?): RelationType? =
+    when {
+        this == "assosiativ" -> RelationType.ASSOCIATIVE
+        this == "partitiv" && subType == "omfatter" -> RelationType.HAS_PARTITIVE
+        this == "partitiv" && subType == "erDelAv" -> RelationType.HAS_COMPREHENSIVE
+        this == "generisk" && subType == "underordnet" -> RelationType.HAS_SPECIFIC
+        this == "generisk" && subType == "overordnet" -> RelationType.HAS_GENERIC
+        else -> null
+    }
+
+private fun BegrepsRelasjon.toAssociativeRelation(): ConceptRelation =
+    ConceptRelation(
+        relationType = RelationType.ASSOCIATIVE.name,
+        description = LocalizedStrings(
+            nb = beskrivelse?.get("nb"),
+            nn = beskrivelse?.get("nn"),
+            en = beskrivelse?.get("en")
+        ),
+        relatedConcept = relatertBegrep
+    )
+
+private fun BegrepsRelasjon.toGenericOrPartitiveRelation(relationType: RelationType?): ConceptRelation =
+    ConceptRelation(
+        relationType = relationType?.name,
+        description = LocalizedStrings(
+            nb = inndelingskriterium?.get("nb"),
+            nn = inndelingskriterium?.get("nn"),
+            en = inndelingskriterium?.get("en")
+        ),
+        relatedConcept = relatertBegrep
+    )
+
+private fun BegrepsRelasjon.toConceptRelations(): ConceptRelation {
+    val relationType = relasjon.toRelationType(relasjonsType)
+
+    return if (relationType == RelationType.ASSOCIATIVE) toAssociativeRelation()
+    else toGenericOrPartitiveRelation(relationType)
+}

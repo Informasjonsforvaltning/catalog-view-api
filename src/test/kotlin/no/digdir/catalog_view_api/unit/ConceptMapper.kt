@@ -417,4 +417,87 @@ class ConceptMapper {
         assertEquals(expected = EMPTY_CONCEPT, actual = resultInvalid)
     }
 
+    @Test
+    fun `Map seeAlso`() {
+        val expected = EMPTY_CONCEPT.copy(seeAlso = listOf("https://concept-0.no"))
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(seOgså = listOf("https://concept-0.no")).toExternalDTO(EMPTY_ADMIN_DATA)
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map replacedBy`() {
+        val expected = EMPTY_CONCEPT.copy(replacedBy = listOf("https://concept-1.no"))
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(erstattesAv = listOf("https://concept-1.no")).toExternalDTO(EMPTY_ADMIN_DATA)
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map associative relations`() {
+        val expected = EMPTY_CONCEPT.copy(conceptRelations = listOf(
+            ConceptRelation(relationType="ASSOCIATIVE", description=LocalizedStrings(nb=null, nn=null, en=null), relatedConcept="https://concept-0.no"),
+            ConceptRelation(relationType="ASSOCIATIVE", description=LocalizedStrings(nb="beskrivelse", nn=null, en=null), relatedConcept="https://concept-1.no")))
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(begrepsRelasjon = listOf(
+            BegrepsRelasjon(relasjon = "assosiativ", relatertBegrep = "https://concept-0.no"),
+            BegrepsRelasjon(
+                relasjon = "assosiativ",
+                relasjonsType = "omfatter",
+                beskrivelse = mapOf("nb" to "beskrivelse"),
+                inndelingskriterium = mapOf("nb" to "inndelingskriterium"),
+                relatertBegrep = "https://concept-1.no"
+            ))).toExternalDTO(EMPTY_ADMIN_DATA)
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map partitive relations`() {
+        val expected = EMPTY_CONCEPT.copy(conceptRelations = listOf(
+            ConceptRelation(relationType = null, description = LocalizedStrings(null, null, null), relatedConcept="https://concept-0.no"),
+            ConceptRelation(
+                relationType="HAS_PARTITIVE",
+                description=LocalizedStrings(nb="inndelingskriterium", nn=null, en=null),
+                relatedConcept="https://concept-1.no"))
+        )
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(begrepsRelasjon = listOf(
+            BegrepsRelasjon(relasjon = "partitiv", relatertBegrep = "https://concept-0.no"),
+            BegrepsRelasjon(
+                relasjon = "partitiv",
+                relasjonsType = "omfatter",
+                beskrivelse = mapOf("nb" to "beskrivelse"),
+                inndelingskriterium = mapOf("nb" to "inndelingskriterium"),
+                relatertBegrep = "https://concept-1.no"
+            ))).toExternalDTO(EMPTY_ADMIN_DATA)
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map generic relations`() {
+        val expected = EMPTY_CONCEPT.copy(conceptRelations = listOf(
+            ConceptRelation(relationType = null, description = LocalizedStrings(null, null, null), relatedConcept="https://concept-0.no"),
+            ConceptRelation(
+                relationType="HAS_SPECIFIC",
+                description=LocalizedStrings(nb="inndelingskriterium", nn=null, en=null),
+                relatedConcept="https://concept-1.no"))
+        )
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(begrepsRelasjon = listOf(
+            BegrepsRelasjon(relasjon = "generisk", relatertBegrep = "https://concept-0.no"),
+            BegrepsRelasjon(
+                relasjon = "generisk",
+                relasjonsType = "underordnet",
+                beskrivelse = mapOf("nb" to "beskrivelse"),
+                inndelingskriterium = mapOf("nb" to "inndelingskriterium"),
+                relatertBegrep = "https://concept-1.no"
+            ))).toExternalDTO(EMPTY_ADMIN_DATA)
+
+        assertEquals(expected = expected, actual = result)
+    }
+
 }

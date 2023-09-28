@@ -30,6 +30,9 @@ data class Concept(
     val valueRange: URIText?,
     val contactPoint: ContactPoint?,
     val abbreviatedLabel: String?,
+    val seeAlso: List<String>?,
+    val conceptRelations: List<ConceptRelation>?,
+    val replacedBy: List<String>?,
     val example: LocalizedStrings?,
     val domainCodes: List<Code>?,
     @Field(type = FieldType.Date)
@@ -165,3 +168,10 @@ data class CodeField(
     override val type: String = "code",
     override val value: Code
 ): FieldInterface
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class ConceptRelation (
+    val relationType: String?,
+    val description: LocalizedStrings?,
+    val relatedConcept: String?
+)

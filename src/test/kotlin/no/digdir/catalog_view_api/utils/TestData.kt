@@ -40,6 +40,9 @@ val EMPTY_CONCEPT = Concept(
     valueRange = null,
     contactPoint = null,
     abbreviatedLabel = null,
+    seeAlso = null,
+    conceptRelations = null,
+    replacedBy = null,
     example = null,
     domainCodes = null,
     startDate = null,
@@ -79,9 +82,9 @@ val EMPTY_INTERNAL_CONCEPT = InternalConcept(
     opprettetAv = null,
     seOgså = null,
     erstattesAv = null,
+    begrepsRelasjon = null,
     assignedUser = null,
     abbreviatedLabel = null,
-    begrepsRelasjon = null,
     interneFelt = null
 )
 
@@ -122,6 +125,43 @@ val DB_CONCEPT = EMPTY_INTERNAL_CONCEPT.copy(
     endringslogelement = Endringslogelement(
         endretAv = "Mod Ifier",
         endringstidspunkt = ZonedDateTime.of(2022, 1, 1, 12,0,0,0, ZoneId.of("Europe/Oslo")).toInstant()),
+    seOgså = listOf("https://begrep0", "https://begrep1"),
+    erstattesAv = listOf("https://begrep1", "https://begrep2"),
+    begrepsRelasjon = listOf(
+        BegrepsRelasjon(
+            relasjon = "assosiativ",
+            relasjonsType = "",
+            beskrivelse = mapOf("en" to "description"),
+            relatertBegrep = "https://begrep0"),
+        BegrepsRelasjon(
+            relasjon = "assosiativ",
+            relasjonsType = "",
+            beskrivelse = mapOf("en" to "missing uri"),
+            relatertBegrep = null),
+        BegrepsRelasjon(
+            relasjon = "invalid",
+            relasjonsType = "",
+            beskrivelse = mapOf("en" to "description"),
+            inndelingskriterium = mapOf("en" to "invalid relation type"),
+            relatertBegrep = "https://begrep1"),
+        BegrepsRelasjon(
+            relasjon = "partitiv",
+            relasjonsType = "invalid",
+            beskrivelse = mapOf("en" to "description"),
+            inndelingskriterium = mapOf("en" to "invalid relation subtype"),
+            relatertBegrep = "https://begrep2"),
+        BegrepsRelasjon(
+            relasjon = "generisk",
+            relasjonsType = "overordnet",
+            beskrivelse = mapOf("en" to "description"),
+            inndelingskriterium = mapOf("en" to "generic relation"),
+            relatertBegrep = "https://begrep3"),
+        BegrepsRelasjon(
+            relasjon = "partitiv",
+            relasjonsType = "erDelAv",
+            beskrivelse = mapOf("en" to "description"),
+            inndelingskriterium = mapOf("en" to "partitive relation"),
+            relatertBegrep = "https://begrep4")),
     interneFelt = mapOf(
         "text-short-field-id" to InterntFelt(value = "short text"),
         "text-long-field-id" to InterntFelt(value = "long text"),
@@ -163,6 +203,33 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
     createdBy = "Crea Tor",
     lastChanged = ZonedDateTime.of(2022, 1, 1, 12,0,0,0, ZoneId.of("Europe/Oslo")).toInstant(),
     lastChangedBy = "Mod Ifier",
+    seeAlso = listOf("https://begrep0", "https://begrep1"),
+    replacedBy = listOf("https://begrep1", "https://begrep2"),
+    conceptRelations = listOf(
+        ConceptRelation(
+            relationType="ASSOCIATIVE",
+            description=LocalizedStrings(nb=null, nn=null, en="description"),
+            relatedConcept="https://begrep0"),
+        ConceptRelation(
+            relationType="ASSOCIATIVE",
+            description=LocalizedStrings(nb=null, nn=null, en="missing uri"),
+            relatedConcept=null),
+        ConceptRelation(
+            relationType=null,
+            description=LocalizedStrings(nb=null, nn=null, en="invalid relation type"),
+            relatedConcept="https://begrep1"),
+        ConceptRelation(
+            relationType=null,
+            description=LocalizedStrings(nb=null, nn=null, en="invalid relation subtype"),
+            relatedConcept="https://begrep2"),
+        ConceptRelation(
+            relationType="HAS_GENERIC",
+            description=LocalizedStrings(nb=null, nn=null, en="generic relation"),
+            relatedConcept="https://begrep3"),
+        ConceptRelation(
+            relationType="HAS_COMPREHENSIVE",
+            description=LocalizedStrings(nb=null, nn=null, en="partitive relation"),
+            relatedConcept="https://begrep4")),
     internalFields = listOf(
         ShortTextField(
             id="text-short-field-id",
