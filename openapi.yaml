@@ -105,6 +105,18 @@ components:
           $ref: "#/components/schemas/ContactPoint"
         abbreviatedLabel:
           type: string
+        seeAlso:
+          type: array
+          items:
+            type: string
+        conceptRelations:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConceptRelation"
+        replacedBy:
+          type: array
+          items:
+            type: string
         example:
           $ref: "#/components/schemas/LocalizedStrings"
         domainCodes:
@@ -270,3 +282,14 @@ components:
 
     BooleanValue:
       type: boolean
+
+    ConceptRelation:
+      type: object
+      properties:
+        relationType:
+          type: string
+          enum: [ASSOCIATIVE, HAS_PARTITIVE, HAS_COMPREHENSIVE, HAS_SPECIFIC, HAS_GENERIC]
+        description:
+          $ref: "#/components/schemas/LocalizedStrings"
+        relatedConcept:
+          type: string

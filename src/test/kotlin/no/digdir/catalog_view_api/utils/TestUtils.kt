@@ -6,6 +6,7 @@ import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import no.digdir.catalog_view_api.model.AdminCode
 import no.digdir.catalog_view_api.model.AdminUser
+import no.digdir.catalog_view_api.model.BegrepsRelasjon
 import no.digdir.catalog_view_api.model.CodeList
 import no.digdir.catalog_view_api.model.Definisjon
 import no.digdir.catalog_view_api.model.EditableFields
@@ -157,6 +158,10 @@ private fun InternalConcept.mongoDocument(): Document {
     concept.append("fagområdeKoder", fagområdeKoder)
     concept.append("assignedUser", assignedUser)
 
+    concept.append("seOgså", seOgså)
+    concept.append("erstattesAv", erstattesAv)
+    concept.append("begrepsRelasjon", begrepsRelasjon?.map { it.mongoDocument() })
+
     return concept
 }
 
@@ -234,6 +239,16 @@ private fun EditableFields.mongoDocument(): Document {
     fields.append("_id", catalogId)
     fields.append("domainCodeListId", domainCodeListId)
     return fields
+}
+
+private fun BegrepsRelasjon.mongoDocument(): Document {
+    val relation = Document()
+    relation.append("relasjon", relasjon)
+    relation.append("relasjonsType", relasjonsType)
+    relation.append("beskrivelse", beskrivelse)
+    relation.append("inndelingskriterium", inndelingskriterium)
+    relation.append("relatertBegrep", relatertBegrep)
+    return relation
 }
 
 fun populateDB() {
