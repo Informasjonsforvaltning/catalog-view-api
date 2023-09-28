@@ -1,6 +1,8 @@
 package no.digdir.catalog_view_api.model
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonInclude
+import java.time.Instant
 import java.time.LocalDate
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -18,7 +20,13 @@ data class Concept(
     val abbreviatedLabel: String?,
     val example: LanguageValues?,
     val dateValidFrom: LocalDate?,
-    val dateValidThrough: LocalDate?
+    val dateValidThrough: LocalDate?,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "Europe/Oslo")
+    val created: Instant?,
+    val createdBy: String?,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "Europe/Oslo")
+    val lastChanged: Instant?,
+    val lastChangedBy: String?
 )
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

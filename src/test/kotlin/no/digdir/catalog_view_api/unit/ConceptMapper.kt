@@ -7,6 +7,8 @@ import no.digdir.catalog_view_api.utils.EMPTY_INTERNAL_CONCEPT
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import kotlin.test.assertEquals
 
 @Tag("unit")
@@ -154,6 +156,26 @@ class ConceptMapper {
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(
             kontaktpunkt = Kontaktpunkt(harEpost = "epost@asdf.no", harTelefon = "11122233")
+        ).toExternalDTO()
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map created & lastChanged`() {
+        val creatDate = ZonedDateTime.of(2019, 1, 1, 12,0,0,0, ZoneId.of("Europe/Oslo")).toInstant()
+        val changeDate = ZonedDateTime.of(2022, 1, 1, 12,0,0,0, ZoneId.of("Europe/Oslo")).toInstant()
+        val expected = EMPTY_CONCEPT.copy(
+            created = creatDate,
+            createdBy = "Kari Nordmann",
+            lastChanged = changeDate,
+            lastChangedBy = "Ola Nordmann"
+        )
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(
+            opprettet = creatDate,
+            opprettetAv = "Kari Nordmann",
+            endringslogelement = Endringslogelement(endretAv = "Ola Nordmann", endringstidspunkt = changeDate)
         ).toExternalDTO()
 
         assertEquals(expected = expected, actual = result)
