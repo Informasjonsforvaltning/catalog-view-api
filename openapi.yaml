@@ -17,7 +17,7 @@ servers:
   - url: 'https://catalog-view-api.staging.fellesdatakatalog.digdir.no'
     description: Test
 paths:
-  /{catalogId}/concepts:
+  /catalogs/{catalogId}/concepts:
     get:
       description: Returns all concepts in the collection
       operationId: getConcepts
@@ -37,7 +37,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Concept'
-  /{catalogId}/concepts/{id}:
+  /catalogs/{catalogId}/concepts/{id}:
     get:
       description: Returns single concept
       operationId: getConceptById
