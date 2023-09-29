@@ -23,7 +23,7 @@ class ConceptMapper {
     @Test
     fun `Map preferred term`() {
         val expected = EMPTY_CONCEPT.copy(
-            preferredTerm = LanguageValues(
+            preferredTerm = LocalizedStrings(
                 nb = "bokmål",
                 nn = "nynorsk",
                 en = "english"
@@ -45,7 +45,7 @@ class ConceptMapper {
     fun `Map definition`() {
         val expected = EMPTY_CONCEPT.copy(
             definition = Definition(
-                text = LanguageValues(
+                text = LocalizedStrings(
                     nb = "bokmål",
                     nn = "nynorsk",
                     en = "english"),
@@ -81,7 +81,7 @@ class ConceptMapper {
     @Test
     fun `Map note`() {
         val expected = EMPTY_CONCEPT.copy(
-            note = LanguageValues(
+            note = LocalizedStrings(
                 nb = "bokmål",
                 nn = "nynorsk",
                 en = "english"
@@ -102,7 +102,7 @@ class ConceptMapper {
     @Test
     fun `Map example`() {
         val expected = EMPTY_CONCEPT.copy(
-            example = LanguageValues(
+            example = LocalizedStrings(
                 nb = "bokmål",
                 nn = "nynorsk",
                 en = "english"
