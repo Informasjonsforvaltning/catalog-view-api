@@ -83,11 +83,11 @@ components:
           type: string
           description: Status of concept, full uri if part of EU published concept statuses
         preferredTerm:
-          $ref: "#/components/schemas/LanguageValues"
+          $ref: "#/components/schemas/LocalizedStrings"
         definition:
           $ref: "#/components/schemas/Definition"
         note:
-          $ref: "#/components/schemas/LanguageValues"
+          $ref: "#/components/schemas/LocalizedStrings"
         valueRange:
           $ref: "#/components/schemas/URIText"
         contactPoint:
@@ -95,7 +95,7 @@ components:
         abbreviatedLabel:
           type: string
         example:
-          $ref: "#/components/schemas/LanguageValues"
+          $ref: "#/components/schemas/LocalizedStrings"
         dateValidFrom:
           type: string
           format: date
@@ -123,7 +123,7 @@ components:
       type: object
       properties:
         text:
-          $ref: "#/components/schemas/LanguageValues"
+          $ref: "#/components/schemas/LocalizedStrings"
         sourceDescription:
           $ref: "#/components/schemas/SourceDescription"
 
@@ -144,7 +144,7 @@ components:
           type: integer
           minimum: 0
 
-    LanguageValues:
+    LocalizedStrings:
       type: object
       properties:
         nb:

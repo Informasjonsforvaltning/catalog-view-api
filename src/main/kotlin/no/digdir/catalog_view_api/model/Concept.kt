@@ -12,13 +12,13 @@ data class Concept(
     val version: SemVer,
     val publisher: String,
     val status: String?,
-    val preferredTerm: LanguageValues?,
+    val preferredTerm: LocalizedStrings?,
     val definition: Definition?,
-    val note: LanguageValues?,
+    val note: LocalizedStrings?,
     val valueRange: URIText?,
     val contactPoint: ContactPoint?,
     val abbreviatedLabel: String?,
-    val example: LanguageValues?,
+    val example: LocalizedStrings?,
     val dateValidFrom: LocalDate?,
     val dateValidThrough: LocalDate?,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "Europe/Oslo")
@@ -30,7 +30,7 @@ data class Concept(
 )
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class LanguageValues(
+data class LocalizedStrings(
     val nb: String?,
     val nn: String?,
     val en: String?
@@ -38,7 +38,7 @@ data class LanguageValues(
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class Definition (
-    val text: LanguageValues?,
+    val text: LocalizedStrings?,
     val sourceDescription: SourceDescription?
 )
 

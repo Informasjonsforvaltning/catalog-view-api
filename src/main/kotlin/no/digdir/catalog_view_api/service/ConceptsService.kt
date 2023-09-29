@@ -52,8 +52,8 @@ fun InternalConcept.toExternalDTO(): Concept =
         lastChangedBy = endringslogelement?.endretAv
     )
 
-private fun Map<String, String>.toLangValueObject(): LanguageValues? {
-    val langValues = LanguageValues(
+private fun Map<String, String>.toLangValueObject(): LocalizedStrings? {
+    val langValues = LocalizedStrings(
         nb = get("nb")?.ifBlank { null },
         nn = get("nn")?.ifBlank { null },
         en = get("en")?.ifBlank { null }
