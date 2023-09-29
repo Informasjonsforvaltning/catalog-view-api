@@ -26,7 +26,7 @@ class ConceptsTest: ApiTestContext() {
 
     @Nested
     internal inner class GetConceptById {
-        private val path = "/111222333/concepts/123"
+        private val path = "/catalogs/111222333/concepts/123"
 
         @Test
         fun `Responds with Unauthorized when missing token`() {
@@ -48,13 +48,13 @@ class ConceptsTest: ApiTestContext() {
 
         @Test
         fun `Responds with Not Found when not found in concept catalog`() {
-            val response = apiAuthorizedRequest("/111222333/concepts/321", port, null, JwtToken("111222333").toString(), HttpMethod.GET)
+            val response = apiAuthorizedRequest("/catalogs/111222333/concepts/321", port, null, JwtToken("111222333").toString(), HttpMethod.GET)
             Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), response["status"])
         }
 
         @Test
         fun `Responds with Not Found when not in relevant catalog`() {
-            val response = apiAuthorizedRequest("/333222111/concepts/123", port, null, JwtToken("333222111").toString(), HttpMethod.GET)
+            val response = apiAuthorizedRequest("/catalogs/333222111/concepts/123", port, null, JwtToken("333222111").toString(), HttpMethod.GET)
             Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), response["status"])
         }
 
@@ -68,7 +68,7 @@ class ConceptsTest: ApiTestContext() {
 
     @Nested
     internal inner class GetConcepts {
-        private val path = "/111222333/concepts"
+        private val path = "/catalogs/111222333/concepts"
 
         @Test
         fun `Responds with Unauthorized when missing token`() {

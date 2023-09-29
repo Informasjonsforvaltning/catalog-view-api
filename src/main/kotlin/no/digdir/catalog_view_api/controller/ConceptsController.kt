@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(value = ["/{catalog}/concepts"], produces = ["application/json"])
+@RequestMapping(value = ["/catalogs/{catalog}/concepts"], produces = ["application/json"])
 class ConceptsController(
     private val conceptsService: ConceptsService,
     private val permissionService: PermissionService
