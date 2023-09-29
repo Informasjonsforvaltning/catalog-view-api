@@ -19,8 +19,8 @@ data class Concept(
     val contactPoint: ContactPoint?,
     val abbreviatedLabel: String?,
     val example: LocalizedStrings?,
-    val dateValidFrom: LocalDate?,
-    val dateValidThrough: LocalDate?,
+    val startDate: LocalDate?,
+    val endDate: LocalDate?,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "Europe/Oslo")
     val created: Instant?,
     val createdBy: String?,

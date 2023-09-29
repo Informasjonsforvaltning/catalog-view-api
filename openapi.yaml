@@ -96,11 +96,11 @@ components:
           type: string
         example:
           $ref: "#/components/schemas/LocalizedStrings"
-        dateValidFrom:
+        startDate:
           type: string
           format: date
           description: date (inclusive) from which the concept is valid
-        dateValidThrough:
+        endDate:
           type: string
           format: date
           description: date (inclusively) through which the concept is valid
