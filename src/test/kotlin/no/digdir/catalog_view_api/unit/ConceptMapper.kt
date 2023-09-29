@@ -123,8 +123,8 @@ class ConceptMapper {
     @Test
     fun `Map valid period`() {
         val expected = EMPTY_CONCEPT.copy(
-            dateValidFrom = LocalDate.of(2021, 7, 11),
-            dateValidThrough = LocalDate.of(2027, 10, 22)
+            startDate = LocalDate.of(2021, 7, 11),
+            endDate = LocalDate.of(2027, 10, 22)
         )
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(
