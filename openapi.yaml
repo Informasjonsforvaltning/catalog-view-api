@@ -88,9 +88,9 @@ components:
         preferredTerm:
           $ref: "#/components/schemas/LocalizedStrings"
         admittedTerm:
-          $ref: "#/components/schemas/LanguageListValues"
+          $ref: "#/components/schemas/ListOfLocalizedStrings"
         deprecatedTerm:
-          $ref: "#/components/schemas/LanguageListValues"
+          $ref: "#/components/schemas/ListOfLocalizedStrings"
         definition:
           $ref: "#/components/schemas/Definition"
         publicDefinition:
@@ -168,7 +168,7 @@ components:
           type: string
           description: English
 
-    LanguageListValues:
+    ListOfLocalizedStrings:
       type: object
       properties:
         nb:

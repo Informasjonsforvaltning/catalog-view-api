@@ -72,8 +72,8 @@ private fun Map<String, String>.toLangValueObject(): LocalizedStrings? {
     }
 }
 
-private fun Map<String, List<String>>.toLangValueObject(): LanguageListValues? {
-    val langValues = LanguageListValues(
+private fun Map<String, List<String>>.toLangValueObject(): ListOfLocalizedStrings? {
+    val langValues = ListOfLocalizedStrings(
         nb = get("nb")?.mapNotNull { it.ifBlank { null } }?.ifEmpty { null },
         nn = get("nn")?.mapNotNull { it.ifBlank { null } }?.ifEmpty { null },
         en = get("en")?.mapNotNull { it.ifBlank { null } }?.ifEmpty { null }

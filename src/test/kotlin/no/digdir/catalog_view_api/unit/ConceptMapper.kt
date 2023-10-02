@@ -184,7 +184,7 @@ class ConceptMapper {
     @Test
     fun `Map admitted term`() {
         val expected = EMPTY_CONCEPT.copy(
-            admittedTerm = LanguageListValues(nb = listOf("bokmål", "tillatt term"), nn = null, en = null)
+            admittedTerm = ListOfLocalizedStrings(nb = listOf("bokmål", "tillatt term"), nn = null, en = null)
         )
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(
@@ -201,7 +201,7 @@ class ConceptMapper {
     @Test
     fun `Map deprecated term`() {
         val expected = EMPTY_CONCEPT.copy(
-            deprecatedTerm = LanguageListValues(nb = null, nn = null, en = listOf("english"))
+            deprecatedTerm = ListOfLocalizedStrings(nb = null, nn = null, en = listOf("english"))
         )
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(

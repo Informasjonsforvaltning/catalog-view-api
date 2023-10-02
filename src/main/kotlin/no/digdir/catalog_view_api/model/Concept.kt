@@ -14,8 +14,8 @@ data class Concept(
     val publisher: String,
     val status: String?,
     val preferredTerm: LocalizedStrings?,
-    val admittedTerm: LanguageListValues?,
-    val deprecatedTerm: LanguageListValues?,
+    val admittedTerm: ListOfLocalizedStrings?,
+    val deprecatedTerm: ListOfLocalizedStrings?,
     val definition: Definition?,
     val publicDefinition: Definition?,
     val specialistDefinition: Definition?,
@@ -42,7 +42,7 @@ data class LocalizedStrings(
 )
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class LanguageListValues(
+data class ListOfLocalizedStrings(
     val nb: List<String>?,
     val nn: List<String>?,
     val en: List<String>?
