@@ -19,6 +19,11 @@ open class MongoConf(
     }
 
     @Bean
+    open fun adminServiceDB(): MongoTemplate {
+        return MongoTemplate(mongoClient(), databases.adminService)
+    }
+
+    @Bean
     open fun conceptCatalogDB(): MongoTemplate {
         return MongoTemplate(mongoClient(), databases.conceptCatalog)
     }

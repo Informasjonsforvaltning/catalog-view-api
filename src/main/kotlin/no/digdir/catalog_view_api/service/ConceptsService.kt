@@ -1,5 +1,6 @@
 package no.digdir.catalog_view_api.service
 
+import no.digdir.catalog_view_api.config.MongoCollections
 import no.digdir.catalog_view_api.model.*
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.find
@@ -12,25 +13,44 @@ import org.springframework.web.server.ResponseStatusException
 
 @Service
 class ConceptsService(
-    private val conceptCatalogDB: MongoTemplate
+    private val adminServiceDB: MongoTemplate,
+    private val conceptCatalogDB: MongoTemplate,
+    private val mongoCollections: MongoCollections
 ) {
-    private val conceptMongoCollection = "begrep"
 
     fun getConcepts(catalogId: String): List<Concept> =
         Criteria.where("ansvarligVirksomhet.id").`is`(catalogId)
             .let { Query(it) }
-            .let { query -> conceptCatalogDB.find<InternalConcept>(query, conceptMongoCollection) }
-            .map { it.toExternalDTO() }
+            .let { query -> conceptCatalogDB.find<InternalConcept>(query, mongoCollections.concepts) }
+            .map { it.toExternalDTO(getAdminData(catalogId)) }
 
     fun getConceptById(catalogId: String, conceptId: String): Concept =
-        conceptCatalogDB.findById<InternalConcept>(conceptId, conceptMongoCollection)
+        conceptCatalogDB.findById<InternalConcept>(conceptId, mongoCollections.concepts)
             ?.also { if (it.ansvarligVirksomhet.id != catalogId) throw ResponseStatusException(HttpStatus.NOT_FOUND) }
-            ?.toExternalDTO()
+            ?.toExternalDTO(getAdminData(catalogId))
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
+
+    private fun getAdminData(catalogId: String): CatalogAdminData =
+        CatalogAdminData(
+            users = getUsersFromAdminService(catalogId)
+        )
+
+    private fun getUsersFromAdminService(catalogId: String): Map<String, AdminUser> =
+        Criteria.where("catalogId").`is`(catalogId)
+            .let { Query(it) }
+            .let { query -> adminServiceDB.find<AdminUser>(query, mongoCollections.users) }
+            .associateBy({ it.id }, { it })
 
 }
 
-fun InternalConcept.toExternalDTO(): Concept =
+private fun AdminUser.toDTO(): User =
+    User(
+        name = name,
+        email = email,
+        telephone = telephoneNumber
+    )
+
+fun InternalConcept.toExternalDTO(adminData: CatalogAdminData): Concept =
     Concept(
         id = id,
         idOfOriginalVersion = originaltBegrep,
@@ -54,7 +74,8 @@ fun InternalConcept.toExternalDTO(): Concept =
         created = opprettet,
         createdBy = opprettetAv,
         lastChanged = endringslogelement?.endringstidspunkt,
-        lastChangedBy = endringslogelement?.endretAv
+        lastChangedBy = endringslogelement?.endretAv,
+        assignedUser = assignedUser?.let { adminData.users[it] }?.toDTO()
     )
 
 private fun Map<String, String>.toLangValueObject(): LocalizedStrings? {

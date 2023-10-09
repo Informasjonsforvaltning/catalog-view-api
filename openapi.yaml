@@ -129,6 +129,8 @@ components:
         lastChangedBy:
           type: string
           description: Name of user who last changed the concept
+        assignedUser:
+          $ref: "#/components/schemas/User"
 
     Definition:
       type: object
@@ -207,6 +209,16 @@ components:
     ContactPoint:
       type: object
       properties:
+        email:
+          type: string
+        telephone:
+          type: string
+
+    User:
+      type: object
+      properties:
+        name:
+          type: string
         email:
           type: string
         telephone:

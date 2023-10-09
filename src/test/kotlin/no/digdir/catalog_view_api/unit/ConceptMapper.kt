@@ -16,7 +16,7 @@ class ConceptMapper {
 
     @Test
     fun `Map id, publisherID, status and version`() {
-        val result = EMPTY_INTERNAL_CONCEPT.toExternalDTO()
+        val result = EMPTY_INTERNAL_CONCEPT.toExternalDTO(CatalogAdminData(users = emptyMap()))
         assertEquals(expected = EMPTY_CONCEPT, actual = result)
     }
 
@@ -36,7 +36,7 @@ class ConceptMapper {
                 Pair("nn", "nynorsk"),
                 Pair("en", "english")
             ))
-        ).toExternalDTO()
+        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
 
         assertEquals(expected = expected, actual = result)
     }
@@ -73,7 +73,7 @@ class ConceptMapper {
                     )
                 )
             )
-        ).toExternalDTO()
+        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
 
         assertEquals(expected = expected, actual = result)
     }
@@ -94,7 +94,7 @@ class ConceptMapper {
                 Pair("nn", "nynorsk"),
                 Pair("en", "english")
             )
-        ).toExternalDTO()
+        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
 
         assertEquals(expected = expected, actual = result)
     }
@@ -115,7 +115,7 @@ class ConceptMapper {
                 Pair("nn", "nynorsk"),
                 Pair("en", "english")
             )
-        ).toExternalDTO()
+        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
 
         assertEquals(expected = expected, actual = result)
     }
@@ -130,7 +130,7 @@ class ConceptMapper {
         val result = EMPTY_INTERNAL_CONCEPT.copy(
             gyldigFom = LocalDate.of(2021, 7, 11),
             gyldigTom = LocalDate.of(2027, 10, 22)
-        ).toExternalDTO()
+        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
 
         assertEquals(expected = expected, actual = result)
     }
@@ -143,7 +143,7 @@ class ConceptMapper {
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(
             omfang = URITekst(uri = "https://omfang.com", tekst = "Omfang")
-        ).toExternalDTO()
+        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
 
         assertEquals(expected = expected, actual = result)
     }
@@ -156,7 +156,7 @@ class ConceptMapper {
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(
             kontaktpunkt = Kontaktpunkt(harEpost = "epost@asdf.no", harTelefon = "11122233")
-        ).toExternalDTO()
+        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
 
         assertEquals(expected = expected, actual = result)
     }
@@ -176,7 +176,19 @@ class ConceptMapper {
             opprettet = creatDate,
             opprettetAv = "Kari Nordmann",
             endringslogelement = Endringslogelement(endretAv = "Ola Nordmann", endringstidspunkt = changeDate)
-        ).toExternalDTO()
+        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map assigned user`() {
+        val adminUser = AdminUser(id = "user-id", catalogId = "123456789", name = "John Doe", email = "epost@asdf.no", telephoneNumber = "11122233")
+        val user = User(name = "John Doe", email = "epost@asdf.no", telephone = "11122233")
+        val expected = EMPTY_CONCEPT.copy(assignedUser = user)
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(assignedUser = adminUser.id)
+            .toExternalDTO(CatalogAdminData(users = mapOf(adminUser.id to adminUser)))
 
         assertEquals(expected = expected, actual = result)
     }
