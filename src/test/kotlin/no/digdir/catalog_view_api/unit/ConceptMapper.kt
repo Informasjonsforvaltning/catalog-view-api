@@ -181,4 +181,101 @@ class ConceptMapper {
         assertEquals(expected = expected, actual = result)
     }
 
+    @Test
+    fun `Map admitted term`() {
+        val expected = EMPTY_CONCEPT.copy(
+            admittedTerm = ListOfLocalizedStrings(nb = listOf("bokmål", "tillatt term"), nn = null, en = null)
+        )
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(
+            tillattTerm = mapOf(
+                Pair("nb", listOf("bokmål", "tillatt term", "")),
+                Pair("nn", listOf("")),
+                Pair("en", emptyList())
+            )
+        ).toExternalDTO()
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map deprecated term`() {
+        val expected = EMPTY_CONCEPT.copy(
+            deprecatedTerm = ListOfLocalizedStrings(nb = null, nn = null, en = listOf("english"))
+        )
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(
+            frarådetTerm = mapOf(
+                Pair("nb", emptyList()),
+                Pair("en", listOf("english", ""))
+            )
+        ).toExternalDTO()
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map public definition`() {
+        val expected = EMPTY_CONCEPT.copy(
+            publicDefinition = Definition(
+                text = LocalizedStrings(
+                    nb = null,
+                    nn = "nynorsk",
+                    en = null),
+                sourceDescription = SourceDescription(
+                    relationshipWithSource = "https://data.norge.no/vocabulary/relationship-with-source-type#self-composed",
+                    source = emptyList()
+                )
+            )
+        )
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(
+            folkeligForklaring = Definisjon(
+                tekst = mapOf(
+                    Pair("nn", "nynorsk")),
+                kildebeskrivelse = Kildebeskrivelse(
+                    forholdTilKilde = ForholdTilKildeEnum.EGENDEFINERT
+                )
+            )
+        ).toExternalDTO()
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map specialist definition`() {
+        val expected = EMPTY_CONCEPT.copy(
+            specialistDefinition = Definition(
+                text = LocalizedStrings(
+                    nb = "bokmål",
+                    nn = null,
+                    en = null),
+                sourceDescription = SourceDescription(
+                    relationshipWithSource = "https://data.norge.no/vocabulary/relationship-with-source-type#direct-from-source",
+                    source = listOf(
+                        URIText(uri = "https://testkilde.no", text = "Testkilde"),
+                        URIText(uri = "https://testsource.com", text = "Test source")
+                    )
+                )
+            )
+        )
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(
+            rettsligForklaring = Definisjon(
+                tekst = mapOf(
+                    Pair("nb", "bokmål"),
+                    Pair("nn", "")),
+                kildebeskrivelse = Kildebeskrivelse(
+                    forholdTilKilde = ForholdTilKildeEnum.SITATFRAKILDE,
+                    kilde = listOf(
+                        URITekst(uri = "https://testkilde.no", tekst = "Testkilde"),
+                        URITekst(uri = "https://testsource.com", tekst = "Test source")
+                    )
+                )
+            )
+        ).toExternalDTO()
+
+        assertEquals(expected = expected, actual = result)
+    }
+
 }

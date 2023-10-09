@@ -10,10 +10,15 @@ data class Concept(
     val id: String,
     val idOfOriginalVersion: String,
     val version: SemVer,
+    val isPublished: Boolean,
     val publisher: String,
     val status: String?,
     val preferredTerm: LocalizedStrings?,
+    val admittedTerm: ListOfLocalizedStrings?,
+    val deprecatedTerm: ListOfLocalizedStrings?,
     val definition: Definition?,
+    val publicDefinition: Definition?,
+    val specialistDefinition: Definition?,
     val note: LocalizedStrings?,
     val valueRange: URIText?,
     val contactPoint: ContactPoint?,
@@ -34,6 +39,13 @@ data class LocalizedStrings(
     val nb: String?,
     val nn: String?,
     val en: String?
+)
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class ListOfLocalizedStrings(
+    val nb: List<String>?,
+    val nn: List<String>?,
+    val en: List<String>?
 )
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

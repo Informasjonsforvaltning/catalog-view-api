@@ -35,10 +35,15 @@ fun InternalConcept.toExternalDTO(): Concept =
         id = id,
         idOfOriginalVersion = originaltBegrep,
         version = versjonsnr,
+        isPublished = erPublisert,
         publisher = ansvarligVirksomhet.id,
         status = statusURI,
         preferredTerm = anbefaltTerm?.navn?.toLangValueObject(),
+        admittedTerm = tillattTerm?.toLangValueObject(),
+        deprecatedTerm = frarådetTerm?.toLangValueObject(),
         definition = definisjon?.toDefinition(),
+        publicDefinition = folkeligForklaring?.toDefinition(),
+        specialistDefinition = rettsligForklaring?.toDefinition(),
         note = merknad?.toLangValueObject(),
         valueRange = omfang?.toURIText(),
         contactPoint = kontaktpunkt?.let { ContactPoint(email = it.harEpost, telephone = it.harTelefon) },
@@ -57,6 +62,21 @@ private fun Map<String, String>.toLangValueObject(): LocalizedStrings? {
         nb = get("nb")?.ifBlank { null },
         nn = get("nn")?.ifBlank { null },
         en = get("en")?.ifBlank { null }
+    )
+
+    return when {
+        langValues.nb != null -> langValues
+        langValues.nn != null -> langValues
+        langValues.en != null -> langValues
+        else -> null
+    }
+}
+
+private fun Map<String, List<String>>.toLangValueObject(): ListOfLocalizedStrings? {
+    val langValues = ListOfLocalizedStrings(
+        nb = get("nb")?.mapNotNull { it.ifBlank { null } }?.ifEmpty { null },
+        nn = get("nn")?.mapNotNull { it.ifBlank { null } }?.ifEmpty { null },
+        en = get("en")?.mapNotNull { it.ifBlank { null } }?.ifEmpty { null }
     )
 
     return when {
