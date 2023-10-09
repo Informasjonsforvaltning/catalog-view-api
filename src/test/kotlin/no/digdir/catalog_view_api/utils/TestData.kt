@@ -38,7 +38,8 @@ val EMPTY_CONCEPT = Concept(
     created = null,
     createdBy = null,
     lastChanged = null,
-    lastChangedBy = null
+    lastChangedBy = null,
+    assignedUser = null
 )
 
 val EMPTY_INTERNAL_CONCEPT = InternalConcept(

@@ -8,7 +8,11 @@ server:
 application:
   scope: ${MASKINPORTEN_SCOPE:datanorge:test/catalog.read}
   databases:
+    adminService: catalogAdminService
     conceptCatalog: concept-catalogue
+  collections:
+    concepts: begrep
+    users: users
 spring:
   data.mongodb.uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/?authSource=admin&authMechanism=SCRAM-SHA-1
   security.oauth2.resourceserver.jwt:

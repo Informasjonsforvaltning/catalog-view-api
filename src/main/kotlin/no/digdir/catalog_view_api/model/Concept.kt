@@ -31,7 +31,8 @@ data class Concept(
     val createdBy: String?,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "Europe/Oslo")
     val lastChanged: Instant?,
-    val lastChangedBy: String?
+    val lastChangedBy: String?,
+    val assignedUser: User?
 )
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -68,6 +69,13 @@ data class URIText (
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class ContactPoint (
+    val email: String?,
+    val telephone: String?
+)
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class User (
+    val name: String?,
     val email: String?,
     val telephone: String?
 )

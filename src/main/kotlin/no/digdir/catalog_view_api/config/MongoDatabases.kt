@@ -4,5 +4,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties("application.databases")
 data class MongoDatabases(
+    val adminService: String,
     val conceptCatalog: String
 )
