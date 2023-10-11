@@ -12,6 +12,8 @@ application:
     conceptCatalog: concept-catalogue
   collections:
     concepts: begrep
+    codeLists: codeLists
+    editableFields: editableFields
     users: users
 spring:
   data.mongodb.uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/?authSource=admin&authMechanism=SCRAM-SHA-1

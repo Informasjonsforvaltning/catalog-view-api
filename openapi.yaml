@@ -107,6 +107,10 @@ components:
           type: string
         example:
           $ref: "#/components/schemas/LocalizedStrings"
+        domainCodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Code"
         startDate:
           type: string
           format: date
@@ -223,3 +227,13 @@ components:
           type: string
         telephone:
           type: string
+
+    Code:
+      type: object
+      properties:
+        codeId:
+          type: string
+        codeListId:
+          type: string
+        codeLabel:
+          $ref: "#/components/schemas/LocalizedStrings"

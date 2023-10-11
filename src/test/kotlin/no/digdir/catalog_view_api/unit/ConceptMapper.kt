@@ -2,6 +2,12 @@ package no.digdir.catalog_view_api.unit
 
 import no.digdir.catalog_view_api.model.*
 import no.digdir.catalog_view_api.service.toExternalDTO
+import no.digdir.catalog_view_api.utils.CODE_2
+import no.digdir.catalog_view_api.utils.CODE_3
+import no.digdir.catalog_view_api.utils.CODE_LISTS
+import no.digdir.catalog_view_api.utils.CODE_LIST_0
+import no.digdir.catalog_view_api.utils.CODE_LIST_1
+import no.digdir.catalog_view_api.utils.EMPTY_ADMIN_DATA
 import no.digdir.catalog_view_api.utils.EMPTY_CONCEPT
 import no.digdir.catalog_view_api.utils.EMPTY_INTERNAL_CONCEPT
 import org.junit.jupiter.api.Tag
@@ -16,7 +22,7 @@ class ConceptMapper {
 
     @Test
     fun `Map id, publisherID, status and version`() {
-        val result = EMPTY_INTERNAL_CONCEPT.toExternalDTO(CatalogAdminData(users = emptyMap()))
+        val result = EMPTY_INTERNAL_CONCEPT.toExternalDTO(EMPTY_ADMIN_DATA)
         assertEquals(expected = EMPTY_CONCEPT, actual = result)
     }
 
@@ -36,7 +42,7 @@ class ConceptMapper {
                 Pair("nn", "nynorsk"),
                 Pair("en", "english")
             ))
-        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
+        ).toExternalDTO(EMPTY_ADMIN_DATA)
 
         assertEquals(expected = expected, actual = result)
     }
@@ -73,7 +79,7 @@ class ConceptMapper {
                     )
                 )
             )
-        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
+        ).toExternalDTO(EMPTY_ADMIN_DATA)
 
         assertEquals(expected = expected, actual = result)
     }
@@ -94,7 +100,7 @@ class ConceptMapper {
                 Pair("nn", "nynorsk"),
                 Pair("en", "english")
             )
-        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
+        ).toExternalDTO(EMPTY_ADMIN_DATA)
 
         assertEquals(expected = expected, actual = result)
     }
@@ -115,7 +121,7 @@ class ConceptMapper {
                 Pair("nn", "nynorsk"),
                 Pair("en", "english")
             )
-        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
+        ).toExternalDTO(EMPTY_ADMIN_DATA)
 
         assertEquals(expected = expected, actual = result)
     }
@@ -130,7 +136,7 @@ class ConceptMapper {
         val result = EMPTY_INTERNAL_CONCEPT.copy(
             gyldigFom = LocalDate.of(2021, 7, 11),
             gyldigTom = LocalDate.of(2027, 10, 22)
-        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
+        ).toExternalDTO(EMPTY_ADMIN_DATA)
 
         assertEquals(expected = expected, actual = result)
     }
@@ -143,7 +149,7 @@ class ConceptMapper {
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(
             omfang = URITekst(uri = "https://omfang.com", tekst = "Omfang")
-        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
+        ).toExternalDTO(EMPTY_ADMIN_DATA)
 
         assertEquals(expected = expected, actual = result)
     }
@@ -156,7 +162,7 @@ class ConceptMapper {
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(
             kontaktpunkt = Kontaktpunkt(harEpost = "epost@asdf.no", harTelefon = "11122233")
-        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
+        ).toExternalDTO(EMPTY_ADMIN_DATA)
 
         assertEquals(expected = expected, actual = result)
     }
@@ -176,7 +182,7 @@ class ConceptMapper {
             opprettet = creatDate,
             opprettetAv = "Kari Nordmann",
             endringslogelement = Endringslogelement(endretAv = "Ola Nordmann", endringstidspunkt = changeDate)
-        ).toExternalDTO(CatalogAdminData(users = emptyMap()))
+        ).toExternalDTO(EMPTY_ADMIN_DATA)
 
         assertEquals(expected = expected, actual = result)
     }
@@ -188,7 +194,19 @@ class ConceptMapper {
         val expected = EMPTY_CONCEPT.copy(assignedUser = user)
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(assignedUser = adminUser.id)
-            .toExternalDTO(CatalogAdminData(users = mapOf(adminUser.id to adminUser)))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(users = mapOf(adminUser.id to adminUser)))
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map domain codes`() {
+        val expected = EMPTY_CONCEPT.copy(domainCodes = listOf(
+            Code(codeId = 0, codeListId = CODE_LIST_1.id, codeLabel = CODE_2.name),
+            Code(codeId = 1, codeListId = CODE_LIST_1.id, codeLabel = CODE_3.name)))
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(fagområdeKoder = listOf("0", "1"))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(domainCodeList = CODE_LIST_1.id, codeLists = CODE_LISTS))
 
         assertEquals(expected = expected, actual = result)
     }
@@ -205,7 +223,7 @@ class ConceptMapper {
                 Pair("nn", listOf("")),
                 Pair("en", emptyList())
             )
-        ).toExternalDTO()
+        ).toExternalDTO(EMPTY_ADMIN_DATA)
 
         assertEquals(expected = expected, actual = result)
     }
@@ -221,7 +239,7 @@ class ConceptMapper {
                 Pair("nb", emptyList()),
                 Pair("en", listOf("english", ""))
             )
-        ).toExternalDTO()
+        ).toExternalDTO(EMPTY_ADMIN_DATA)
 
         assertEquals(expected = expected, actual = result)
     }
@@ -249,7 +267,7 @@ class ConceptMapper {
                     forholdTilKilde = ForholdTilKildeEnum.EGENDEFINERT
                 )
             )
-        ).toExternalDTO()
+        ).toExternalDTO(EMPTY_ADMIN_DATA)
 
         assertEquals(expected = expected, actual = result)
     }
@@ -285,7 +303,7 @@ class ConceptMapper {
                     )
                 )
             )
-        ).toExternalDTO()
+        ).toExternalDTO(EMPTY_ADMIN_DATA)
 
         assertEquals(expected = expected, actual = result)
     }
