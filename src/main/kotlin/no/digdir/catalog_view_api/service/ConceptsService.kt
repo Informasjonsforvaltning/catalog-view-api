@@ -32,8 +32,20 @@ class ConceptsService(
 
     private fun getAdminData(catalogId: String): CatalogAdminData =
         CatalogAdminData(
+            codeLists = getCodeListsFromAdminService(catalogId),
+            domainCodeList = getDomainCodeListIdFromAdminService(catalogId),
             users = getUsersFromAdminService(catalogId)
         )
+
+    private fun getCodeListsFromAdminService(catalogId: String): Map<String, CodeList> =
+        Criteria.where("catalogId").`is`(catalogId)
+            .let { Query(it) }
+            .let { query -> adminServiceDB.find<CodeList>(query, mongoCollections.codeLists) }
+            .associateBy({ it.id }, { it })
+
+    private fun getDomainCodeListIdFromAdminService(catalogId: String): String? =
+        adminServiceDB.findById<EditableFields>(catalogId, mongoCollections.editableFields)
+            ?.domainCodeListId
 
     private fun getUsersFromAdminService(catalogId: String): Map<String, AdminUser> =
         Criteria.where("catalogId").`is`(catalogId)
@@ -69,6 +81,8 @@ fun InternalConcept.toExternalDTO(adminData: CatalogAdminData): Concept =
         contactPoint = kontaktpunkt?.let { ContactPoint(email = it.harEpost, telephone = it.harTelefon) },
         abbreviatedLabel = abbreviatedLabel,
         example = eksempel?.toLangValueObject(),
+        domainCodes = fagområdeKoder?.mapNotNull { adminData.getDomainCode(it.safeToInt()) }
+            ?.ifEmpty { null },
         startDate = gyldigFom,
         endDate = gyldigTom,
         created = opprettet,
@@ -127,3 +141,12 @@ private fun ForholdTilKildeEnum.toURI(): String =
 
 private fun URITekst.toURIText(): URIText =
     URIText(uri = uri, text = tekst)
+
+private fun CatalogAdminData.getDomainCode(id: Int?): Code? =
+    if (id == null || domainCodeList == null) null
+    else codeLists[domainCodeList]?.codes
+        ?.find { it.id == id }
+        ?.let { Code(codeId = id, codeListId = domainCodeList, codeLabel = it.name) }
+
+private fun String.safeToInt(): Int? =
+    try { toInt() } catch (_: Exception) { null }

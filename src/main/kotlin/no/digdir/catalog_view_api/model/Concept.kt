@@ -1,6 +1,7 @@
 package no.digdir.catalog_view_api.model
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.Instant
 import java.time.LocalDate
@@ -24,6 +25,7 @@ data class Concept(
     val contactPoint: ContactPoint?,
     val abbreviatedLabel: String?,
     val example: LocalizedStrings?,
+    val domainCodes: List<Code>?,
     val startDate: LocalDate?,
     val endDate: LocalDate?,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "Europe/Oslo")
@@ -36,6 +38,7 @@ data class Concept(
 )
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class LocalizedStrings(
     val nb: String?,
     val nn: String?,
@@ -78,4 +81,11 @@ data class User (
     val name: String?,
     val email: String?,
     val telephone: String?
+)
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class Code (
+    val codeId: Int,
+    val codeListId: String,
+    val codeLabel: LocalizedStrings
 )
