@@ -4,6 +4,7 @@ import no.digdir.catalog_view_api.model.AdminCode
 import no.digdir.catalog_view_api.model.CatalogAdminData
 import no.digdir.catalog_view_api.model.CodeList
 import no.digdir.catalog_view_api.model.Concept
+import no.digdir.catalog_view_api.model.Field
 import no.digdir.catalog_view_api.model.InternalConcept
 import no.digdir.catalog_view_api.model.LocalizedStrings
 import no.digdir.catalog_view_api.model.SemVer
@@ -44,7 +45,8 @@ val EMPTY_CONCEPT = Concept(
     createdBy = null,
     lastChanged = null,
     lastChangedBy = null,
-    assignedUser = null
+    assignedUser = null,
+    internalFields = null
 )
 
 val EMPTY_INTERNAL_CONCEPT = InternalConcept(
@@ -83,6 +85,7 @@ val EMPTY_INTERNAL_CONCEPT = InternalConcept(
 val EMPTY_ADMIN_DATA = CatalogAdminData(
     codeLists = emptyMap(),
     domainCodeList = null,
+    internalFields = emptyMap(),
     users = emptyMap()
 )
 
@@ -97,4 +100,57 @@ val CODE_LIST_1 = CodeList(id = "code-list-1", catalogId = "123456789", codes = 
 val CODE_LISTS = mapOf(
     CODE_LIST_0.id to CODE_LIST_0,
     CODE_LIST_1.id to CODE_LIST_1
+)
+
+val BOOLEAN_FIELD = Field(
+    id = "boolean-field-id",
+    label = LocalizedStrings(nb = "bool nb", nn = "bool nn", en = "bool en"),
+    description = LocalizedStrings(nb = "bool desc nb", nn = "bool desc nn", en = "bool desc en"),
+    catalogId = "123456789",
+    type = "boolean",
+    codeListId = null
+)
+
+val TEXT_SHORT_FIELD = Field(
+    id = "text-short-field-id",
+    label = LocalizedStrings(nb = "text short nb", nn = "text short nn", en = "text short en"),
+    description = LocalizedStrings(nb = "text short desc nb", nn = "text short desc nn", en = "text short desc en"),
+    catalogId = "123456789",
+    type = "text_short",
+    codeListId = null
+)
+
+val TEXT_LONG_FIELD = Field(
+    id = "text-long-field-id",
+    label = LocalizedStrings(nb = "text long nb", nn = "text long nn", en = "text long en"),
+    description = LocalizedStrings(nb = "text long desc nb", nn = "text long desc nn", en = "text long desc en"),
+    catalogId = "123456789",
+    type = "text_long",
+    codeListId = null
+)
+
+val CODE_LIST_FIELD = Field(
+    id = "code-list-field-id",
+    label = LocalizedStrings(nb = "code list nb", nn = "code list nn", en = "code list en"),
+    description = LocalizedStrings(nb = "code list desc nb", nn = "code list desc nn", en = "code list desc en"),
+    catalogId = "123456789",
+    type = "code_list",
+    codeListId = CODE_LIST_0.id
+)
+
+val USER_LIST_FIELD = Field(
+    id = "user-list-field-id",
+    label = LocalizedStrings(nb = "user list nb", nn = "user list nn", en = "user list en"),
+    description = LocalizedStrings(nb = "user list desc nb", nn = "user list desc nn", en = "user list desc en"),
+    catalogId = "123456789",
+    type = "user_list",
+    codeListId = null
+)
+
+val INTERNAL_FIELDS = mapOf(
+    BOOLEAN_FIELD.id to BOOLEAN_FIELD,
+    TEXT_SHORT_FIELD.id to TEXT_SHORT_FIELD,
+    TEXT_LONG_FIELD.id to TEXT_LONG_FIELD,
+    CODE_LIST_FIELD.id to CODE_LIST_FIELD,
+    USER_LIST_FIELD.id to USER_LIST_FIELD
 )
