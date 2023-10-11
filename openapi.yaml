@@ -135,6 +135,10 @@ components:
           description: Name of user who last changed the concept
         assignedUser:
           $ref: "#/components/schemas/User"
+        internalFields:
+          type: array
+          items:
+            $ref: "#/components/schemas/InternalField"
 
     Definition:
       type: object
@@ -237,3 +241,28 @@ components:
           type: string
         codeLabel:
           $ref: "#/components/schemas/LocalizedStrings"
+
+    InternalField:
+      type: object
+      properties:
+        id:
+          type: string
+        label:
+          $ref: "#/components/schemas/LocalizedStrings"
+        description:
+          $ref: "#/components/schemas/LocalizedStrings"
+        type:
+          type: string
+          enum: [text_short, text_long, bool, user, code]
+        value:
+          oneOf:
+            - $ref: "#/components/schemas/StringValue"
+            - $ref: "#/components/schemas/BooleanValue"
+            - $ref: "#/components/schemas/User"
+            - $ref: "#/components/schemas/Code"
+
+    StringValue:
+      type: string
+
+    BooleanValue:
+      type: boolean

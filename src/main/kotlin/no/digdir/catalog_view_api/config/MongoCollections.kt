@@ -7,5 +7,6 @@ data class MongoCollections(
     val concepts: String,
     val codeLists: String,
     val editableFields: String,
+    val internalFields: String,
     val users: String
 )

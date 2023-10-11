@@ -2,14 +2,21 @@ package no.digdir.catalog_view_api.unit
 
 import no.digdir.catalog_view_api.model.*
 import no.digdir.catalog_view_api.service.toExternalDTO
+import no.digdir.catalog_view_api.utils.BOOLEAN_FIELD
+import no.digdir.catalog_view_api.utils.CODE_1
 import no.digdir.catalog_view_api.utils.CODE_2
 import no.digdir.catalog_view_api.utils.CODE_3
 import no.digdir.catalog_view_api.utils.CODE_LISTS
 import no.digdir.catalog_view_api.utils.CODE_LIST_0
 import no.digdir.catalog_view_api.utils.CODE_LIST_1
+import no.digdir.catalog_view_api.utils.CODE_LIST_FIELD
 import no.digdir.catalog_view_api.utils.EMPTY_ADMIN_DATA
 import no.digdir.catalog_view_api.utils.EMPTY_CONCEPT
 import no.digdir.catalog_view_api.utils.EMPTY_INTERNAL_CONCEPT
+import no.digdir.catalog_view_api.utils.INTERNAL_FIELDS
+import no.digdir.catalog_view_api.utils.TEXT_LONG_FIELD
+import no.digdir.catalog_view_api.utils.TEXT_SHORT_FIELD
+import no.digdir.catalog_view_api.utils.USER_LIST_FIELD
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -306,6 +313,108 @@ class ConceptMapper {
         ).toExternalDTO(EMPTY_ADMIN_DATA)
 
         assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map boolean internal fields`() {
+        val expectedTrue = EMPTY_CONCEPT.copy(internalFields = listOf(
+            BooleanField(
+                id = BOOLEAN_FIELD.id,
+                label = BOOLEAN_FIELD.label,
+                description = BOOLEAN_FIELD.description,
+                value = true
+            )))
+        val expectedFalse = EMPTY_CONCEPT.copy(internalFields = listOf(
+            BooleanField(
+                id = BOOLEAN_FIELD.id,
+                label = BOOLEAN_FIELD.label,
+                description = BOOLEAN_FIELD.description,
+                value = false
+            )))
+
+        val resultTrue = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(BOOLEAN_FIELD.id to InterntFelt("true")))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS))
+        val resultFalse = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(BOOLEAN_FIELD.id to InterntFelt("false")))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS))
+        val resultInvalid = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(BOOLEAN_FIELD.id to InterntFelt("invalid")))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS))
+
+        assertEquals(expected = expectedTrue, actual = resultTrue)
+        assertEquals(expected = expectedFalse, actual = resultFalse)
+        assertEquals(expected = EMPTY_CONCEPT, actual = resultInvalid)
+    }
+
+    @Test
+    fun `Map short text internal fields`() {
+        val expected = EMPTY_CONCEPT.copy(internalFields = listOf(
+            ShortTextField(
+                id = TEXT_SHORT_FIELD.id,
+                label = TEXT_SHORT_FIELD.label,
+                description = TEXT_SHORT_FIELD.description,
+                value = "short string value"
+            )))
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(TEXT_SHORT_FIELD.id to InterntFelt("short string value")))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS))
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map long text internal fields`() {
+        val expected = EMPTY_CONCEPT.copy(internalFields = listOf(
+            LongTextField(
+                id = TEXT_LONG_FIELD.id,
+                label = TEXT_LONG_FIELD.label,
+                description = TEXT_LONG_FIELD.description,
+                value = "long string value"
+            )))
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(TEXT_LONG_FIELD.id to InterntFelt("long string value")))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS))
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
+    fun `Map code list internal fields`() {
+        val expected = EMPTY_CONCEPT.copy(internalFields = listOf(
+            CodeField(
+                id = CODE_LIST_FIELD.id,
+                label = CODE_LIST_FIELD.label,
+                description = CODE_LIST_FIELD.description,
+                value = Code(CODE_1.id, CODE_LIST_0.id, CODE_1.name)
+            )))
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(CODE_LIST_FIELD.id to InterntFelt("${CODE_1.id}")))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, codeLists = CODE_LISTS))
+
+        val resultInvalid = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(CODE_LIST_FIELD.id to InterntFelt("asdf")))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, codeLists = CODE_LISTS))
+
+        assertEquals(expected = expected, actual = result)
+        assertEquals(expected = EMPTY_CONCEPT, actual = resultInvalid)
+    }
+
+    @Test
+    fun `Map user list internal fields`() {
+        val adminUser = AdminUser(id = "user-id", catalogId = "123456789", name = "John Doe", email = "epost@asdf.no", telephoneNumber = "11122233")
+        val expected = EMPTY_CONCEPT.copy(internalFields = listOf(
+            UserField(
+                id = USER_LIST_FIELD.id,
+                label = USER_LIST_FIELD.label,
+                description = USER_LIST_FIELD.description,
+                value = User(name = "John Doe", email = "epost@asdf.no", telephone = "11122233")
+            )))
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(USER_LIST_FIELD.id to InterntFelt(adminUser.id)))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, users = mapOf(adminUser.id to adminUser)))
+
+        val resultInvalid = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(CODE_LIST_FIELD.id to InterntFelt("asdf")))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, users = mapOf(adminUser.id to adminUser)))
+
+        assertEquals(expected = expected, actual = result)
+        assertEquals(expected = EMPTY_CONCEPT, actual = resultInvalid)
     }
 
 }

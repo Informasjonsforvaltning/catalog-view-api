@@ -31,6 +31,18 @@ data class AdminUser(
     val telephoneNumber: String?
 )
 
+@Document(collection = "internalFields")
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class Field(
+    @Id
+    val id: String,
+    val label: LocalizedStrings,
+    val description: LocalizedStrings,
+    val catalogId: String,
+    val type: String,
+    val codeListId: String?
+)
+
 @Document(collection = "editableFields")
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class EditableFields(
@@ -42,5 +54,6 @@ data class EditableFields(
 data class CatalogAdminData(
     val codeLists: Map<String, CodeList>,
     val domainCodeList: String?,
+    val internalFields: Map<String, Field>,
     val users: Map<String, AdminUser>
 )

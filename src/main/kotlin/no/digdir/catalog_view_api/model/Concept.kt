@@ -3,6 +3,8 @@ package no.digdir.catalog_view_api.model
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.Document
 import java.time.Instant
 import java.time.LocalDate
 
@@ -34,7 +36,8 @@ data class Concept(
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "Europe/Oslo")
     val lastChanged: Instant?,
     val lastChangedBy: String?,
-    val assignedUser: User?
+    val assignedUser: User?,
+    val internalFields: List<FieldInterface>?
 )
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -89,3 +92,56 @@ data class Code (
     val codeListId: String,
     val codeLabel: LocalizedStrings
 )
+
+interface FieldInterface {
+    val id: String
+    val label: LocalizedStrings
+    val description: LocalizedStrings
+    val type: String
+    val value: Any
+}
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class ShortTextField(
+    override val id: String,
+    override val label: LocalizedStrings,
+    override val description: LocalizedStrings,
+    override val type: String = "string",
+    override val value: String
+): FieldInterface
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class LongTextField(
+    override val id: String,
+    override val label: LocalizedStrings,
+    override val description: LocalizedStrings,
+    override val type: String = "string",
+    override val value: String
+): FieldInterface
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class BooleanField(
+    override val id: String,
+    override val label: LocalizedStrings,
+    override val description: LocalizedStrings,
+    override val type: String = "bool",
+    override val value: Boolean
+): FieldInterface
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class UserField(
+    override val id: String,
+    override val label: LocalizedStrings,
+    override val description: LocalizedStrings,
+    override val type: String = "user",
+    override val value: User
+): FieldInterface
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class CodeField(
+    override val id: String,
+    override val label: LocalizedStrings,
+    override val description: LocalizedStrings,
+    override val type: String = "code",
+    override val value: Code
+): FieldInterface
