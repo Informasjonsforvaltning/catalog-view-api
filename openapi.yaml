@@ -10,11 +10,11 @@ info:
     name: License of API
     url: 'http://data.norge.no/nlod/no/2.0'
 servers:
-  - url: 'https://catalog-view-api.fellesdatakatalog.digdir.no'
+  - url: 'https://catalog-view.api.fellesdatakatalog.digdir.no'
     description: Production
-  - url: 'https://catalog-view-api.demo.fellesdatakatalog.digdir.no'
+  - url: 'https://catalog-view.api.demo.fellesdatakatalog.digdir.no'
     description: Demo
-  - url: 'https://catalog-view-api.staging.fellesdatakatalog.digdir.no'
+  - url: 'https://catalog-view.api.staging.fellesdatakatalog.digdir.no'
     description: Test
 paths:
   /catalogs/{catalogId}/concepts:
