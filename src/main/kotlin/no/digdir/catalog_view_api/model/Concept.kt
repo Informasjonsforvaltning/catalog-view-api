@@ -3,12 +3,14 @@ package no.digdir.catalog_view_api.model
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
-import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.data.elasticsearch.annotations.Document
+import org.springframework.data.elasticsearch.annotations.Field
+import org.springframework.data.elasticsearch.annotations.FieldType
 import java.time.Instant
 import java.time.LocalDate
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Document(indexName = "catalog-view-concepts")
 data class Concept(
     val id: String,
     val idOfOriginalVersion: String,
@@ -28,12 +30,16 @@ data class Concept(
     val abbreviatedLabel: String?,
     val example: LocalizedStrings?,
     val domainCodes: List<Code>?,
+    @Field(type = FieldType.Date)
     val startDate: LocalDate?,
+    @Field(type = FieldType.Date)
     val endDate: LocalDate?,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "Europe/Oslo")
+    @Field(type = FieldType.Date)
     val created: Instant?,
     val createdBy: String?,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "Europe/Oslo")
+    @Field(type = FieldType.Date)
     val lastChanged: Instant?,
     val lastChangedBy: String?,
     val assignedUser: User?,

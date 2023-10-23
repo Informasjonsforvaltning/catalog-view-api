@@ -3,13 +3,8 @@ package no.digdir.catalog_view_api.service
 import no.digdir.catalog_view_api.config.MongoCollections
 import no.digdir.catalog_view_api.model.*
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.find
-import org.springframework.data.mongodb.core.findById
-import org.springframework.data.mongodb.core.query.Criteria
-import org.springframework.data.mongodb.core.query.Query
-import org.springframework.http.HttpStatus
+import org.springframework.data.mongodb.core.findAll
 import org.springframework.stereotype.Service
-import org.springframework.web.server.ResponseStatusException
 
 @Service
 class ConceptsService(
@@ -18,46 +13,32 @@ class ConceptsService(
     private val mongoCollections: MongoCollections
 ) {
 
-    fun getConcepts(catalogId: String): List<Concept> =
-        Criteria.where("ansvarligVirksomhet.id").`is`(catalogId)
-            .let { Query(it) }
-            .let { query -> conceptCatalogDB.find<InternalConcept>(query, mongoCollections.concepts) }
-            .map { it.toExternalDTO(getAdminData(catalogId)) }
+    fun getAndMapAllConcepts(): List<Concept> =
+        conceptCatalogDB.findAll<InternalConcept>(mongoCollections.concepts)
+            .map { it.toExternalDTO(getAllAdminData()) }
 
-    fun getConceptById(catalogId: String, conceptId: String): Concept =
-        conceptCatalogDB.findById<InternalConcept>(conceptId, mongoCollections.concepts)
-            ?.also { if (it.ansvarligVirksomhet.id != catalogId) throw ResponseStatusException(HttpStatus.NOT_FOUND) }
-            ?.toExternalDTO(getAdminData(catalogId))
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
-
-    private fun getAdminData(catalogId: String): CatalogAdminData =
+    private fun getAllAdminData(): CatalogAdminData =
         CatalogAdminData(
-            codeLists = getCodeListsFromAdminService(catalogId),
-            domainCodeList = getDomainCodeListIdFromAdminService(catalogId),
-            internalFields = getInternalFieldsFromAdminService(catalogId),
-            users = getUsersFromAdminService(catalogId)
+            codeLists = getCodeListsFromAdminService(),
+            domainCodeList = getDomainCodeListIdFromAdminService(),
+            internalFields = getInternalFieldsFromAdminService(),
+            users = getUsersFromAdminService()
         )
 
-    private fun getCodeListsFromAdminService(catalogId: String): Map<String, CodeList> =
-        Criteria.where("catalogId").`is`(catalogId)
-            .let { Query(it) }
-            .let { query -> adminServiceDB.find<CodeList>(query, mongoCollections.codeLists) }
+    private fun getCodeListsFromAdminService(): Map<String, CodeList> =
+        adminServiceDB.findAll<CodeList>(mongoCollections.codeLists)
+            .associateBy({ "${it.catalogId}-${it.id}" }, { it })
+
+    private fun getInternalFieldsFromAdminService(): Map<String, Field> =
+        adminServiceDB.findAll<Field>(mongoCollections.internalFields)
             .associateBy({ it.id }, { it })
 
-    private fun getInternalFieldsFromAdminService(catalogId: String): Map<String, Field> =
-        Criteria.where("catalogId").`is`(catalogId)
-            .let { Query(it) }
-            .let { query -> adminServiceDB.find<Field>(query, mongoCollections.internalFields) }
-            .associateBy({ it.id }, { it })
+    private fun getDomainCodeListIdFromAdminService(): Map<String, String?> =
+        adminServiceDB.findAll<EditableFields>(mongoCollections.editableFields)
+            .associateBy({ it.catalogId }, { it.domainCodeListId })
 
-    private fun getDomainCodeListIdFromAdminService(catalogId: String): String? =
-        adminServiceDB.findById<EditableFields>(catalogId, mongoCollections.editableFields)
-            ?.domainCodeListId
-
-    private fun getUsersFromAdminService(catalogId: String): Map<String, AdminUser> =
-        Criteria.where("catalogId").`is`(catalogId)
-            .let { Query(it) }
-            .let { query -> adminServiceDB.find<AdminUser>(query, mongoCollections.users) }
+    private fun getUsersFromAdminService(): Map<String, AdminUser> =
+        adminServiceDB.findAll<AdminUser>(mongoCollections.users)
             .associateBy({ it.id }, { it })
 
 }
@@ -88,7 +69,7 @@ fun InternalConcept.toExternalDTO(adminData: CatalogAdminData): Concept =
         contactPoint = kontaktpunkt?.let { ContactPoint(email = it.harEpost, telephone = it.harTelefon) },
         abbreviatedLabel = abbreviatedLabel,
         example = eksempel?.toLangValueObject(),
-        domainCodes = fagområdeKoder?.mapNotNull { adminData.getDomainCode(it.safeToInt()) }
+        domainCodes = fagområdeKoder?.mapNotNull { adminData.getDomainCode(it.safeToInt(), ansvarligVirksomhet.id) }
             ?.ifEmpty { null },
         startDate = gyldigFom,
         endDate = gyldigTom,
@@ -96,8 +77,8 @@ fun InternalConcept.toExternalDTO(adminData: CatalogAdminData): Concept =
         createdBy = opprettetAv,
         lastChanged = endringslogelement?.endringstidspunkt,
         lastChangedBy = endringslogelement?.endretAv,
-        assignedUser = assignedUser?.let { adminData.users[it] }?.toDTO(),
-        internalFields = interneFelt?.mapNotNull { transformInternalField(it.key, it.value.value, adminData) }
+        assignedUser = assignedUser?.let { adminData.users["${ansvarligVirksomhet.id}-$it"] }?.toDTO(),
+        internalFields = interneFelt?.mapNotNull { transformInternalField(it.key, ansvarligVirksomhet.id, it.value.value, adminData) }
             ?.ifEmpty { null }
     )
 
@@ -151,25 +132,28 @@ private fun ForholdTilKildeEnum.toURI(): String =
 private fun URITekst.toURIText(): URIText =
     URIText(uri = uri, text = tekst)
 
-private fun CatalogAdminData.getDomainCode(id: Int?): Code? =
-    if (id == null || domainCodeList == null) null
-    else codeLists[domainCodeList]?.codes
+private fun CatalogAdminData.getDomainCode(id: Int?, catalogId: String): Code? {
+    val codeListId = domainCodeList[catalogId]
+
+    return if (id == null || codeListId == null) null
+    else codeLists["$catalogId-$codeListId"]?.codes
         ?.find { it.id == id }
-        ?.let { Code(codeId = id, codeListId = domainCodeList, codeLabel = it.name) }
+        ?.let { Code(codeId = id, codeListId = codeListId, codeLabel = it.name) }
+}
 
 private fun String.safeToInt(): Int? =
     try { toInt() } catch (_: Exception) { null }
 
-private fun transformInternalField(fieldId: String, fieldValue: String?, adminData: CatalogAdminData): FieldInterface? {
-    val fieldData = adminData.internalFields[fieldId]
+private fun transformInternalField(fieldId: String, catalogId: String, fieldValue: String?, adminData: CatalogAdminData): FieldInterface? {
+    val fieldData = adminData.internalFields["$catalogId-$fieldId"]
     return when {
         fieldValue.isNullOrBlank() -> null
         fieldData == null -> null
         fieldData.type == "boolean" -> fieldData.toBooleanField(fieldValue)
         fieldData.type == "text_short" -> fieldData.toShortTextField(fieldValue)
         fieldData.type == "text_long" -> fieldData.toLongTextField(fieldValue)
-        fieldData.type == "code_list" -> fieldData.toCodeField(fieldValue, adminData.codeLists)
-        fieldData.type == "user_list" -> fieldData.toUserField(fieldValue, adminData.users)
+        fieldData.type == "code_list" -> fieldData.toCodeField(fieldValue, catalogId, adminData.codeLists)
+        fieldData.type == "user_list" -> fieldData.toUserField(fieldValue, catalogId, adminData.users)
         else -> null
     }
 }
@@ -201,10 +185,10 @@ private fun Field.toLongTextField(value: String): LongTextField =
         value = value
     )
 
-private fun Field.toCodeField(value: String, codeLists: Map<String, CodeList>): CodeField? {
+private fun Field.toCodeField(value: String, catalogId: String, codeLists: Map<String, CodeList>): CodeField? {
     val codeId = value.safeToInt()
     return if (codeId == null || codeListId == null) null
-    else codeLists[codeListId]?.codes?.find { it.id == codeId }
+    else codeLists["$catalogId-$codeListId"]?.codes?.find { it.id == codeId }
         ?.let {
             CodeField(
                 id = id,
@@ -219,8 +203,8 @@ private fun Field.toCodeField(value: String, codeLists: Map<String, CodeList>): 
         }
 }
 
-private fun Field.toUserField(value: String, users: Map<String, AdminUser>): UserField? =
-    users[value]?.let {
+private fun Field.toUserField(value: String, catalogId: String, users: Map<String, AdminUser>): UserField? =
+    users["$catalogId-$value"]?.let {
         UserField(
             id = id,
             label = label,

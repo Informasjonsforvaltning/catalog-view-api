@@ -16,6 +16,15 @@ application:
     editableFields: editableFields
     internalFields: internalFields
     users: users
+  elastic:
+    username: ${ELASTIC_USERNAME}
+    password: ${ELASTIC_PASSWORD}
+    host: ${ELASTIC_HOST}
+    ssl: ${ELASTIC_SSL:true}
+    storeName: ${ELASTIC_KEYSTORE_NAME}
+    storePass: ${ELASTIC_KEYSTORE_PASSWORD}
+    certPath: ${ELASTIC_CERT_PATH}
+
 spring:
   data.mongodb.uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/?authSource=admin&authMechanism=SCRAM-SHA-1
   security.oauth2.resourceserver.jwt:
@@ -28,3 +37,10 @@ spring:
   security.oauth2.resourceserver.jwt:
     jwk-set-uri: http://localhost:5050/jwk
     issuer-uri: http://localhost:5050/
+application.elastic:
+  username: elastic
+  password: elasticpwd
+  ssl: false
+  storeName: keystore
+  storePass: keystore
+  certPath: path

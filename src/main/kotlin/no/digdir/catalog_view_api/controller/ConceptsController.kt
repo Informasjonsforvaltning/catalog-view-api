@@ -1,7 +1,7 @@
 package no.digdir.catalog_view_api.controller
 
 import no.digdir.catalog_view_api.model.Concept
-import no.digdir.catalog_view_api.service.ConceptsService
+import no.digdir.catalog_view_api.service.ConceptsViewService
 import no.digdir.catalog_view_api.service.PermissionService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(value = ["/catalogs/{catalog}/concepts"], produces = ["application/json"])
 class ConceptsController(
-    private val conceptsService: ConceptsService,
+    private val conceptsViewService: ConceptsViewService,
     private val permissionService: PermissionService
 ) {
 
@@ -25,7 +25,7 @@ class ConceptsController(
         @PathVariable catalog: String
     ): ResponseEntity<List<Concept>> =
         if (permissionService.hasOrgReadPermission(jwt, catalog)) {
-            ResponseEntity(conceptsService.getConcepts(catalog), HttpStatus.OK)
+            ResponseEntity(conceptsViewService.getConcepts(catalog), HttpStatus.OK)
         } else {
             ResponseEntity(HttpStatus.FORBIDDEN)
         }
@@ -37,7 +37,7 @@ class ConceptsController(
         @PathVariable id: String
     ): ResponseEntity<Concept> =
         if (permissionService.hasOrgReadPermission(jwt, catalog)) {
-            ResponseEntity(conceptsService.getConceptById(catalog, id), HttpStatus.OK)
+            ResponseEntity(conceptsViewService.getConceptById(catalog, id), HttpStatus.OK)
         } else {
             ResponseEntity(HttpStatus.FORBIDDEN)
         }

@@ -1,6 +1,5 @@
 package no.digdir.catalog_view_api.integration
 
-
 import no.digdir.catalog_view_api.utils.ApiTestContext
 import no.digdir.catalog_view_api.utils.apiGet
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -8,7 +7,6 @@ import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.ContextConfiguration
 

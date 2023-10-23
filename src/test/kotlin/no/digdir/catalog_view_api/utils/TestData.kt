@@ -20,6 +20,14 @@ val MONGO_ENV_VALUES: Map<String, String> = ImmutableMap.of(
     "MONGO_INITDB_ROOT_PASSWORD", MONGO_PASSWORD
 )
 
+val ELASTIC_ENV_VALUES: Map<String, String> = ImmutableMap.of(
+    "cluster.name", "elasticsearch",
+    "discovery.type", "single-node",
+    "xpack.security.enabled", "true",
+    "ELASTIC_PASSWORD","elasticpwd",
+    "ES_JAVA_OPTS", "-Xms2G -Xmx2G"
+)
+
 val EMPTY_CONCEPT = Concept(
     id = "concept-id",
     idOfOriginalVersion = "original-id",
@@ -84,7 +92,7 @@ val EMPTY_INTERNAL_CONCEPT = InternalConcept(
 
 val EMPTY_ADMIN_DATA = CatalogAdminData(
     codeLists = emptyMap(),
-    domainCodeList = null,
+    domainCodeList = emptyMap(),
     internalFields = emptyMap(),
     users = emptyMap()
 )
@@ -98,8 +106,8 @@ val CODE_LIST_0 = CodeList(id = "code-list-0", catalogId = "123456789", codes = 
 val CODE_LIST_1 = CodeList(id = "code-list-1", catalogId = "123456789", codes = listOf(CODE_2, CODE_3))
 
 val CODE_LISTS = mapOf(
-    CODE_LIST_0.id to CODE_LIST_0,
-    CODE_LIST_1.id to CODE_LIST_1
+    "${CODE_LIST_0.catalogId}-${CODE_LIST_0.id}" to CODE_LIST_0,
+    "${CODE_LIST_1.catalogId}-${CODE_LIST_1.id}" to CODE_LIST_1
 )
 
 val BOOLEAN_FIELD = Field(
@@ -148,9 +156,9 @@ val USER_LIST_FIELD = Field(
 )
 
 val INTERNAL_FIELDS = mapOf(
-    BOOLEAN_FIELD.id to BOOLEAN_FIELD,
-    TEXT_SHORT_FIELD.id to TEXT_SHORT_FIELD,
-    TEXT_LONG_FIELD.id to TEXT_LONG_FIELD,
-    CODE_LIST_FIELD.id to CODE_LIST_FIELD,
-    USER_LIST_FIELD.id to USER_LIST_FIELD
+    "${BOOLEAN_FIELD.catalogId}-${BOOLEAN_FIELD.id}" to BOOLEAN_FIELD,
+    "${TEXT_SHORT_FIELD.catalogId}-${TEXT_SHORT_FIELD.id}" to TEXT_SHORT_FIELD,
+    "${TEXT_LONG_FIELD.catalogId}-${TEXT_LONG_FIELD.id}" to TEXT_LONG_FIELD,
+    "${CODE_LIST_FIELD.catalogId}-${CODE_LIST_FIELD.id}" to CODE_LIST_FIELD,
+    "${USER_LIST_FIELD.catalogId}-${USER_LIST_FIELD.id}" to USER_LIST_FIELD
 )
