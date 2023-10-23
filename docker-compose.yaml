@@ -7,10 +7,18 @@ services:
     environment:
       - MONGO_USERNAME=admin
       - MONGO_PASSWORD=admin
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=elasticpwd
+      - ELASTIC_SSL=false
+      - ELASTIC_URI=elasticsearch:9200
+      - ELASTIC_KEYSTORE_NAME=keystore
+      - ELASTIC_KEYSTORE_PASSWORD=keystore
+      - ELASTIC_CERT_PATH=path
     ports:
       - '8080:8080'
     depends_on:
       - mongodb
+      - elasticsearch
 
   mongodb:
     image: mongo:latest
@@ -19,3 +27,15 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=admin
     ports:
       - "27017:27017"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - cluster.name=elasticsearch
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=elasticpwd
+      - ES_JAVA_OPTS=-Xms2G -Xmx2G

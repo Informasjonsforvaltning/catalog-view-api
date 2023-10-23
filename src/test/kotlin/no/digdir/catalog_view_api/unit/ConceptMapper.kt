@@ -201,7 +201,7 @@ class ConceptMapper {
         val expected = EMPTY_CONCEPT.copy(assignedUser = user)
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(assignedUser = adminUser.id)
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(users = mapOf(adminUser.id to adminUser)))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(users = mapOf("${adminUser.catalogId}-${adminUser.id}" to adminUser)))
 
         assertEquals(expected = expected, actual = result)
     }
@@ -213,7 +213,7 @@ class ConceptMapper {
             Code(codeId = 1, codeListId = CODE_LIST_1.id, codeLabel = CODE_3.name)))
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(fagområdeKoder = listOf("0", "1"))
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(domainCodeList = CODE_LIST_1.id, codeLists = CODE_LISTS))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(domainCodeList = mapOf("123456789" to CODE_LIST_1.id), codeLists = CODE_LISTS))
 
         assertEquals(expected = expected, actual = result)
     }
@@ -408,10 +408,10 @@ class ConceptMapper {
             )))
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(USER_LIST_FIELD.id to InterntFelt(adminUser.id)))
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, users = mapOf(adminUser.id to adminUser)))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, users = mapOf("${adminUser.catalogId}-${adminUser.id}" to adminUser)))
 
         val resultInvalid = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(CODE_LIST_FIELD.id to InterntFelt("asdf")))
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, users = mapOf(adminUser.id to adminUser)))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, users = mapOf("${adminUser.catalogId}-${adminUser.id}" to adminUser)))
 
         assertEquals(expected = expected, actual = result)
         assertEquals(expected = EMPTY_CONCEPT, actual = resultInvalid)

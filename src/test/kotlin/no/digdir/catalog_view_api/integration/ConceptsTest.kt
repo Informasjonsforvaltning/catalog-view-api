@@ -1,19 +1,20 @@
 package no.digdir.catalog_view_api.integration
 
+import no.digdir.catalog_view_api.elastic.ElasticUpdater
 import no.digdir.catalog_view_api.utils.ApiTestContext
 import no.digdir.catalog_view_api.utils.apiAuthorizedRequest
-import no.digdir.catalog_view_api.utils.apiGet
 import no.digdir.catalog_view_api.utils.jwk.JwtToken
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.ContextConfiguration
-
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(
@@ -23,6 +24,14 @@ import org.springframework.test.context.ContextConfiguration
 @ContextConfiguration(initializers = [ApiTestContext.Initializer::class])
 @Tag("integration")
 class ConceptsTest: ApiTestContext() {
+
+    @Autowired
+    private lateinit var elasticUpdater: ElasticUpdater
+
+    @BeforeAll
+    fun populateElastic() {
+        elasticUpdater.updateConceptsViewIndex()
+    }
 
     @Nested
     internal inner class GetConceptById {

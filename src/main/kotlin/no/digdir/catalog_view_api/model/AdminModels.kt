@@ -53,7 +53,7 @@ data class EditableFields(
 
 data class CatalogAdminData(
     val codeLists: Map<String, CodeList>,
-    val domainCodeList: String?,
+    val domainCodeList: Map<String, String?>,
     val internalFields: Map<String, Field>,
     val users: Map<String, AdminUser>
 )

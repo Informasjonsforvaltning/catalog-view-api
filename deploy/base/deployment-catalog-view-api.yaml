@@ -19,6 +19,10 @@ spec:
       annotations:
         prometheus.io/scrape: "false"
     spec:
+      volumes:
+        - name: elastic-certs
+          secret:
+            secretName: catalog-elasticsearch-es-http-certs-public
       containers:
         - name: catalog-view-api
           image: catalog-view-api
@@ -43,4 +47,7 @@ spec:
             failureThreshold: 5
           resources:
             requests:
-              memory: 100Mi
+              memory: 7Gi
+          volumeMounts:
+            - name: elastic-certs
+              mountPath: /var/secrets/elastic
