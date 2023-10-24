@@ -21,6 +21,7 @@ spring:
   security.oauth2.resourceserver.jwt:
     jwk-set-uri: ${MASKINPORTEN_JWK:https://test.maskinporten.no/jwk}
     issuer-uri: ${MASKINPORTEN_ISSUER:https://test.maskinporten.no/}
+springdoc.api-docs.path: api-docs
 ---
 spring:
   config.activate.on-profile: test
