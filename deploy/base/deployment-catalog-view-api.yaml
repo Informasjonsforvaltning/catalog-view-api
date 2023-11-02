@@ -41,7 +41,7 @@ spec:
                   name: catalog-view-api
                   key: KEYSTORE_PASSWORD
           command: ["/bin/bash"]
-          args: ['-c', "openssl pkcs12 -export -in $crtfile -out $keystore_pkcs12 -password pass:$KEYSTORE_PASSWORD && keytool -importkeystore -noprompt -srckeystore $keystore_pkcs12 -srcstoretype pkcs12 -destkeystore $keystore_jks -storepass $KEYSTORE_PASSWORD -srcstorepass $KEYSTORE_PASSWORD"]
+          args: ['-c', "openssl pkcs12 -export -nokeys -in $crtfile -out $keystore_pkcs12 -password pass:$KEYSTORE_PASSWORD && keytool -importkeystore -noprompt -srckeystore $keystore_pkcs12 -srcstoretype pkcs12 -destkeystore $keystore_jks -storepass $KEYSTORE_PASSWORD -srcstorepass $KEYSTORE_PASSWORD"]
           volumeMounts:
             - name: keystore-volume
               mountPath: /var/secrets/elastic/keystores
