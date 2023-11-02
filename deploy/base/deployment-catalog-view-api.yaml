@@ -24,7 +24,8 @@ spec:
           secret:
             secretName: catalog-elasticsearch-es-http-certs-public
         - name: keystore-volume
-          emptyDir: {}
+          emptyDir:
+            sizeLimit: 2Gi
       initContainers:
         - name: pem-to-keystore
           image: eclipse-temurin:17-jdk-jammy
@@ -71,8 +72,13 @@ spec:
             failureThreshold: 5
           resources:
             requests:
-              cpu: 300m
+              cpu: 500m
               memory: 7Gi
+              ephemeral-storage: 10Gi
+            limits:
+              cpu: 1500m
+              memory: 15Gi
+              ephemeral-storage: 30Gi
           volumeMounts:
             - name: keystore-volume
               mountPath: /var/secrets/elastic/keystores
