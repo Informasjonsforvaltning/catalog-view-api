@@ -28,7 +28,7 @@ spec:
             sizeLimit: 2Gi
       initContainers:
         - name: pem-to-keystore
-          image: eclipse-temurin:17-jdk-jammy
+          image: eclipse-temurin:17-jdk-alpine
           env:
             - name: crtfile
               value: /var/secrets/elastic/tls.crt
