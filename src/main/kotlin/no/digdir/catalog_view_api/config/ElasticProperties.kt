@@ -8,7 +8,6 @@ data class ElasticProperties (
     val password: String,
     val host: String,
     val ssl: Boolean,
-    val storeName: String,
-    val storePass: String,
-    val certPath: String
+    val storePath: String,
+    val storePass: String
 )

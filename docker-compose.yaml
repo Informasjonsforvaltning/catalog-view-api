@@ -11,9 +11,8 @@ services:
       - ELASTIC_PASSWORD=elasticpwd
       - ELASTIC_SSL=false
       - ELASTIC_URI=elasticsearch:9200
-      - ELASTIC_KEYSTORE_NAME=keystore
+      - ELASTIC_KEYSTORE_PATH=keystore.jks
       - ELASTIC_KEYSTORE_PASSWORD=keystore
-      - ELASTIC_CERT_PATH=path
     ports:
       - '8080:8080'
     depends_on:

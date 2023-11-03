@@ -23,6 +23,29 @@ spec:
         - name: elastic-certs
           secret:
             secretName: catalog-elasticsearch-es-http-certs-public
+        - name: keystore-volume
+          emptyDir:
+            sizeLimit: 2Gi
+      initContainers:
+        - name: pem-to-keystore
+          image: eclipse-temurin:17-jdk-alpine
+          env:
+            - name: crtfile
+              value: /var/secrets/elastic/tls.crt
+            - name: keystore_jks
+              value: /var/secrets/elastic/keystores/keystore.jks
+            - name: KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-view-api
+                  key: KEYSTORE_PASSWORD
+          command: ["/bin/bash"]
+          args: ['-c', "keytool -noprompt -import -v -trustcacerts -file $crtfile -keystore $keystore_jks -keypass $KEYSTORE_PASSWORD -storepass $KEYSTORE_PASSWORD"]
+          volumeMounts:
+            - name: keystore-volume
+              mountPath: /var/secrets/elastic/keystores
+            - name: elastic-certs
+              mountPath: /var/secrets/elastic
       containers:
         - name: catalog-view-api
           image: catalog-view-api
@@ -47,7 +70,13 @@ spec:
             failureThreshold: 5
           resources:
             requests:
+              cpu: 500m
               memory: 7Gi
+              ephemeral-storage: 10Gi
+            limits:
+              cpu: 1500m
+              memory: 15Gi
+              ephemeral-storage: 30Gi
           volumeMounts:
-            - name: elastic-certs
-              mountPath: /var/secrets/elastic
+            - name: keystore-volume
+              mountPath: /var/secrets/elastic/keystores
