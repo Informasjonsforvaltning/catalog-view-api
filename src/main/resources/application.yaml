@@ -21,9 +21,8 @@ application:
     password: ${ELASTIC_PASSWORD}
     host: ${ELASTIC_HOST}
     ssl: ${ELASTIC_SSL:true}
-    storeName: ${ELASTIC_KEYSTORE_NAME}
+    storePath: ${ELASTIC_KEYSTORE_PATH}
     storePass: ${ELASTIC_KEYSTORE_PASSWORD}
-    certPath: ${ELASTIC_CERT_PATH}
 
 spring:
   data.mongodb.uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/?authSource=admin&authMechanism=SCRAM-SHA-1

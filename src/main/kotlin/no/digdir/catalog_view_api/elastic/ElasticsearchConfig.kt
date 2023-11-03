@@ -25,20 +25,9 @@ open class ElasticsearchConfig(private val elasticProperties: ElasticProperties)
     private fun sslContext(): SSLContext {
         val builder: SSLContextBuilder = SSLContexts.custom()
 
-        val factory = CertificateFactory.getInstance("X.509")
-        val cert: Certificate = factory.generateCertificate(
-            FileInputStream(elasticProperties.certPath)
-        )
-
-        val keyStorePass = elasticProperties.storePass.toCharArray()
-        val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
-        keyStore.load(null)
-        keyStore.setCertificateEntry("es-http-public", cert)
-        keyStore.store(FileOutputStream(elasticProperties.storeName), keyStorePass)
-
         builder.loadTrustMaterial(
-            File(elasticProperties.storeName),
-            keyStorePass,
+            File(elasticProperties.storePath),
+            elasticProperties.storePass.toCharArray(),
             TrustSelfSignedStrategy()
         )
 
