@@ -3,6 +3,8 @@ package no.digdir.catalog_view_api.model
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import org.springframework.data.elasticsearch.annotations.Document
 import org.springframework.data.elasticsearch.annotations.Field
 import org.springframework.data.elasticsearch.annotations.FieldType
@@ -43,6 +45,7 @@ data class Concept(
     val lastChanged: Instant?,
     val lastChangedBy: String?,
     val assignedUser: User?,
+    @Field(type = FieldType.Flattened)
     val internalFields: List<FieldInterface>?
 )
 
@@ -99,6 +102,17 @@ data class Code (
     val codeLabel: LocalizedStrings
 )
 
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "type")
+@JsonSubTypes(value = [
+    JsonSubTypes.Type(value = ShortTextField::class, name = "text_short"),
+    JsonSubTypes.Type(value = LongTextField::class, name = "text_long"),
+    JsonSubTypes.Type(value = BooleanField::class, name = "bool"),
+    JsonSubTypes.Type(value = UserField::class, name = "user"),
+    JsonSubTypes.Type(value = CodeField::class, name = "code")
+])
 interface FieldInterface {
     val id: String
     val label: LocalizedStrings
@@ -112,7 +126,7 @@ data class ShortTextField(
     override val id: String,
     override val label: LocalizedStrings,
     override val description: LocalizedStrings,
-    override val type: String = "string",
+    override val type: String = "text_short",
     override val value: String
 ): FieldInterface
 
@@ -121,7 +135,7 @@ data class LongTextField(
     override val id: String,
     override val label: LocalizedStrings,
     override val description: LocalizedStrings,
-    override val type: String = "string",
+    override val type: String = "text_long",
     override val value: String
 ): FieldInterface
 

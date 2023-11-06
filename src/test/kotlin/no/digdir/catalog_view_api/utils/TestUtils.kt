@@ -4,7 +4,16 @@ import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
+import no.digdir.catalog_view_api.model.AdminCode
+import no.digdir.catalog_view_api.model.AdminUser
+import no.digdir.catalog_view_api.model.CodeList
+import no.digdir.catalog_view_api.model.Definisjon
+import no.digdir.catalog_view_api.model.EditableFields
+import no.digdir.catalog_view_api.model.Field
 import no.digdir.catalog_view_api.model.InternalConcept
+import no.digdir.catalog_view_api.model.InterntFelt
+import no.digdir.catalog_view_api.model.LocalizedStrings
+import no.digdir.catalog_view_api.model.URITekst
 import no.digdir.catalog_view_api.utils.ApiTestContext.Companion.mongoContainer
 import org.bson.Document
 import org.bson.codecs.configuration.CodecRegistries
@@ -101,6 +110,12 @@ private fun InternalConcept.mongoDocument(): Document {
     concept.append("erPublisert", erPublisert)
     concept.append("statusURI", statusURI)
 
+    val preferred = Document()
+    preferred.append("navn", anbefaltTerm?.navn)
+    concept.append("anbefaltTerm", preferred)
+    concept.append("tillattTerm", tillattTerm)
+    concept.append("frarådetTerm", frarådetTerm)
+
     val semver = Document()
     semver.append("major", versjonsnr.major)
     semver.append("minor", versjonsnr.minor)
@@ -115,7 +130,110 @@ private fun InternalConcept.mongoDocument(): Document {
     org.append("prefLabel", ansvarligVirksomhet.prefLabel)
     concept.append("ansvarligVirksomhet", org)
 
+    concept.append("definisjon", definisjon?.mongoDocument())
+    concept.append("folkeligForklaring", folkeligForklaring?.mongoDocument())
+    concept.append("rettsligForklaring", rettsligForklaring?.mongoDocument())
+
+    concept.append("merknad", merknad)
+    concept.append("eksempel", eksempel)
+    concept.append("omfang", omfang?.mongoDocument())
+
+    val contact = Document()
+    contact.append("harEpost", kontaktpunkt?.harEpost)
+    contact.append("harTelefon", kontaktpunkt?.harTelefon)
+    concept.append("kontaktpunkt", contact)
+    concept.append("abbreviatedLabel", abbreviatedLabel)
+    concept.append("gyldigTom", gyldigTom)
+    concept.append("gyldigFom", gyldigFom)
+
+    val edited = Document()
+    edited.append("endretAv", endringslogelement?.endretAv)
+    edited.append("endringstidspunkt", endringslogelement?.endringstidspunkt)
+    concept.append("endringslogelement", edited)
+    concept.append("opprettetAv", opprettetAv)
+    concept.append("opprettet", opprettet)
+
+    concept.append("interneFelt", interneFelt?.mapValues { it.value.mongoDocument() })
+    concept.append("fagområdeKoder", fagområdeKoder)
+    concept.append("assignedUser", assignedUser)
+
     return concept
+}
+
+private fun Definisjon.mongoDocument(): Document {
+    val definition = Document()
+    definition.append("tekst", tekst)
+
+    val source = Document()
+    source.append("forholdTilKilde", kildebeskrivelse?.forholdTilKilde)
+    source.append("kilde", kildebeskrivelse?.kilde?.map { it.mongoDocument() })
+    definition.append("kildebeskrivelse", source)
+    return definition
+}
+
+private fun URITekst.mongoDocument(): Document {
+    val doc = Document()
+    doc.append("uri", uri)
+    doc.append("tekst", tekst)
+    return doc
+}
+
+private fun InterntFelt.mongoDocument(): Document {
+    val field = Document()
+    field.append("value", value)
+    return field
+}
+
+private fun LocalizedStrings.mongoDocument(): Document {
+    val strings = Document()
+    strings.append("nb", nb)
+    strings.append("nn", nn)
+    strings.append("en", en)
+    return strings
+}
+
+private fun Field.mongoDocument(): Document {
+    val field = Document()
+    field.append("_id", id)
+    field.append("label", label.mongoDocument())
+    field.append("description", description.mongoDocument())
+    field.append("catalogId", catalogId)
+    field.append("type", type)
+    field.append("codeListId", codeListId)
+    return field
+}
+
+private fun AdminCode.mongoDocument(): Document {
+    val list = Document()
+    list.append("_id", id)
+    list.append("parentID", parentID)
+    list.append("name", name.mongoDocument())
+    return list
+}
+
+private fun CodeList.mongoDocument(): Document {
+    val list = Document()
+    list.append("_id", id)
+    list.append("catalogId", catalogId)
+    list.append("codes", codes.map { it.mongoDocument() })
+    return list
+}
+
+private fun AdminUser.mongoDocument(): Document {
+    val list = Document()
+    list.append("_id", id)
+    list.append("catalogId", catalogId)
+    list.append("name", name)
+    list.append("email", email)
+    list.append("telephoneNumber", telephoneNumber)
+    return list
+}
+
+private fun EditableFields.mongoDocument(): Document {
+    val fields = Document()
+    fields.append("_id", catalogId)
+    fields.append("domainCodeListId", domainCodeListId)
+    return fields
 }
 
 fun populateDB() {
@@ -129,6 +247,16 @@ fun populateDB() {
     val conceptCatalogDatabase = client.getDatabase("concept-catalogue").withCodecRegistry(pojoCodecRegistry)
     val conceptCatalogCollection = conceptCatalogDatabase.getCollection("begrep")
     conceptCatalogCollection.insertOne(DB_CONCEPT.mongoDocument())
+
+    val adminDatabase = client.getDatabase("catalogAdminService").withCodecRegistry(pojoCodecRegistry)
+    val internalFieldsCollection = adminDatabase.getCollection("internalFields")
+    internalFieldsCollection.insertMany(DB_INTERNAL_FIELDS.map { it.mongoDocument() })
+    val codeListsCollection = adminDatabase.getCollection("codeLists")
+    codeListsCollection.insertMany(DB_CODE_LISTS.map { it.mongoDocument() })
+    val usersCollection = adminDatabase.getCollection("users")
+    usersCollection.insertMany(DB_ADMIN_USERS.map { it.mongoDocument() })
+    val editableFieldsCollection = adminDatabase.getCollection("editableFields")
+    editableFieldsCollection.insertMany(DB_EDITABLE_FIELDS.map { it.mongoDocument() })
 
     client.close()
 }

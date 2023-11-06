@@ -256,12 +256,16 @@ components:
           enum: [text_short, text_long, bool, user, code]
         value:
           oneOf:
-            - $ref: "#/components/schemas/StringValue"
+            - $ref: "#/components/schemas/ShortTextField"
+            - $ref: "#/components/schemas/LongTextField"
             - $ref: "#/components/schemas/BooleanValue"
             - $ref: "#/components/schemas/User"
             - $ref: "#/components/schemas/Code"
 
-    StringValue:
+    ShortTextField:
+      type: string
+
+    LongTextField:
       type: string
 
     BooleanValue:
