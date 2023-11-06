@@ -31,7 +31,7 @@ class ConceptsService(
 
     private fun getInternalFieldsFromAdminService(): Map<String, Field> =
         adminServiceDB.findAll<Field>(mongoCollections.internalFields)
-            .associateBy({ it.id }, { it })
+            .associateBy({ "${it.catalogId}-${it.id}" }, { it })
 
     private fun getDomainCodeListIdFromAdminService(): Map<String, String?> =
         adminServiceDB.findAll<EditableFields>(mongoCollections.editableFields)
@@ -39,7 +39,7 @@ class ConceptsService(
 
     private fun getUsersFromAdminService(): Map<String, AdminUser> =
         adminServiceDB.findAll<AdminUser>(mongoCollections.users)
-            .associateBy({ it.id }, { it })
+            .associateBy({ "${it.catalogId}-${it.id}" }, { it })
 
 }
 

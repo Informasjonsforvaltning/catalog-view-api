@@ -1,15 +1,10 @@
 package no.digdir.catalog_view_api.utils
 
-import no.digdir.catalog_view_api.model.AdminCode
-import no.digdir.catalog_view_api.model.CatalogAdminData
-import no.digdir.catalog_view_api.model.CodeList
-import no.digdir.catalog_view_api.model.Concept
-import no.digdir.catalog_view_api.model.Field
-import no.digdir.catalog_view_api.model.InternalConcept
-import no.digdir.catalog_view_api.model.LocalizedStrings
-import no.digdir.catalog_view_api.model.SemVer
-import no.digdir.catalog_view_api.model.Virksomhet
+import no.digdir.catalog_view_api.model.*
 import org.testcontainers.shaded.com.google.common.collect.ImmutableMap
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 const val MONGO_USER = "testuser"
 const val MONGO_PASSWORD = "testpassword"
@@ -93,13 +88,122 @@ val EMPTY_INTERNAL_CONCEPT = InternalConcept(
 val DB_CONCEPT = EMPTY_INTERNAL_CONCEPT.copy(
     id = "123",
     ansvarligVirksomhet = Virksomhet(id = "111222333"),
-    erPublisert = true
+    erPublisert = true,
+    anbefaltTerm = Term(navn = mapOf("nb" to "title nb", "nn" to "title nn", "en" to "title en")),
+    tillattTerm = mapOf("nb" to listOf("nb 0", "nb 1"), "nn" to listOf("nn 0", "nn 1"), "en" to listOf("en 0", "en 1")),
+    frarådetTerm = mapOf("nb" to listOf("nb 2", "nb 3"), "nn" to listOf("nn 2", "nn 3"), "en" to listOf("en 2", "en 3")),
+    definisjon = Definisjon(
+        tekst = mapOf("nb" to "definition nb", "nn" to "definition nn", "en" to "definition en"),
+        kildebeskrivelse = Kildebeskrivelse(forholdTilKilde = ForholdTilKildeEnum.EGENDEFINERT)
+    ),
+    folkeligForklaring = Definisjon(
+        tekst = mapOf("nb" to "public nb", "nn" to "public nn", "en" to "public en"),
+        kildebeskrivelse = Kildebeskrivelse(
+            forholdTilKilde = ForholdTilKildeEnum.SITATFRAKILDE,
+            kilde = listOf(URITekst("https://source0", "Source 0"))
+        )
+    ),
+    rettsligForklaring = Definisjon(
+        tekst = mapOf("nb" to "specialist nb", "nn" to "specialist nn", "en" to "specialist en"),
+        kildebeskrivelse = Kildebeskrivelse(
+            forholdTilKilde = ForholdTilKildeEnum.BASERTPAAKILDE,
+            kilde = listOf(URITekst("https://source1", "Source 1"), URITekst("https://source2", "Source 2"))
+        )
+    ),
+    merknad = mapOf("nb" to "note nb", "nn" to "note nn", "en" to "note en"),
+    eksempel = mapOf("nb" to "example nb", "nn" to "example nn", "en" to "example en"),
+    omfang = URITekst("https://value-range", "value range"),
+    kontaktpunkt = Kontaktpunkt(harEpost = "fellesdatakatalog@digdir.no", harTelefon = "12345678"),
+    abbreviatedLabel = "fdk",
+    gyldigFom = LocalDate.of(2021, 5, 5),
+    gyldigTom = LocalDate.of(2030, 7, 7),
+    opprettet = ZonedDateTime.of(2019, 1, 1, 12,0,0,0, ZoneId.of("Europe/Oslo")).toInstant(),
+    opprettetAv = "Crea Tor",
+    endringslogelement = Endringslogelement(
+        endretAv = "Mod Ifier",
+        endringstidspunkt = ZonedDateTime.of(2022, 1, 1, 12,0,0,0, ZoneId.of("Europe/Oslo")).toInstant()),
+    interneFelt = mapOf(
+        "text-short-field-id" to InterntFelt(value = "short text"),
+        "text-long-field-id" to InterntFelt(value = "long text"),
+        "code-list-field-id" to InterntFelt(value = "1"),
+        "user-list-field-id" to InterntFelt(value = "1"),
+        "boolean-field-id" to InterntFelt(value = "true")
+    ),
+    fagområdeKoder = listOf("1"),
+    assignedUser = "0"
 )
 
 val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
     id = "123",
     publisher = "111222333",
-    isPublished = true
+    isPublished = true,
+    preferredTerm = LocalizedStrings(nb = "title nb", nn = "title nn", en = "title en"),
+    admittedTerm = ListOfLocalizedStrings(nb = listOf("nb 0", "nb 1"), nn = listOf("nn 0", "nn 1"), en = listOf("en 0", "en 1")),
+    deprecatedTerm = ListOfLocalizedStrings(nb = listOf("nb 2", "nb 3"), nn = listOf("nn 2", "nn 3"), en = listOf("en 2", "en 3")),
+    definition = Definition(
+        text=LocalizedStrings(nb="definition nb", nn="definition nn", en="definition en"),
+        sourceDescription= SourceDescription(relationshipWithSource="https://data.norge.no/vocabulary/relationship-with-source-type#self-composed", source=emptyList())),
+    publicDefinition = Definition(text=LocalizedStrings(nb="public nb", nn="public nn", en="public en"),
+        sourceDescription=SourceDescription(
+            relationshipWithSource="https://data.norge.no/vocabulary/relationship-with-source-type#direct-from-source",
+            source=listOf(URIText(uri="https://source0", text="Source 0")))),
+    specialistDefinition=Definition(
+        text=LocalizedStrings(nb="specialist nb", nn="specialist nn", en="specialist en"),
+        sourceDescription=SourceDescription(
+            relationshipWithSource="https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source",
+            source=listOf(URIText(uri="https://source1", text="Source 1"), URIText(uri="https://source2", text="Source 2")))),
+    note = LocalizedStrings(nb = "note nb", nn =  "note nn", en = "note en"),
+    example = LocalizedStrings(nb = "example nb", nn =  "example nn", en = "example en"),
+    valueRange = URIText(uri = "https://value-range", text = "value range"),
+    contactPoint = ContactPoint(email = "fellesdatakatalog@digdir.no", telephone = "12345678"),
+    abbreviatedLabel = "fdk",
+    startDate = LocalDate.of(2021, 5, 5),
+    endDate = LocalDate.of(2030, 7, 7),
+    created = ZonedDateTime.of(2019, 1, 1, 12,0,0,0, ZoneId.of("Europe/Oslo")).toInstant(),
+    createdBy = "Crea Tor",
+    lastChanged = ZonedDateTime.of(2022, 1, 1, 12,0,0,0, ZoneId.of("Europe/Oslo")).toInstant(),
+    lastChangedBy = "Mod Ifier",
+    internalFields = listOf(
+        ShortTextField(
+            id="text-short-field-id",
+            label=LocalizedStrings(nb="text short nb", nn="text short nn", en="text short en"),
+            description=LocalizedStrings(nb="text short desc nb", nn="text short desc nn", en="text short desc en"),
+            type="text_short",
+            value="short text"),
+        LongTextField(
+            id="text-long-field-id",
+            label=LocalizedStrings(nb="text long nb", nn="text long nn", en="text long en"),
+            description=LocalizedStrings(nb="text long desc nb", nn="text long desc nn", en="text long desc en"),
+            type="text_long",
+            value="long text"),
+        CodeField(id="code-list-field-id",
+            label=LocalizedStrings(nb="code list nb", nn="code list nn", en="code list en"),
+            description=LocalizedStrings(nb="code list desc nb", nn="code list desc nn", en="code list desc en"),
+            type="code",
+            value=Code(
+                codeId=1,
+                codeListId="code-list-0",
+                codeLabel=LocalizedStrings(nb="Kode 0.1", nn="Kode 0.1", en="Code 0.1"))),
+        UserField(
+            id="user-list-field-id",
+            label=LocalizedStrings(nb="user list nb", nn="user list nn", en="user list en"),
+            description=LocalizedStrings(nb="user list desc nb", nn="user list desc nn", en="user list desc en"),
+            type="user",
+            value=User(
+                name="John Doe",
+                email="fdk@digdir.no",
+                telephone="12345678")),
+        BooleanField(
+            id="boolean-field-id",
+            label=LocalizedStrings(nb="bool nb", nn="bool nn", en="bool en"),
+            description=LocalizedStrings(nb="bool desc nb", nn="bool desc nn", en="bool desc en"),
+            type="bool",
+            value=true)),
+    domainCodes = listOf(Code(codeId=1, codeListId="code-list-1", codeLabel=LocalizedStrings(nb="Kode 1.1", nn="Kode 1.1", en="Code 1.1"))),
+    assignedUser = User(
+        name="Jane Doe",
+        email="fdk@digdir.no",
+        telephone="87654321")
 )
 
 val EMPTY_ADMIN_DATA = CatalogAdminData(
@@ -174,3 +278,10 @@ val INTERNAL_FIELDS = mapOf(
     "${CODE_LIST_FIELD.catalogId}-${CODE_LIST_FIELD.id}" to CODE_LIST_FIELD,
     "${USER_LIST_FIELD.catalogId}-${USER_LIST_FIELD.id}" to USER_LIST_FIELD
 )
+
+val DB_INTERNAL_FIELDS = INTERNAL_FIELDS.values.map { it.copy(catalogId = "111222333") }
+val DB_CODE_LISTS = CODE_LISTS.values.map { it.copy(catalogId = "111222333") }
+val DB_ADMIN_USERS = listOf(
+    AdminUser("0", "111222333", "Jane Doe", "fdk@digdir.no", "87654321"),
+    AdminUser("1", "111222333", "John Doe", "fdk@digdir.no", "12345678"))
+val DB_EDITABLE_FIELDS = listOf(EditableFields("111222333", "code-list-1"))

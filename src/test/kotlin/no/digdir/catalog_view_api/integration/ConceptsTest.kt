@@ -1,7 +1,7 @@
 package no.digdir.catalog_view_api.integration
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import no.digdir.catalog_view_api.config.JacksonConfigurer
 import no.digdir.catalog_view_api.elastic.ElasticUpdater
 import no.digdir.catalog_view_api.model.Concept
 import no.digdir.catalog_view_api.utils.ApiTestContext
@@ -28,7 +28,7 @@ import org.springframework.test.context.ContextConfiguration
 @ContextConfiguration(initializers = [ApiTestContext.Initializer::class])
 @Tag("integration")
 class ConceptsTest: ApiTestContext() {
-    private val mapper = jacksonObjectMapper()
+    private val mapper = JacksonConfigurer().objectMapper()
 
     @Autowired
     private lateinit var elasticUpdater: ElasticUpdater
