@@ -90,6 +90,18 @@ val EMPTY_INTERNAL_CONCEPT = InternalConcept(
     interneFelt = null
 )
 
+val DB_CONCEPT = EMPTY_INTERNAL_CONCEPT.copy(
+    id = "123",
+    ansvarligVirksomhet = Virksomhet(id = "111222333"),
+    erPublisert = true
+)
+
+val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
+    id = "123",
+    publisher = "111222333",
+    isPublished = true
+)
+
 val EMPTY_ADMIN_DATA = CatalogAdminData(
     codeLists = emptyMap(),
     domainCodeList = emptyMap(),
