@@ -1,7 +1,11 @@
 package no.digdir.catalog_view_api.integration
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import no.digdir.catalog_view_api.elastic.ElasticUpdater
+import no.digdir.catalog_view_api.model.Concept
 import no.digdir.catalog_view_api.utils.ApiTestContext
+import no.digdir.catalog_view_api.utils.MAPPED_DB_CONCEPT
 import no.digdir.catalog_view_api.utils.apiAuthorizedRequest
 import no.digdir.catalog_view_api.utils.jwk.JwtToken
 import org.junit.jupiter.api.Assertions
@@ -24,6 +28,7 @@ import org.springframework.test.context.ContextConfiguration
 @ContextConfiguration(initializers = [ApiTestContext.Initializer::class])
 @Tag("integration")
 class ConceptsTest: ApiTestContext() {
+    private val mapper = jacksonObjectMapper()
 
     @Autowired
     private lateinit var elasticUpdater: ElasticUpdater
@@ -71,6 +76,9 @@ class ConceptsTest: ApiTestContext() {
         fun `Responds with OK when found in concept catalog`() {
             val response = apiAuthorizedRequest(path, port, null, JwtToken("111222333").toString(), HttpMethod.GET)
             Assertions.assertEquals(HttpStatus.OK.value(), response["status"])
+
+            val result: Concept = mapper.readValue(response["body"] as String)
+            Assertions.assertEquals(MAPPED_DB_CONCEPT, result)
         }
 
     }
@@ -101,6 +109,9 @@ class ConceptsTest: ApiTestContext() {
         fun `Responds with OK when authorized`() {
             val response = apiAuthorizedRequest(path, port, null, JwtToken("111222333").toString(), HttpMethod.GET)
             Assertions.assertEquals(HttpStatus.OK.value(), response["status"])
+
+            val result: List<Concept> = mapper.readValue(response["body"] as String)
+            Assertions.assertEquals(listOf(MAPPED_DB_CONCEPT), result)
         }
 
     }

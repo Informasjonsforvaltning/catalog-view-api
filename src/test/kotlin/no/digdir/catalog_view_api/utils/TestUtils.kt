@@ -4,6 +4,7 @@ import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
+import no.digdir.catalog_view_api.model.InternalConcept
 import no.digdir.catalog_view_api.utils.ApiTestContext.Companion.mongoContainer
 import org.bson.Document
 import org.bson.codecs.configuration.CodecRegistries
@@ -93,19 +94,26 @@ private fun isOK(response: Int?): Boolean =
     if (response == null) false
     else HttpStatus.resolve(response)?.is2xxSuccessful == true
 
-private fun internalConceptDBO(id: String, orgId: String): Document {
-    val org = Document()
-    org.append("_id", orgId)
-    val semver = Document()
-    semver.append("major", 1)
-    semver.append("minor", 1)
-    semver.append("patch", 1)
+private fun InternalConcept.mongoDocument(): Document {
     val concept = Document()
     concept.append("_id", id)
-    concept.append("originaltBegrep", id)
-    concept.append("ansvarligVirksomhet", org)
+    concept.append("originaltBegrep", originaltBegrep)
+    concept.append("erPublisert", erPublisert)
+    concept.append("statusURI", statusURI)
+
+    val semver = Document()
+    semver.append("major", versjonsnr.major)
+    semver.append("minor", versjonsnr.minor)
+    semver.append("patch", versjonsnr.patch)
     concept.append("versjonsnr", semver)
-    concept.append("erPublisert", false)
+
+    val org = Document()
+    org.append("_id", ansvarligVirksomhet.id)
+    org.append("uri", ansvarligVirksomhet.uri)
+    org.append("navn", ansvarligVirksomhet.navn)
+    org.append("orgPath", ansvarligVirksomhet.orgPath)
+    org.append("prefLabel", ansvarligVirksomhet.prefLabel)
+    concept.append("ansvarligVirksomhet", org)
 
     return concept
 }
@@ -120,7 +128,7 @@ fun populateDB() {
 
     val conceptCatalogDatabase = client.getDatabase("concept-catalogue").withCodecRegistry(pojoCodecRegistry)
     val conceptCatalogCollection = conceptCatalogDatabase.getCollection("begrep")
-    conceptCatalogCollection.insertOne(internalConceptDBO("123", "111222333"))
+    conceptCatalogCollection.insertOne(DB_CONCEPT.mongoDocument())
 
     client.close()
 }
