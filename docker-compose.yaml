@@ -5,6 +5,7 @@ services:
     image: eu.gcr.io/digdir-fdk-infra/catalog-view-api:test
     build: .
     environment:
+      - MASKINPORTEN_SCOPE=test.scope
       - MONGO_USERNAME=admin
       - MONGO_PASSWORD=admin
       - ELASTIC_USERNAME=elastic
