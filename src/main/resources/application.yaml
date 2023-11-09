@@ -6,7 +6,7 @@ logging:
 server:
   port: 8080
 application:
-  scope: ${MASKINPORTEN_SCOPE:datanorge:test/catalog.read}
+  scope: ${MASKINPORTEN_SCOPE}
   databases:
     adminService: catalogAdminService
     conceptCatalog: concept-catalogue
@@ -36,10 +36,12 @@ spring:
   security.oauth2.resourceserver.jwt:
     jwk-set-uri: http://localhost:5050/jwk
     issuer-uri: http://localhost:5050/
-application.elastic:
-  username: elastic
-  password: elasticpwd
-  ssl: false
-  storeName: keystore
-  storePass: keystore
-  certPath: path
+application:
+  scope: test.scope
+  elastic:
+    username: elastic
+    password: elasticpwd
+    ssl: false
+    storeName: keystore
+    storePass: keystore
+    certPath: path

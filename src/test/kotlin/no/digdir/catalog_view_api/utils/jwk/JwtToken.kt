@@ -5,7 +5,7 @@ import com.nimbusds.jwt.SignedJWT
 import java.util.*
 
 
-class JwtToken (private val catalog: String, private val scope: String = "datanorge:test/catalog.read") {
+class JwtToken (private val catalog: String, private val scope: String = "test.scope") {
     private val now = Date()
     private val exp = Date(now.time + 120 * 1000)
 

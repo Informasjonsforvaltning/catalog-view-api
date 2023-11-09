@@ -50,7 +50,7 @@ class ConceptsTest: ApiTestContext() {
 
         @Test
         fun `Responds with Forbidden when authorized for wrong scope`() {
-            val response = apiAuthorizedRequest(path, port, null, JwtToken("111222333", "datanorge:test/wrong.scope").toString(), HttpMethod.GET)
+            val response = apiAuthorizedRequest(path, port, null, JwtToken("111222333", "wrong.scope").toString(), HttpMethod.GET)
             Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response["status"])
         }
 
@@ -95,7 +95,7 @@ class ConceptsTest: ApiTestContext() {
 
         @Test
         fun `Responds with Forbidden when authorized for wrong scope`() {
-            val response = apiAuthorizedRequest(path, port, null, JwtToken("111222333", "datanorge:test/wrong.scope").toString(), HttpMethod.GET)
+            val response = apiAuthorizedRequest(path, port, null, JwtToken("111222333", "wrong.scope").toString(), HttpMethod.GET)
             Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response["status"])
         }
 
