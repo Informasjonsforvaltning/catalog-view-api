@@ -267,7 +267,7 @@ class ConceptMapper {
         )
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(
-            folkeligForklaring = Definisjon(
+            definisjonForAllmennheten = Definisjon(
                 tekst = mapOf(
                     Pair("nn", "nynorsk")),
                 kildebeskrivelse = Kildebeskrivelse(
@@ -298,7 +298,7 @@ class ConceptMapper {
         )
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(
-            rettsligForklaring = Definisjon(
+            definisjonForSpesialister = Definisjon(
                 tekst = mapOf(
                     Pair("nb", "bokmål"),
                     Pair("nn", "")),

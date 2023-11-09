@@ -66,8 +66,8 @@ val EMPTY_INTERNAL_CONCEPT = InternalConcept(
     tillattTerm = null,
     frarådetTerm = null,
     definisjon = null,
-    folkeligForklaring = null,
-    rettsligForklaring = null,
+    definisjonForAllmennheten = null,
+    definisjonForSpesialister = null,
     merknad = null,
     ansvarligVirksomhet = Virksomhet(id = "123456789"),
     eksempel = null,
@@ -99,14 +99,14 @@ val DB_CONCEPT = EMPTY_INTERNAL_CONCEPT.copy(
         tekst = mapOf("nb" to "definition nb", "nn" to "definition nn", "en" to "definition en"),
         kildebeskrivelse = Kildebeskrivelse(forholdTilKilde = ForholdTilKildeEnum.EGENDEFINERT)
     ),
-    folkeligForklaring = Definisjon(
+    definisjonForAllmennheten = Definisjon(
         tekst = mapOf("nb" to "public nb", "nn" to "public nn", "en" to "public en"),
         kildebeskrivelse = Kildebeskrivelse(
             forholdTilKilde = ForholdTilKildeEnum.SITATFRAKILDE,
             kilde = listOf(URITekst("https://source0", "Source 0"))
         )
     ),
-    rettsligForklaring = Definisjon(
+    definisjonForSpesialister = Definisjon(
         tekst = mapOf("nb" to "specialist nb", "nn" to "specialist nn", "en" to "specialist en"),
         kildebeskrivelse = Kildebeskrivelse(
             forholdTilKilde = ForholdTilKildeEnum.BASERTPAAKILDE,

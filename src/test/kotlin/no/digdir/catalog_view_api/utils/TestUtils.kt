@@ -132,8 +132,8 @@ private fun InternalConcept.mongoDocument(): Document {
     concept.append("ansvarligVirksomhet", org)
 
     concept.append("definisjon", definisjon?.mongoDocument())
-    concept.append("folkeligForklaring", folkeligForklaring?.mongoDocument())
-    concept.append("rettsligForklaring", rettsligForklaring?.mongoDocument())
+    concept.append("definisjonForAllmennheten", definisjonForAllmennheten?.mongoDocument())
+    concept.append("definisjonForSpesialister", definisjonForSpesialister?.mongoDocument())
 
     concept.append("merknad", merknad)
     concept.append("eksempel", eksempel)
