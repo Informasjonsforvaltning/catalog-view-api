@@ -15,31 +15,20 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(value = ["/catalogs/{catalog}/concepts"], produces = ["application/json"])
 class ConceptsController(
-    private val conceptsViewService: ConceptsViewService,
-    private val permissionService: PermissionService
+    private val conceptsViewService: ConceptsViewService
 ) {
 
     @GetMapping
     fun getConcepts(
-        @AuthenticationPrincipal jwt: Jwt,
         @PathVariable catalog: String
     ): ResponseEntity<List<Concept>> =
-        if (permissionService.hasOrgReadPermission(jwt, catalog)) {
-            ResponseEntity(conceptsViewService.getConcepts(catalog), HttpStatus.OK)
-        } else {
-            ResponseEntity(HttpStatus.FORBIDDEN)
-        }
+        ResponseEntity(conceptsViewService.getConcepts(catalog), HttpStatus.OK)
 
     @GetMapping("/{id}")
     fun getConceptById(
-        @AuthenticationPrincipal jwt: Jwt,
         @PathVariable catalog: String,
         @PathVariable id: String
     ): ResponseEntity<Concept> =
-        if (permissionService.hasOrgReadPermission(jwt, catalog)) {
-            ResponseEntity(conceptsViewService.getConceptById(catalog, id), HttpStatus.OK)
-        } else {
-            ResponseEntity(HttpStatus.FORBIDDEN)
-        }
+        ResponseEntity(conceptsViewService.getConceptById(catalog, id), HttpStatus.OK)
 
 }

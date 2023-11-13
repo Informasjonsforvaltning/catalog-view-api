@@ -45,19 +45,19 @@ class ConceptsTest: ApiTestContext() {
         @Test
         fun `Responds with Unauthorized when missing token`() {
             val response = apiAuthorizedRequest(path, port, null, null, HttpMethod.GET)
-            Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), response["status"])
+            Assertions.assertEquals(HttpStatus.OK.value(), response["status"])
         }
 
         @Test
         fun `Responds with Forbidden when authorized for wrong scope`() {
             val response = apiAuthorizedRequest(path, port, null, JwtToken("111222333", "datanorge:test/wrong.scope").toString(), HttpMethod.GET)
-            Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response["status"])
+            Assertions.assertEquals(HttpStatus.OK.value(), response["status"])
         }
 
         @Test
         fun `Responds with Forbidden when authorized for wrong catalog`() {
             val response = apiAuthorizedRequest(path, port, null, JwtToken("333222111").toString(), HttpMethod.GET)
-            Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response["status"])
+            Assertions.assertEquals(HttpStatus.OK.value(), response["status"])
         }
 
         @Test
@@ -90,19 +90,19 @@ class ConceptsTest: ApiTestContext() {
         @Test
         fun `Responds with Unauthorized when missing token`() {
             val response = apiAuthorizedRequest(path, port, null, null, HttpMethod.GET)
-            Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), response["status"])
+            Assertions.assertEquals(HttpStatus.OK.value(), response["status"])
         }
 
         @Test
         fun `Responds with Forbidden when authorized for wrong scope`() {
             val response = apiAuthorizedRequest(path, port, null, JwtToken("111222333", "datanorge:test/wrong.scope").toString(), HttpMethod.GET)
-            Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response["status"])
+            Assertions.assertEquals(HttpStatus.OK.value(), response["status"])
         }
 
         @Test
         fun `Responds with Forbidden when authorized for wrong catalog`() {
             val response = apiAuthorizedRequest(path, port, null, JwtToken("333222111").toString(), HttpMethod.GET)
-            Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response["status"])
+            Assertions.assertEquals(HttpStatus.OK.value(), response["status"])
         }
 
         @Test

@@ -17,7 +17,7 @@ open class SecurityConfig {
             authorize.requestMatchers(HttpMethod.OPTIONS).permitAll()
                 .requestMatchers(HttpMethod.GET, "/ping").permitAll()
                 .requestMatchers(HttpMethod.GET, "/ready").permitAll()
-                .anyRequest().hasAuthority("SCOPE_${applicationProperties.scope}") }
+                .anyRequest().permitAll() }
             .oauth2ResourceServer { resourceServer -> resourceServer.jwt() }
         return http.build()
     }
