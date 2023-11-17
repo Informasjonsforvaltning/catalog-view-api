@@ -22,7 +22,7 @@ spec:
       volumes:
         - name: elastic-certs
           secret:
-            secretName: catalog-elasticsearch-es-http-certs-public
+            secretName: elasticsearch-es-http-certs-public
         - name: keystore-volume
           emptyDir:
             sizeLimit: 2Gi
