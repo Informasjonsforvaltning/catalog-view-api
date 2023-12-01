@@ -21,14 +21,9 @@ class ConceptsController(
 
     @GetMapping
     fun getConcepts(
-        @AuthenticationPrincipal jwt: Jwt,
         @PathVariable catalog: String
     ): ResponseEntity<List<Concept>> =
-        if (permissionService.hasOrgReadPermission(jwt, catalog)) {
             ResponseEntity(conceptsViewService.getConcepts(catalog), HttpStatus.OK)
-        } else {
-            ResponseEntity(HttpStatus.FORBIDDEN)
-        }
 
     @GetMapping("/{id}")
     fun getConceptById(
