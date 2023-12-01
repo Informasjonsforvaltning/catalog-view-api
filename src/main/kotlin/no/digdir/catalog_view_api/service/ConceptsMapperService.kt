@@ -149,14 +149,15 @@ private fun String.safeToInt(): Int? =
 
 private fun transformInternalField(fieldId: String, catalogId: String, fieldValue: String?, adminData: CatalogAdminData): FieldInterface? {
     val fieldData = adminData.internalFields["$catalogId-$fieldId"]
+    val fieldType = fieldData?.type?.lowercase()
     return when {
         fieldValue.isNullOrBlank() -> null
         fieldData == null -> null
-        fieldData.type == "boolean" -> fieldData.toBooleanField(fieldValue)
-        fieldData.type == "text_short" -> fieldData.toShortTextField(fieldValue)
-        fieldData.type == "text_long" -> fieldData.toLongTextField(fieldValue)
-        fieldData.type == "code_list" -> fieldData.toCodeField(fieldValue, catalogId, adminData.codeLists)
-        fieldData.type == "user_list" -> fieldData.toUserField(fieldValue, catalogId, adminData.users)
+        fieldType == "boolean" -> fieldData.toBooleanField(fieldValue)
+        fieldType == "text_short" -> fieldData.toShortTextField(fieldValue)
+        fieldType == "text_long" -> fieldData.toLongTextField(fieldValue)
+        fieldType == "code_list" -> fieldData.toCodeField(fieldValue, catalogId, adminData.codeLists)
+        fieldType == "user_list" -> fieldData.toUserField(fieldValue, catalogId, adminData.users)
         else -> null
     }
 }
