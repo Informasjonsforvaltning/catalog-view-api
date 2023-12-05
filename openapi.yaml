@@ -119,6 +119,8 @@ components:
             type: string
         example:
           $ref: "#/components/schemas/LocalizedStrings"
+        domain:
+          $ref: "#/components/schemas/ListOfLocalizedStrings"
         domainCodes:
           type: array
           items:
