@@ -34,6 +34,7 @@ data class Concept(
     val conceptRelations: List<ConceptRelation>?,
     val replacedBy: List<String>?,
     val example: LocalizedStrings?,
+    val domain: ListOfLocalizedStrings?,
     val domainCodes: List<Code>?,
     @Field(type = FieldType.Date)
     val startDate: LocalDate?,

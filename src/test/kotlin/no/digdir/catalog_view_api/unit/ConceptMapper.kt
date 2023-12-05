@@ -207,6 +207,23 @@ class ConceptMapper {
     }
 
     @Test
+    fun `Map domain`() {
+        val expected = EMPTY_CONCEPT.copy(
+            domain = ListOfLocalizedStrings(nb = listOf("fagområde"), nn = null, en = listOf("domain"))
+        )
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(
+            fagområde = mapOf(
+                Pair("nb", listOf("fagområde")),
+                Pair("nn", emptyList()),
+                Pair("en", listOf("domain"))
+            )
+        ).toExternalDTO(EMPTY_ADMIN_DATA)
+
+        assertEquals(expected = expected, actual = result)
+    }
+
+    @Test
     fun `Map domain codes`() {
         val expected = EMPTY_CONCEPT.copy(domainCodes = listOf(
             Code(codeId = 0, codeListId = CODE_LIST_1.id, codeLabel = CODE_2.name),

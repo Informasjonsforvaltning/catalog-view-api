@@ -44,6 +44,7 @@ val EMPTY_CONCEPT = Concept(
     conceptRelations = null,
     replacedBy = null,
     example = null,
+    domain = null,
     domainCodes = null,
     startDate = null,
     endDate = null,

@@ -72,6 +72,7 @@ fun InternalConcept.toExternalDTO(adminData: CatalogAdminData): Concept =
         conceptRelations = begrepsRelasjon?.map { it.toConceptRelations() },
         replacedBy = erstattesAv,
         example = eksempel?.toLangValueObject(),
+        domain = fagområde?.toLangValueObject(),
         domainCodes = fagområdeKoder?.mapNotNull { adminData.getDomainCode(it.safeToInt(), ansvarligVirksomhet.id) }
             ?.ifEmpty { null },
         startDate = gyldigFom,
