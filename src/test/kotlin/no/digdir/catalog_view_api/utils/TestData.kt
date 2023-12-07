@@ -259,8 +259,7 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
             type="user",
             value=User(
                 name="John Doe",
-                email="fdk@digdir.no",
-                telephone="12345678")),
+                email="fdk@digdir.no")),
         BooleanField(
             id="boolean-field-id",
             label=LocalizedStrings(nb="bool nb", nn="bool nn", en="bool en"),
@@ -270,8 +269,7 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
     domainCodes = listOf(Code(codeId=1, codeListId="code-list-1", codeLabel=LocalizedStrings(nb="Kode 1.1", nn="Kode 1.1", en="Code 1.1"))),
     assignedUser = User(
         name="Jane Doe",
-        email="fdk@digdir.no",
-        telephone="87654321")
+        email="fdk@digdir.no")
 )
 
 val EMPTY_ADMIN_DATA = CatalogAdminData(

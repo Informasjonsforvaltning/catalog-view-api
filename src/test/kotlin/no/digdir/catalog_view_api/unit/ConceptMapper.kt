@@ -197,7 +197,7 @@ class ConceptMapper {
     @Test
     fun `Map assigned user`() {
         val adminUser = AdminUser(id = "user-id", catalogId = "123456789", name = "John Doe", email = "epost@asdf.no", telephoneNumber = "11122233")
-        val user = User(name = "John Doe", email = "epost@asdf.no", telephone = "11122233")
+        val user = User(name = "John Doe", email = "epost@asdf.no")
         val expected = EMPTY_CONCEPT.copy(assignedUser = user)
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(assignedUser = adminUser.id)
@@ -421,7 +421,7 @@ class ConceptMapper {
                 id = USER_LIST_FIELD.id,
                 label = USER_LIST_FIELD.label,
                 description = USER_LIST_FIELD.description,
-                value = User(name = "John Doe", email = "epost@asdf.no", telephone = "11122233")
+                value = User(name = "John Doe", email = "epost@asdf.no")
             )))
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(USER_LIST_FIELD.id to InterntFelt(adminUser.id)))
