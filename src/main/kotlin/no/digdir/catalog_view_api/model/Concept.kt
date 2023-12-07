@@ -95,8 +95,7 @@ data class ContactPoint (
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class User (
     val name: String?,
-    val email: String?,
-    val telephone: String?
+    val email: String?
 )
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

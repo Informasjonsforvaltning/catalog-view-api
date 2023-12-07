@@ -46,8 +46,7 @@ class ConceptsService(
 private fun AdminUser.toDTO(): User =
     User(
         name = name,
-        email = email,
-        telephone = telephoneNumber
+        email = email
     )
 
 fun InternalConcept.toExternalDTO(adminData: CatalogAdminData): Concept =
