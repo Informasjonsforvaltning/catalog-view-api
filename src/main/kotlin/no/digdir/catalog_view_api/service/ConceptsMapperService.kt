@@ -168,7 +168,6 @@ private fun Field.toBooleanField(value: String): BooleanField? =
             BooleanField(
                 id = id,
                 label = label,
-                description = description,
                 value = it
             )
         }
@@ -177,7 +176,6 @@ private fun Field.toShortTextField(value: String): ShortTextField =
     ShortTextField(
         id = id,
         label = label,
-        description = description,
         value = value
     )
 
@@ -185,7 +183,6 @@ private fun Field.toLongTextField(value: String): LongTextField =
     LongTextField(
         id = id,
         label = label,
-        description = description,
         value = value
     )
 
@@ -197,7 +194,6 @@ private fun Field.toCodeField(value: String, catalogId: String, codeLists: Map<S
             CodeField(
                 id = id,
                 label = label,
-                description = description,
                 value = Code(
                     codeId = codeId,
                     codeListId = codeListId,
@@ -212,7 +208,6 @@ private fun Field.toUserField(value: String, catalogId: String, users: Map<Strin
         UserField(
             id = id,
             label = label,
-            description = description,
             value = it.toDTO()
         )
     }

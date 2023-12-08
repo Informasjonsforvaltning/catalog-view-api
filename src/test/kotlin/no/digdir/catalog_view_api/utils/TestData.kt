@@ -235,18 +235,15 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
         ShortTextField(
             id="text-short-field-id",
             label=LocalizedStrings(nb="text short nb", nn="text short nn", en="text short en"),
-            description=LocalizedStrings(nb="text short desc nb", nn="text short desc nn", en="text short desc en"),
             type="text_short",
             value="short text"),
         LongTextField(
             id="text-long-field-id",
             label=LocalizedStrings(nb="text long nb", nn="text long nn", en="text long en"),
-            description=LocalizedStrings(nb="text long desc nb", nn="text long desc nn", en="text long desc en"),
             type="text_long",
             value="long text"),
         CodeField(id="code-list-field-id",
             label=LocalizedStrings(nb="code list nb", nn="code list nn", en="code list en"),
-            description=LocalizedStrings(nb="code list desc nb", nn="code list desc nn", en="code list desc en"),
             type="code",
             value=Code(
                 codeId=1,
@@ -255,7 +252,6 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
         UserField(
             id="user-list-field-id",
             label=LocalizedStrings(nb="user list nb", nn="user list nn", en="user list en"),
-            description=LocalizedStrings(nb="user list desc nb", nn="user list desc nn", en="user list desc en"),
             type="user",
             value=User(
                 name="John Doe",
@@ -263,7 +259,6 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
         BooleanField(
             id="boolean-field-id",
             label=LocalizedStrings(nb="bool nb", nn="bool nn", en="bool en"),
-            description=LocalizedStrings(nb="bool desc nb", nn="bool desc nn", en="bool desc en"),
             type="bool",
             value=true)),
     domainCodes = listOf(Code(codeId=1, codeListId="code-list-1", codeLabel=LocalizedStrings(nb="Kode 1.1", nn="Kode 1.1", en="Code 1.1"))),
