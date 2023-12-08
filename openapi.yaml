@@ -99,6 +99,10 @@ components:
           $ref: "#/components/schemas/Definition"
         note:
           $ref: "#/components/schemas/LocalizedStrings"
+        attachedTag:
+          type: array
+          items:
+            type: string
         valueRange:
           $ref: "#/components/schemas/URIText"
         contactPoint:
