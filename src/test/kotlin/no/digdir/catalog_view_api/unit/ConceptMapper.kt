@@ -338,14 +338,12 @@ class ConceptMapper {
             BooleanField(
                 id = BOOLEAN_FIELD.id,
                 label = BOOLEAN_FIELD.label,
-                description = BOOLEAN_FIELD.description,
                 value = true
             )))
         val expectedFalse = EMPTY_CONCEPT.copy(internalFields = listOf(
             BooleanField(
                 id = BOOLEAN_FIELD.id,
                 label = BOOLEAN_FIELD.label,
-                description = BOOLEAN_FIELD.description,
                 value = false
             )))
 
@@ -367,7 +365,6 @@ class ConceptMapper {
             ShortTextField(
                 id = TEXT_SHORT_FIELD.id,
                 label = TEXT_SHORT_FIELD.label,
-                description = TEXT_SHORT_FIELD.description,
                 value = "short string value"
             )))
 
@@ -383,7 +380,6 @@ class ConceptMapper {
             LongTextField(
                 id = TEXT_LONG_FIELD.id,
                 label = TEXT_LONG_FIELD.label,
-                description = TEXT_LONG_FIELD.description,
                 value = "long string value"
             )))
 
@@ -399,7 +395,6 @@ class ConceptMapper {
             CodeField(
                 id = CODE_LIST_FIELD.id,
                 label = CODE_LIST_FIELD.label,
-                description = CODE_LIST_FIELD.description,
                 value = Code(CODE_1.id, CODE_LIST_0.id, CODE_1.name)
             )))
 
@@ -420,7 +415,6 @@ class ConceptMapper {
             UserField(
                 id = USER_LIST_FIELD.id,
                 label = USER_LIST_FIELD.label,
-                description = USER_LIST_FIELD.description,
                 value = User(name = "John Doe", email = "epost@asdf.no")
             )))
 

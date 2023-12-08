@@ -261,8 +261,6 @@ components:
           type: string
         label:
           $ref: "#/components/schemas/LocalizedStrings"
-        description:
-          $ref: "#/components/schemas/LocalizedStrings"
         type:
           type: string
           enum: [text_short, text_long, bool, user, code]

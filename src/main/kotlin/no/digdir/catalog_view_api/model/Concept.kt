@@ -119,7 +119,6 @@ data class Code (
 interface FieldInterface {
     val id: String
     val label: LocalizedStrings
-    val description: LocalizedStrings
     val type: String
     val value: Any
 }
@@ -128,7 +127,6 @@ interface FieldInterface {
 data class ShortTextField(
     override val id: String,
     override val label: LocalizedStrings,
-    override val description: LocalizedStrings,
     override val type: String = "text_short",
     override val value: String
 ): FieldInterface
@@ -137,7 +135,6 @@ data class ShortTextField(
 data class LongTextField(
     override val id: String,
     override val label: LocalizedStrings,
-    override val description: LocalizedStrings,
     override val type: String = "text_long",
     override val value: String
 ): FieldInterface
@@ -146,7 +143,6 @@ data class LongTextField(
 data class BooleanField(
     override val id: String,
     override val label: LocalizedStrings,
-    override val description: LocalizedStrings,
     override val type: String = "bool",
     override val value: Boolean
 ): FieldInterface
@@ -155,7 +151,6 @@ data class BooleanField(
 data class UserField(
     override val id: String,
     override val label: LocalizedStrings,
-    override val description: LocalizedStrings,
     override val type: String = "user",
     override val value: User
 ): FieldInterface
@@ -164,7 +159,6 @@ data class UserField(
 data class CodeField(
     override val id: String,
     override val label: LocalizedStrings,
-    override val description: LocalizedStrings,
     override val type: String = "code",
     override val value: Code
 ): FieldInterface
