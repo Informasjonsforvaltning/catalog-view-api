@@ -29,6 +29,7 @@ data class InternalConcept(
     val definisjonForAllmennheten: Definisjon?,
     val definisjonForSpesialister: Definisjon?,
     val merknad: Map<String, String>?,
+    val merkelapp: List<String>?,
     val ansvarligVirksomhet: Virksomhet,
     val eksempel: Map<String, String>?,
     val fagområde: Map<String, List<String>>?,

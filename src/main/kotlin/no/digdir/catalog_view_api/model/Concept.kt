@@ -27,6 +27,7 @@ data class Concept(
     val publicDefinition: Definition?,
     val specialistDefinition: Definition?,
     val note: LocalizedStrings?,
+    val attachedTag: List<String>?,
     val valueRange: URIText?,
     val contactPoint: ContactPoint?,
     val abbreviatedLabel: String?,

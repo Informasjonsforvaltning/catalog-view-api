@@ -64,6 +64,7 @@ fun InternalConcept.toExternalDTO(adminData: CatalogAdminData): Concept =
         publicDefinition = definisjonForAllmennheten?.toDefinition(),
         specialistDefinition = definisjonForSpesialister?.toDefinition(),
         note = merknad?.toLangValueObject(),
+        attachedTag = merkelapp,
         valueRange = omfang?.toURIText(),
         contactPoint = kontaktpunkt?.let { ContactPoint(email = it.harEpost, telephone = it.harTelefon) },
         abbreviatedLabel = abbreviatedLabel,

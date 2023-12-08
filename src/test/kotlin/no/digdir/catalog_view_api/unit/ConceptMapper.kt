@@ -511,4 +511,13 @@ class ConceptMapper {
         assertEquals(expected = expected, actual = result)
     }
 
+    @Test
+    fun `Map attachedTag`() {
+        val expected = EMPTY_CONCEPT.copy(attachedTag = listOf("merkelapp", "tag"))
+
+        val result = EMPTY_INTERNAL_CONCEPT.copy(merkelapp = listOf("merkelapp", "tag")).toExternalDTO(EMPTY_ADMIN_DATA)
+
+        assertEquals(expected = expected, actual = result)
+    }
+
 }
