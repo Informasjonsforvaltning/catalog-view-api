@@ -28,6 +28,13 @@ paths:
           required: true
           schema:
             type: string
+        - name: changedAfter
+          in: query
+          description: Response will only include concepts that has been changed after this date, format "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+          required: false
+          schema:
+            type: string
+            format: date
       responses:
         '200':
           description: OK
