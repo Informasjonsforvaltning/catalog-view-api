@@ -114,6 +114,21 @@ class ConceptsTest: ApiTestContext() {
             Assertions.assertEquals(listOf(MAPPED_DB_CONCEPT), result)
         }
 
+        @Test
+        fun `Param changedAfter filters correctly`() {
+            val before = apiAuthorizedRequest("$path?changedAfter=2022-01-01T09:00:00.000-01:00", port, null, JwtToken("111222333").toString(), HttpMethod.GET)
+            Assertions.assertEquals(HttpStatus.OK.value(), before["status"])
+
+            val beforeResult: List<Concept> = mapper.readValue(before["body"] as String)
+            Assertions.assertEquals(listOf(MAPPED_DB_CONCEPT), beforeResult)
+
+            val after = apiAuthorizedRequest("$path?changedAfter=2022-01-01T15:00:00.000-01:00", port, null, JwtToken("111222333").toString(), HttpMethod.GET)
+            Assertions.assertEquals(HttpStatus.OK.value(), after["status"])
+
+            val afterResult: List<Concept> = mapper.readValue(after["body"] as String)
+            Assertions.assertEquals(emptyList<Concept>(), afterResult)
+        }
+
     }
 
 }
