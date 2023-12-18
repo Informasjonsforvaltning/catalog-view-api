@@ -8,17 +8,21 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator
 import org.springframework.security.oauth2.jwt.*
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.config.annotation.web.invoke
 
 @Configuration
 open class SecurityConfig {
     @Bean
     open fun filterChain(http: HttpSecurity, applicationProperties: ApplicationProperties): SecurityFilterChain {
-        http.authorizeHttpRequests { authorize ->
-            authorize.requestMatchers(HttpMethod.OPTIONS).permitAll()
-                .requestMatchers(HttpMethod.GET, "/ping").permitAll()
-                .requestMatchers(HttpMethod.GET, "/ready").permitAll()
-                .anyRequest().hasAuthority("SCOPE_${applicationProperties.scope}") }
-            .oauth2ResourceServer { resourceServer -> resourceServer.jwt() }
+        http {
+            authorizeHttpRequests {
+                authorize(HttpMethod.OPTIONS, "/**", permitAll)
+                authorize(HttpMethod.GET, "/ping", permitAll)
+                authorize(HttpMethod.GET, "/ready", permitAll)
+                authorize(anyRequest, hasAuthority("SCOPE_${applicationProperties.scope}"))
+            }
+            oauth2ResourceServer { jwt { } }
+        }
         return http.build()
     }
 

@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.5</version>
+        <version>3.2.0</version>
         <relativePath/>
     </parent>
 
@@ -26,8 +26,8 @@
         <maven.compiler.target>${java.release}</maven.compiler.target>
         <maven.exec.skip>false</maven.exec.skip>
 
-        <kotlin.version>1.9.20</kotlin.version>
-        <testcontainers.version>1.19.2</testcontainers.version>
+        <kotlin.version>1.9.21</kotlin.version>
+        <testcontainers.version>1.19.3</testcontainers.version>
     </properties>
 
     <dependencies>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>org.mockito.kotlin</groupId>
             <artifactId>mockito-kotlin</artifactId>
-            <version>5.1.0</version>
+            <version>5.2.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -101,8 +101,14 @@
         </dependency>
         <dependency>
             <groupId>org.wiremock</groupId>
-            <artifactId>wiremock</artifactId>
+            <artifactId>wiremock-standalone</artifactId>
             <version>3.3.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.2.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -246,7 +252,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.2</version>
+                <version>3.2.3</version>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <argLine>${surefire.jacoco.args}</argLine>
