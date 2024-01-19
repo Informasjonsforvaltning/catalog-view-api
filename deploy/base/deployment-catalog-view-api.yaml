@@ -26,6 +26,9 @@ spec:
         - name: keystore-volume
           emptyDir:
             sizeLimit: 2Gi
+        - name: ephemeral
+          emptyDir:
+            sizeLimit: 10Gi
       initContainers:
         - name: pem-to-keystore
           image: eclipse-temurin:17-jdk-alpine
@@ -74,9 +77,8 @@ spec:
               memory: 7Gi
               ephemeral-storage: 10Gi
             limits:
-              cpu: 1500m
-              memory: 15Gi
-              ephemeral-storage: 30Gi
+              memory: 7Gi
+              ephemeral-storage: 10Gi
           volumeMounts:
             - name: keystore-volume
               mountPath: /var/secrets/elastic/keystores
