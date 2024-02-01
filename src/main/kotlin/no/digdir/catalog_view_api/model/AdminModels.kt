@@ -6,9 +6,9 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class AdminCode(
-    val id: Int,
+    val id: String,
     val name: LocalizedStrings,
-    val parentID: Int?
+    val parentID: String?
 )
 
 @Document(collection = "codeLists")
