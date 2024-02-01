@@ -101,7 +101,7 @@ data class User (
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class Code (
-    val codeId: Int,
+    val codeId: String,
     val codeListId: String,
     val codeLabel: LocalizedStrings
 )

@@ -73,7 +73,7 @@ fun InternalConcept.toExternalDTO(adminData: CatalogAdminData): Concept =
         replacedBy = erstattesAv,
         example = eksempel?.toLangValueObject(),
         domain = fagområde?.toLangValueObject(),
-        domainCodes = fagområdeKoder?.mapNotNull { adminData.getDomainCode(it.safeToInt(), ansvarligVirksomhet.id) }
+        domainCodes = fagområdeKoder?.mapNotNull { adminData.getDomainCode(it, ansvarligVirksomhet.id) }
             ?.ifEmpty { null },
         startDate = gyldigFom,
         endDate = gyldigTom,
@@ -136,7 +136,7 @@ private fun ForholdTilKildeEnum.toURI(): String =
 private fun URITekst.toURIText(): URIText =
     URIText(uri = uri, text = tekst)
 
-private fun CatalogAdminData.getDomainCode(id: Int?, catalogId: String): Code? {
+private fun CatalogAdminData.getDomainCode(id: String?, catalogId: String): Code? {
     val codeListId = domainCodeList[catalogId]
 
     return if (id == null || codeListId == null) null
@@ -188,15 +188,14 @@ private fun Field.toLongTextField(value: String): LongTextField =
     )
 
 private fun Field.toCodeField(value: String, catalogId: String, codeLists: Map<String, CodeList>): CodeField? {
-    val codeId = value.safeToInt()
-    return if (codeId == null || codeListId == null) null
-    else codeLists["$catalogId-$codeListId"]?.codes?.find { it.id == codeId }
+    return if (codeListId == null) null
+    else codeLists["$catalogId-$codeListId"]?.codes?.find { it.id == value }
         ?.let {
             CodeField(
                 id = id,
                 label = label,
                 value = Code(
-                    codeId = codeId,
+                    codeId = value,
                     codeListId = codeListId,
                     codeLabel = it.name
                 )

@@ -248,7 +248,7 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
             label=LocalizedStrings(nb="code list nb", nn="code list nn", en="code list en"),
             type="code",
             value=Code(
-                codeId=1,
+                codeId="1",
                 codeListId="code-list-0",
                 codeLabel=LocalizedStrings(nb="Kode 0.1", nn="Kode 0.1", en="Code 0.1"))),
         UserField(
@@ -263,7 +263,7 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
             label=LocalizedStrings(nb="bool nb", nn="bool nn", en="bool en"),
             type="bool",
             value=true)),
-    domainCodes = listOf(Code(codeId=1, codeListId="code-list-1", codeLabel=LocalizedStrings(nb="Kode 1.1", nn="Kode 1.1", en="Code 1.1"))),
+    domainCodes = listOf(Code(codeId="1", codeListId="code-list-1", codeLabel=LocalizedStrings(nb="Kode 1.1", nn="Kode 1.1", en="Code 1.1"))),
     assignedUser = User(
         name="Jane Doe",
         email="fdk@digdir.no")
@@ -276,10 +276,10 @@ val EMPTY_ADMIN_DATA = CatalogAdminData(
     users = emptyMap()
 )
 
-val CODE_0 = AdminCode(0, LocalizedStrings("Kode 0.0", "Kode 0.0", "Code 0.0"), null)
-val CODE_1 = AdminCode(1, LocalizedStrings("Kode 0.1", "Kode 0.1", "Code 0.1"), null)
-val CODE_2 = AdminCode(0, LocalizedStrings("Kode 1.0", "Kode 1.0", "Code 1.0"), null)
-val CODE_3 = AdminCode(1, LocalizedStrings("Kode 1.1", "Kode 1.1", "Code 1.1"), null)
+val CODE_0 = AdminCode("0", LocalizedStrings("Kode 0.0", "Kode 0.0", "Code 0.0"), null)
+val CODE_1 = AdminCode("1", LocalizedStrings("Kode 0.1", "Kode 0.1", "Code 0.1"), null)
+val CODE_2 = AdminCode("0", LocalizedStrings("Kode 1.0", "Kode 1.0", "Code 1.0"), null)
+val CODE_3 = AdminCode("1", LocalizedStrings("Kode 1.1", "Kode 1.1", "Code 1.1"), null)
 
 val CODE_LIST_0 = CodeList(id = "code-list-0", catalogId = "123456789", codes = listOf(CODE_0, CODE_1))
 val CODE_LIST_1 = CodeList(id = "code-list-1", catalogId = "123456789", codes = listOf(CODE_2, CODE_3))
