@@ -26,10 +26,11 @@ class ConceptsController(
     fun getConcepts(
         @AuthenticationPrincipal jwt: Jwt,
         @PathVariable catalog: String,
+        @RequestParam(value = "domainCodes", required = false) domainCodes: List<String>?,
         @RequestParam(value = "changedAfter", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) changedAfter: Instant?
     ): ResponseEntity<List<Concept>> =
         if (permissionService.hasOrgReadPermission(jwt, catalog)) {
-            ResponseEntity(conceptsViewService.getConcepts(catalog, changedAfter), HttpStatus.OK)
+            ResponseEntity(conceptsViewService.getConcepts(catalog, changedAfter, domainCodes), HttpStatus.OK)
         } else {
             ResponseEntity(HttpStatus.FORBIDDEN)
         }

@@ -35,6 +35,12 @@ paths:
           schema:
             type: string
             format: date
+        - name: domainCodes
+          in: query
+          description: Response will only include concepts that has at least one of the domain codes
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: OK
