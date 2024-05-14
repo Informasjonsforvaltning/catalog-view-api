@@ -129,6 +129,48 @@ class ConceptsTest: ApiTestContext() {
             Assertions.assertEquals(emptyList<Concept>(), afterResult)
         }
 
+        @Test
+        fun `Param domainCodes filters correctly`() {
+            val response = apiAuthorizedRequest("$path?domainCodes=1", port, null, JwtToken("111222333").toString(), HttpMethod.GET)
+            Assertions.assertEquals(HttpStatus.OK.value(), response["status"])
+
+            val result: List<Concept> = mapper.readValue(response["body"] as String)
+            Assertions.assertEquals(listOf(MAPPED_DB_CONCEPT), result)
+
+            val listResponse = apiAuthorizedRequest("$path?domainCodes=1,555", port, null, JwtToken("111222333").toString(), HttpMethod.GET)
+            Assertions.assertEquals(HttpStatus.OK.value(), listResponse["status"])
+
+            val listResult: List<Concept> = mapper.readValue(listResponse["body"] as String)
+            Assertions.assertEquals(listOf(MAPPED_DB_CONCEPT), listResult)
+
+            val otherDomain = apiAuthorizedRequest("$path?domainCodes=555", port, null, JwtToken("111222333").toString(), HttpMethod.GET)
+            Assertions.assertEquals(HttpStatus.OK.value(), otherDomain["status"])
+
+            val otherDomainResult: List<Concept> = mapper.readValue(otherDomain["body"] as String)
+            Assertions.assertEquals(emptyList<Concept>(), otherDomainResult)
+        }
+
+        @Test
+        fun `Param domainCodes and changedAfter filters correctly`() {
+            val response = apiAuthorizedRequest("$path?domainCodes=1,555&changedAfter=2022-01-01T09:00:00.000-01:00", port, null, JwtToken("111222333").toString(), HttpMethod.GET)
+            Assertions.assertEquals(HttpStatus.OK.value(), response["status"])
+
+            val result: List<Concept> = mapper.readValue(response["body"] as String)
+            Assertions.assertEquals(listOf(MAPPED_DB_CONCEPT), result)
+
+            val after = apiAuthorizedRequest("$path?domainCodes=1,555&changedAfter=2022-01-01T15:00:00.000-01:00", port, null, JwtToken("111222333").toString(), HttpMethod.GET)
+            Assertions.assertEquals(HttpStatus.OK.value(), after["status"])
+
+            val afterResult: List<Concept> = mapper.readValue(after["body"] as String)
+            Assertions.assertEquals(emptyList<Concept>(), afterResult)
+
+            val otherDomain = apiAuthorizedRequest("$path?domainCodes=555&changedAfter=2022-01-01T09:00:00.000-01:00", port, null, JwtToken("111222333").toString(), HttpMethod.GET)
+            Assertions.assertEquals(HttpStatus.OK.value(), otherDomain["status"])
+
+            val otherDomainResult: List<Concept> = mapper.readValue(otherDomain["body"] as String)
+            Assertions.assertEquals(emptyList<Concept>(), otherDomainResult)
+        }
+
     }
 
 }
