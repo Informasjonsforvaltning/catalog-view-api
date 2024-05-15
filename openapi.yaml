@@ -30,7 +30,7 @@ paths:
             type: string
         - name: changedAfter
           in: query
-          description: Response will only include concepts that has been changed after this date, format "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+          description: Response will only include concepts that has been changed after this date, format "yyyy-MM-dd'T'HH:mm:ss.SSSXXX". Note that it needs to be url-encoded, ie `+` -> `%2b`
           required: false
           schema:
             type: string
