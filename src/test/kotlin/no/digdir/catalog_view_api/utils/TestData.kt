@@ -20,7 +20,7 @@ val ELASTIC_ENV_VALUES: Map<String, String> = ImmutableMap.of(
     "discovery.type", "single-node",
     "xpack.security.enabled", "true",
     "ELASTIC_PASSWORD","elasticpwd",
-    "ES_JAVA_OPTS", "-Xms2G -Xmx2G"
+    "ES_JAVA_OPTS", "-Xms512m -Xmx512m"
 )
 
 val EMPTY_CONCEPT = Concept(
