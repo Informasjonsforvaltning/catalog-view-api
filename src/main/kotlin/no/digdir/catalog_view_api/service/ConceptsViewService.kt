@@ -12,8 +12,8 @@ import java.time.Instant
 class ConceptsViewService(private val conceptViewRepository: ConceptViewRepository) {
 
     fun getConcepts(catalogId: String, changedAfter: Instant?, domainCodes: List<String>?): List<Concept> = when {
-        changedAfter != null && domainCodes != null -> conceptViewRepository.getByPublisherAndLastChangedAndDomainCodes(catalogId, changedAfter, domainCodes)
-        changedAfter != null -> conceptViewRepository.getByPublisherAndLastChanged(catalogId, changedAfter)
+        changedAfter != null && domainCodes != null -> conceptViewRepository.getByPublisherAndLastChangedAndDomainCodes(catalogId, changedAfter.toEpochMilli(), domainCodes)
+        changedAfter != null -> conceptViewRepository.getByPublisherAndLastChanged(catalogId, changedAfter.toEpochMilli())
         domainCodes != null -> conceptViewRepository.getByPublisherAndDomainCodes(catalogId, domainCodes)
         else -> conceptViewRepository.getByPublisher(catalogId)
     }
