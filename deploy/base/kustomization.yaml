@@ -6,7 +6,7 @@ resources:
   - service-catalog-view-api.yaml
 images:
   - name: catalog-view-api
-    newName: eu.gcr.io/digdir-fdk-infra/catalog-view-api
+    newName: ghcr.io/informasjonsforvaltning/catalog-view-api
     newTag: $(GIT_COMMIT_SHA)
 
 patchesStrategicMerge:
