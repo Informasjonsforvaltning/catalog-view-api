@@ -1,5 +1,6 @@
 package no.digdir.catalog_view_api.service
 
+import no.digdir.catalog_view_api.config.ApplicationProperties
 import no.digdir.catalog_view_api.config.MongoCollections
 import no.digdir.catalog_view_api.model.*
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -10,12 +11,13 @@ import org.springframework.stereotype.Service
 class ConceptsService(
     private val adminServiceDB: MongoTemplate,
     private val conceptCatalogDB: MongoTemplate,
-    private val mongoCollections: MongoCollections
+    private val mongoCollections: MongoCollections,
+    private val applicationProperties: ApplicationProperties
 ) {
 
     fun getAndMapAllConcepts(): List<Concept> =
         conceptCatalogDB.findAll<InternalConcept>(mongoCollections.concepts)
-            .map { it.toExternalDTO(getAllAdminData()) }
+            .map { it.toExternalDTO(getAllAdminData(), applicationProperties.conceptCatalogBaseURI) }
 
     private fun getAllAdminData(): CatalogAdminData =
         CatalogAdminData(
@@ -49,8 +51,9 @@ private fun AdminUser.toDTO(): User =
         email = email
     )
 
-fun InternalConcept.toExternalDTO(adminData: CatalogAdminData): Concept =
-    Concept(
+fun InternalConcept.toExternalDTO(adminData: CatalogAdminData, baseURI: String): Concept {
+    val collectionURI = collectionURI(baseURI)
+    return Concept(
         id = id,
         idOfOriginalVersion = originaltBegrep,
         version = versjonsnr,
@@ -69,8 +72,11 @@ fun InternalConcept.toExternalDTO(adminData: CatalogAdminData): Concept =
         contactPoint = kontaktpunkt?.let { ContactPoint(email = it.harEpost, telephone = it.harTelefon) },
         abbreviatedLabel = abbreviatedLabel,
         seeAlso = seOgså,
-        conceptRelations = begrepsRelasjon?.map { it.toConceptRelations() },
+        internalSeeAlso = internSeOgså?.map { conceptURI(it, collectionURI) },
+        conceptRelations = begrepsRelasjon?.map { it.toConceptRelation() },
+        internalConceptRelations = internBegrepsRelasjon?.map { it.toInternalConceptRelation(collectionURI) },
         replacedBy = erstattesAv,
+        internalReplacedBy = internErstattesAv?.map { conceptURI(it, collectionURI) },
         example = eksempel?.toLangValueObject(),
         domain = fagområde?.toLangValueObject(),
         domainCodes = fagområdeKoder?.mapNotNull { adminData.getDomainCode(it, ansvarligVirksomhet.id) }
@@ -82,9 +88,17 @@ fun InternalConcept.toExternalDTO(adminData: CatalogAdminData): Concept =
         lastChanged = endringslogelement?.endringstidspunkt,
         lastChangedBy = endringslogelement?.endretAv,
         assignedUser = assignedUser?.let { adminData.users["${ansvarligVirksomhet.id}-$it"] }?.toDTO(),
-        internalFields = interneFelt?.mapNotNull { transformInternalField(it.key, ansvarligVirksomhet.id, it.value.value, adminData) }
+        internalFields = interneFelt?.mapNotNull {
+            transformInternalField(
+                it.key,
+                ansvarligVirksomhet.id,
+                it.value.value,
+                adminData
+            )
+        }
             ?.ifEmpty { null }
     )
+}
 
 private fun Map<String, String>.toLangValueObject(): LocalizedStrings? {
     val langValues = LocalizedStrings(
@@ -248,9 +262,20 @@ private fun BegrepsRelasjon.toGenericOrPartitiveRelation(relationType: RelationT
         relatedConcept = relatertBegrep
     )
 
-private fun BegrepsRelasjon.toConceptRelations(): ConceptRelation {
+private fun BegrepsRelasjon.toConceptRelation(): ConceptRelation {
     val relationType = relasjon.toRelationType(relasjonsType)
 
     return if (relationType == RelationType.ASSOCIATIVE) toAssociativeRelation()
     else toGenericOrPartitiveRelation(relationType)
 }
+
+private fun BegrepsRelasjon.toInternalConceptRelation(conceptBaseURI: String): ConceptRelation =
+    toConceptRelation()
+        .copy(relatedConcept = relatertBegrep?.let { conceptURI(it, conceptBaseURI) })
+
+private fun InternalConcept.collectionURI(baseURI: String) =
+    "$baseURI/collections/${ansvarligVirksomhet.id}"
+
+private fun conceptURI(conceptID: String, collectionURI: String) =
+    "$collectionURI/concepts/$conceptID"
+

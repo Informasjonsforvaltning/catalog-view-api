@@ -126,11 +126,23 @@ components:
           type: array
           items:
             type: string
+        internalSeeAlso:
+          type: array
+          items:
+            type: string
         conceptRelations:
           type: array
           items:
             $ref: "#/components/schemas/ConceptRelation"
+        internalConceptRelations:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConceptRelation"
         replacedBy:
+          type: array
+          items:
+            type: string
+        internalReplacedBy:
           type: array
           items:
             type: string
