@@ -42,11 +42,14 @@ data class InternalConcept(
     val opprettet: Instant? = null,
     val opprettetAv: String? = null,
     val seOgså: List<String>?,
+    val internSeOgså: List<String>?,
     val erstattesAv: List<String>?,
     val assignedUser: String?,
     val abbreviatedLabel: String?,
     val begrepsRelasjon: List<BegrepsRelasjon>?,
-    val interneFelt: Map<String, InterntFelt>?
+    val internBegrepsRelasjon: List<BegrepsRelasjon>?,
+    val interneFelt: Map<String, InterntFelt>?,
+    val internErstattesAv: List<String>?
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -54,7 +54,10 @@ val EMPTY_CONCEPT = Concept(
     lastChanged = null,
     lastChangedBy = null,
     assignedUser = null,
-    internalFields = null
+    internalFields = null,
+    internalSeeAlso = null,
+    internalReplacedBy = null,
+    internalConceptRelations = null
 )
 
 val EMPTY_INTERNAL_CONCEPT = InternalConcept(
@@ -88,7 +91,10 @@ val EMPTY_INTERNAL_CONCEPT = InternalConcept(
     begrepsRelasjon = null,
     assignedUser = null,
     abbreviatedLabel = null,
-    interneFelt = null
+    interneFelt = null,
+    internSeOgså = null,
+    internErstattesAv = null,
+    internBegrepsRelasjon = null
 )
 
 val DB_CONCEPT = EMPTY_INTERNAL_CONCEPT.copy(
@@ -129,7 +135,9 @@ val DB_CONCEPT = EMPTY_INTERNAL_CONCEPT.copy(
         endretAv = "Mod Ifier",
         endringstidspunkt = ZonedDateTime.of(2022, 1, 1, 12,0,0,0, ZoneId.of("Europe/Oslo")).toInstant()),
     seOgså = listOf("https://begrep0", "https://begrep1"),
+    internSeOgså = listOf("related-original-id"),
     erstattesAv = listOf("https://begrep1", "https://begrep2"),
+    internErstattesAv = listOf("related-original-id"),
     begrepsRelasjon = listOf(
         BegrepsRelasjon(
             relasjon = "assosiativ",
@@ -165,6 +173,13 @@ val DB_CONCEPT = EMPTY_INTERNAL_CONCEPT.copy(
             beskrivelse = mapOf("en" to "description"),
             inndelingskriterium = mapOf("en" to "partitive relation"),
             relatertBegrep = "https://begrep4")),
+    internBegrepsRelasjon = listOf(
+        BegrepsRelasjon(
+            relasjon = "assosiativ",
+            relasjonsType = "",
+            beskrivelse = mapOf("en" to "internal"),
+            inndelingskriterium = mapOf("en" to "intern partitive relation"),
+            relatertBegrep = "related-original-id")),
     interneFelt = mapOf(
         "text-short-field-id" to InterntFelt(value = "short text"),
         "text-long-field-id" to InterntFelt(value = "long text"),
@@ -207,7 +222,9 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
     lastChanged = ZonedDateTime.of(2022, 1, 1, 12,0,0,0, ZoneId.of("Europe/Oslo")).toInstant(),
     lastChangedBy = "Mod Ifier",
     seeAlso = listOf("https://begrep0", "https://begrep1"),
+    internalSeeAlso = listOf("http://localhost:5555/collections/111222333/concepts/related-original-id"),
     replacedBy = listOf("https://begrep1", "https://begrep2"),
+    internalReplacedBy = listOf("http://localhost:5555/collections/111222333/concepts/related-original-id"),
     conceptRelations = listOf(
         ConceptRelation(
             relationType="ASSOCIATIVE",
@@ -233,6 +250,11 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
             relationType="HAS_COMPREHENSIVE",
             description=LocalizedStrings(nb=null, nn=null, en="partitive relation"),
             relatedConcept="https://begrep4")),
+    internalConceptRelations = listOf(
+        ConceptRelation(
+            relationType="ASSOCIATIVE",
+            description=LocalizedStrings(nb=null, nn=null, en="internal"),
+            relatedConcept="http://localhost:5555/collections/111222333/concepts/related-original-id")),
     internalFields = listOf(
         ShortTextField(
             id="text-short-field-id",

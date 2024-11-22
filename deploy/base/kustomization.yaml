@@ -9,5 +9,5 @@ images:
     newName: ghcr.io/informasjonsforvaltning/catalog-view-api
     newTag: $(GIT_COMMIT_SHA)
 
-patchesStrategicMerge:
-  - env.yaml
+patches:
+  - path: env.yaml
