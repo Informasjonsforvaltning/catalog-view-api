@@ -4,5 +4,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties("application")
 data class ApplicationProperties (
-    val scope: String
+    val scope: String,
+    val conceptCatalogBaseURI: String
 )

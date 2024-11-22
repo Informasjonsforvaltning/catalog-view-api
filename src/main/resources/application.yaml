@@ -7,6 +7,7 @@ server:
   port: 8080
 application:
   scope: ${MASKINPORTEN_SCOPE}
+  conceptCatalogBaseURI: ${CONCEPT_CATALOG_BASE_URI}
   databases:
     adminService: catalogAdminService
     conceptCatalog: concept-catalogue
@@ -38,6 +39,7 @@ spring:
     issuer-uri: http://localhost:5050/
 application:
   scope: test.scope
+  conceptCatalogBaseURI: http://localhost:5555
   elastic:
     username: elastic
     password: elasticpwd

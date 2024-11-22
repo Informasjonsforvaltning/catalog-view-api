@@ -162,6 +162,10 @@ private fun InternalConcept.mongoDocument(): Document {
     concept.append("erstattesAv", erstattesAv)
     concept.append("begrepsRelasjon", begrepsRelasjon?.map { it.mongoDocument() })
 
+    concept.append("internSeOgså", internSeOgså)
+    concept.append("internErstattesAv", internErstattesAv)
+    concept.append("internBegrepsRelasjon", internBegrepsRelasjon?.map { it.mongoDocument() })
+
     return concept
 }
 

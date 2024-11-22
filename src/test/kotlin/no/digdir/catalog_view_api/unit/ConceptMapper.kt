@@ -29,7 +29,7 @@ class ConceptMapper {
 
     @Test
     fun `Map id, publisherID, status and version`() {
-        val result = EMPTY_INTERNAL_CONCEPT.toExternalDTO(EMPTY_ADMIN_DATA)
+        val result = EMPTY_INTERNAL_CONCEPT.toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
         assertEquals(expected = EMPTY_CONCEPT, actual = result)
     }
 
@@ -49,7 +49,7 @@ class ConceptMapper {
                 Pair("nn", "nynorsk"),
                 Pair("en", "english")
             ))
-        ).toExternalDTO(EMPTY_ADMIN_DATA)
+        ).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -86,7 +86,7 @@ class ConceptMapper {
                     )
                 )
             )
-        ).toExternalDTO(EMPTY_ADMIN_DATA)
+        ).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -107,7 +107,7 @@ class ConceptMapper {
                 Pair("nn", "nynorsk"),
                 Pair("en", "english")
             )
-        ).toExternalDTO(EMPTY_ADMIN_DATA)
+        ).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -128,7 +128,7 @@ class ConceptMapper {
                 Pair("nn", "nynorsk"),
                 Pair("en", "english")
             )
-        ).toExternalDTO(EMPTY_ADMIN_DATA)
+        ).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -143,7 +143,7 @@ class ConceptMapper {
         val result = EMPTY_INTERNAL_CONCEPT.copy(
             gyldigFom = LocalDate.of(2021, 7, 11),
             gyldigTom = LocalDate.of(2027, 10, 22)
-        ).toExternalDTO(EMPTY_ADMIN_DATA)
+        ).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -156,7 +156,7 @@ class ConceptMapper {
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(
             omfang = URITekst(uri = "https://omfang.com", tekst = "Omfang")
-        ).toExternalDTO(EMPTY_ADMIN_DATA)
+        ).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -169,7 +169,7 @@ class ConceptMapper {
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(
             kontaktpunkt = Kontaktpunkt(harEpost = "epost@asdf.no", harTelefon = "11122233")
-        ).toExternalDTO(EMPTY_ADMIN_DATA)
+        ).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -189,7 +189,7 @@ class ConceptMapper {
             opprettet = creatDate,
             opprettetAv = "Kari Nordmann",
             endringslogelement = Endringslogelement(endretAv = "Ola Nordmann", endringstidspunkt = changeDate)
-        ).toExternalDTO(EMPTY_ADMIN_DATA)
+        ).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -201,7 +201,10 @@ class ConceptMapper {
         val expected = EMPTY_CONCEPT.copy(assignedUser = user)
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(assignedUser = adminUser.id)
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(users = mapOf("${adminUser.catalogId}-${adminUser.id}" to adminUser)))
+            .toExternalDTO(
+                EMPTY_ADMIN_DATA.copy(users = mapOf("${adminUser.catalogId}-${adminUser.id}" to adminUser)),
+                "http://localhost:5555"
+            )
 
         assertEquals(expected = expected, actual = result)
     }
@@ -218,7 +221,7 @@ class ConceptMapper {
                 Pair("nn", emptyList()),
                 Pair("en", listOf("domain"))
             )
-        ).toExternalDTO(EMPTY_ADMIN_DATA)
+        ).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -230,7 +233,10 @@ class ConceptMapper {
             Code(codeId = "1", codeListId = CODE_LIST_1.id, codeLabel = CODE_3.name)))
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(fagområdeKoder = listOf("0", "1"))
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(domainCodeList = mapOf("123456789" to CODE_LIST_1.id), codeLists = CODE_LISTS))
+            .toExternalDTO(
+                EMPTY_ADMIN_DATA.copy(domainCodeList = mapOf("123456789" to CODE_LIST_1.id), codeLists = CODE_LISTS),
+                "http://localhost:5555"
+            )
 
         assertEquals(expected = expected, actual = result)
     }
@@ -247,7 +253,7 @@ class ConceptMapper {
                 Pair("nn", listOf("")),
                 Pair("en", emptyList())
             )
-        ).toExternalDTO(EMPTY_ADMIN_DATA)
+        ).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -263,7 +269,7 @@ class ConceptMapper {
                 Pair("nb", emptyList()),
                 Pair("en", listOf("english", ""))
             )
-        ).toExternalDTO(EMPTY_ADMIN_DATA)
+        ).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -291,7 +297,7 @@ class ConceptMapper {
                     forholdTilKilde = ForholdTilKildeEnum.EGENDEFINERT
                 )
             )
-        ).toExternalDTO(EMPTY_ADMIN_DATA)
+        ).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -327,7 +333,7 @@ class ConceptMapper {
                     )
                 )
             )
-        ).toExternalDTO(EMPTY_ADMIN_DATA)
+        ).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -348,11 +354,11 @@ class ConceptMapper {
             )))
 
         val resultTrue = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(BOOLEAN_FIELD.id to InterntFelt("true")))
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS), "http://localhost:5555")
         val resultFalse = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(BOOLEAN_FIELD.id to InterntFelt("false")))
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS), "http://localhost:5555")
         val resultInvalid = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(BOOLEAN_FIELD.id to InterntFelt("invalid")))
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS), "http://localhost:5555")
 
         assertEquals(expected = expectedTrue, actual = resultTrue)
         assertEquals(expected = expectedFalse, actual = resultFalse)
@@ -369,7 +375,7 @@ class ConceptMapper {
             )))
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(TEXT_SHORT_FIELD.id to InterntFelt("short string value")))
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS), "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -384,7 +390,7 @@ class ConceptMapper {
             )))
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(TEXT_LONG_FIELD.id to InterntFelt("long string value")))
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS))
+            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS), "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -399,10 +405,16 @@ class ConceptMapper {
             )))
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(CODE_LIST_FIELD.id to InterntFelt("${CODE_1.id}")))
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, codeLists = CODE_LISTS))
+            .toExternalDTO(
+                EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, codeLists = CODE_LISTS),
+                "http://localhost:5555"
+            )
 
         val resultInvalid = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(CODE_LIST_FIELD.id to InterntFelt("asdf")))
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, codeLists = CODE_LISTS))
+            .toExternalDTO(
+                EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, codeLists = CODE_LISTS),
+                "http://localhost:5555"
+            )
 
         assertEquals(expected = expected, actual = result)
         assertEquals(expected = EMPTY_CONCEPT, actual = resultInvalid)
@@ -419,10 +431,16 @@ class ConceptMapper {
             )))
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(USER_LIST_FIELD.id to InterntFelt(adminUser.id)))
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, users = mapOf("${adminUser.catalogId}-${adminUser.id}" to adminUser)))
+            .toExternalDTO(
+                EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, users = mapOf("${adminUser.catalogId}-${adminUser.id}" to adminUser)),
+                "http://localhost:5555"
+            )
 
         val resultInvalid = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(CODE_LIST_FIELD.id to InterntFelt("asdf")))
-            .toExternalDTO(EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, users = mapOf("${adminUser.catalogId}-${adminUser.id}" to adminUser)))
+            .toExternalDTO(
+                EMPTY_ADMIN_DATA.copy(internalFields = INTERNAL_FIELDS, users = mapOf("${adminUser.catalogId}-${adminUser.id}" to adminUser)),
+                "http://localhost:5555"
+            )
 
         assertEquals(expected = expected, actual = result)
         assertEquals(expected = EMPTY_CONCEPT, actual = resultInvalid)
@@ -432,7 +450,8 @@ class ConceptMapper {
     fun `Map seeAlso`() {
         val expected = EMPTY_CONCEPT.copy(seeAlso = listOf("https://concept-0.no"))
 
-        val result = EMPTY_INTERNAL_CONCEPT.copy(seOgså = listOf("https://concept-0.no")).toExternalDTO(EMPTY_ADMIN_DATA)
+        val result = EMPTY_INTERNAL_CONCEPT.copy(seOgså = listOf("https://concept-0.no"))
+            .toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -441,7 +460,8 @@ class ConceptMapper {
     fun `Map replacedBy`() {
         val expected = EMPTY_CONCEPT.copy(replacedBy = listOf("https://concept-1.no"))
 
-        val result = EMPTY_INTERNAL_CONCEPT.copy(erstattesAv = listOf("https://concept-1.no")).toExternalDTO(EMPTY_ADMIN_DATA)
+        val result = EMPTY_INTERNAL_CONCEPT.copy(erstattesAv = listOf("https://concept-1.no"))
+            .toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -460,7 +480,7 @@ class ConceptMapper {
                 beskrivelse = mapOf("nb" to "beskrivelse"),
                 inndelingskriterium = mapOf("nb" to "inndelingskriterium"),
                 relatertBegrep = "https://concept-1.no"
-            ))).toExternalDTO(EMPTY_ADMIN_DATA)
+            ))).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -483,7 +503,7 @@ class ConceptMapper {
                 beskrivelse = mapOf("nb" to "beskrivelse"),
                 inndelingskriterium = mapOf("nb" to "inndelingskriterium"),
                 relatertBegrep = "https://concept-1.no"
-            ))).toExternalDTO(EMPTY_ADMIN_DATA)
+            ))).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -506,7 +526,7 @@ class ConceptMapper {
                 beskrivelse = mapOf("nb" to "beskrivelse"),
                 inndelingskriterium = mapOf("nb" to "inndelingskriterium"),
                 relatertBegrep = "https://concept-1.no"
-            ))).toExternalDTO(EMPTY_ADMIN_DATA)
+            ))).toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
@@ -515,7 +535,8 @@ class ConceptMapper {
     fun `Map attachedTag`() {
         val expected = EMPTY_CONCEPT.copy(attachedTag = listOf("merkelapp", "tag"))
 
-        val result = EMPTY_INTERNAL_CONCEPT.copy(merkelapp = listOf("merkelapp", "tag")).toExternalDTO(EMPTY_ADMIN_DATA)
+        val result = EMPTY_INTERNAL_CONCEPT.copy(merkelapp = listOf("merkelapp", "tag"))
+            .toExternalDTO(EMPTY_ADMIN_DATA, "http://localhost:5555")
 
         assertEquals(expected = expected, actual = result)
     }
