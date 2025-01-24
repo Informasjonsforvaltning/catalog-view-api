@@ -43,6 +43,7 @@ open class ElasticsearchConfig(private val elasticProperties: ElasticProperties)
 
         builder.withBasicAuth(elasticProperties.username, elasticProperties.password)
             .withConnectTimeout(Duration.ofSeconds(120))
+            .withSocketTimeout(Duration.ofSeconds(120))
 
         return builder.build()
     }
