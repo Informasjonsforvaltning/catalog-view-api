@@ -1,5 +1,5 @@
 logging:
-  level.root: WARN
+  level.root: INFO
   level.no.fdk: ${LOG_LEVEL:INFO}
   level.org.springframework: WARN
   level.org.springframework.web: WARN
