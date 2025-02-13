@@ -6,9 +6,8 @@ on:
       - main
 
 jobs:
-  build-catalog-view-api:
+  build-push:
     name: Build when pull request is created
-    if: github.event.pull_request.draft == false
     uses: Informasjonsforvaltning/workflows/.github/workflows/build-push.yaml@main
     with:
       app_name: catalog-view-api
@@ -20,7 +19,7 @@ jobs:
 
   deploy-prod:
     name: Deploy to prod environment
-    needs: [ build-catalog-view-api ]
+    needs: [ build-push ]
     uses: Informasjonsforvaltning/workflows/.github/workflows/kustomize-deploy.yaml@main
     with:
       app_name: catalog-view-api
