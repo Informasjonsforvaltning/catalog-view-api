@@ -106,7 +106,8 @@ data class User (
 data class Code (
     val codeId: String,
     val codeListId: String,
-    val codeLabel: LocalizedStrings
+    val codeLabel: LocalizedStrings,
+    val codeParent: String?
 )
 
 @JsonTypeInfo(

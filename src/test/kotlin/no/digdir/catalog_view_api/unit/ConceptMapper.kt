@@ -229,8 +229,8 @@ class ConceptMapper {
     @Test
     fun `Map domain codes`() {
         val expected = EMPTY_CONCEPT.copy(domainCodes = listOf(
-            Code(codeId = "0", codeListId = CODE_LIST_1.id, codeLabel = CODE_2.name),
-            Code(codeId = "1", codeListId = CODE_LIST_1.id, codeLabel = CODE_3.name)))
+            Code(codeId = "0", codeListId = CODE_LIST_1.id, codeLabel = CODE_2.name, codeParent = CODE_2.parentID),
+            Code(codeId = "1", codeListId = CODE_LIST_1.id, codeLabel = CODE_3.name, codeParent = CODE_3.parentID)))
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(fagområdeKoder = listOf("0", "1"))
             .toExternalDTO(
@@ -401,7 +401,7 @@ class ConceptMapper {
             CodeField(
                 id = CODE_LIST_FIELD.id,
                 label = CODE_LIST_FIELD.label,
-                value = Code(CODE_1.id, CODE_LIST_0.id, CODE_1.name)
+                value = Code(CODE_1.id, CODE_LIST_0.id, CODE_1.name, CODE_1.parentID)
             )))
 
         val result = EMPTY_INTERNAL_CONCEPT.copy(interneFelt = mapOf(CODE_LIST_FIELD.id to InterntFelt("${CODE_1.id}")))

@@ -156,7 +156,7 @@ private fun CatalogAdminData.getDomainCode(id: String?, catalogId: String): Code
     return if (id == null || codeListId == null) null
     else codeLists["$catalogId-$codeListId"]?.codes
         ?.find { it.id == id }
-        ?.let { Code(codeId = id, codeListId = codeListId, codeLabel = it.name) }
+        ?.let { Code(codeId = id, codeListId = codeListId, codeLabel = it.name, codeParent = it.parentID) }
 }
 
 private fun String.safeToInt(): Int? =
@@ -211,7 +211,8 @@ private fun Field.toCodeField(value: String, catalogId: String, codeLists: Map<S
                 value = Code(
                     codeId = value,
                     codeListId = codeListId,
-                    codeLabel = it.name
+                    codeLabel = it.name,
+                    codeParent = it.parentID
                 )
             )
         }
