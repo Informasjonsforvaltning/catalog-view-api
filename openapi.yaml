@@ -282,6 +282,8 @@ components:
           type: string
         codeLabel:
           $ref: "#/components/schemas/LocalizedStrings"
+        codeParent:
+          type: string
 
     InternalField:
       type: object
