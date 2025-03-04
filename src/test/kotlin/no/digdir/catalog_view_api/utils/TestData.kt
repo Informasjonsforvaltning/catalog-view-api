@@ -272,7 +272,8 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
             value=Code(
                 codeId="1",
                 codeListId="code-list-0",
-                codeLabel=LocalizedStrings(nb="Kode 0.1", nn="Kode 0.1", en="Code 0.1"))),
+                codeLabel=LocalizedStrings(nb="Kode 0.1", nn="Kode 0.1", en="Code 0.1"),
+                codeParent = null)),
         UserField(
             id="user-list-field-id",
             label=LocalizedStrings(nb="user list nb", nn="user list nn", en="user list en"),
@@ -285,7 +286,7 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
             label=LocalizedStrings(nb="bool nb", nn="bool nn", en="bool en"),
             type="bool",
             value=true)),
-    domainCodes = listOf(Code(codeId="1", codeListId="code-list-1", codeLabel=LocalizedStrings(nb="Kode 1.1", nn="Kode 1.1", en="Code 1.1"))),
+    domainCodes = listOf(Code(codeId="1", codeListId="code-list-1", codeLabel=LocalizedStrings(nb="Kode 1.1", nn="Kode 1.1", en="Code 1.1"), codeParent = null)),
     assignedUser = User(
         name="Jane Doe",
         email="fdk@digdir.no")
