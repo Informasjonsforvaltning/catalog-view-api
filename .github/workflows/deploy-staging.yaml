@@ -12,7 +12,7 @@ jobs:
     if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request' }}
     uses: Informasjonsforvaltning/workflows/.github/workflows/build.yaml@main
     with:
-      java_version: '17'
+      java_version: '21'
 
   build-push:
     name: Build when pull request is created
@@ -21,7 +21,7 @@ jobs:
     with:
       app_name: catalog-view-api
       environment: staging
-      java_version: '17'
+      java_version: '21'
       coverage_file_path: ./target/site/jacoco/jacoco.xml
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
