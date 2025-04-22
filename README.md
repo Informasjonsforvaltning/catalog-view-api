@@ -37,8 +37,7 @@ mvn spring-boot:run -Dspring-boot.run.profiles=develop
 
 ### API Documentation (OpenAPI)
 
-Once the application is running locally, the API documentation can be accessed
-at http://localhost:8080/swagger-ui/index.html
+The API documentation is available at ```openapi.yaml```.
 
 ### Running tests
 
