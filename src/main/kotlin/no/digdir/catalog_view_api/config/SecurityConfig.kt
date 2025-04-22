@@ -19,6 +19,8 @@ open class SecurityConfig {
                 authorize(HttpMethod.OPTIONS, "/**", permitAll)
                 authorize(HttpMethod.GET, "/ping", permitAll)
                 authorize(HttpMethod.GET, "/ready", permitAll)
+                authorize(HttpMethod.GET, "/swagger-ui/**", permitAll)
+                authorize(HttpMethod.GET, "/v3/**", permitAll)
                 authorize(anyRequest, hasAuthority("SCOPE_${applicationProperties.scope}"))
             }
             oauth2ResourceServer { jwt { } }

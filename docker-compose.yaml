@@ -1,25 +1,6 @@
 version: "3"
 
 services:
-  catalog-view-api:
-    image: eu.gcr.io/digdir-fdk-infra/catalog-view-api:test
-    build: .
-    environment:
-      - MASKINPORTEN_SCOPE=test.scope
-      - MONGO_USERNAME=admin
-      - MONGO_PASSWORD=admin
-      - ELASTIC_USERNAME=elastic
-      - ELASTIC_PASSWORD=elasticpwd
-      - ELASTIC_SSL=false
-      - ELASTIC_URI=elasticsearch:9200
-      - ELASTIC_KEYSTORE_PATH=keystore.jks
-      - ELASTIC_KEYSTORE_PASSWORD=keystore
-    ports:
-      - '8080:8080'
-    depends_on:
-      - mongodb
-      - elasticsearch
-
   mongodb:
     image: mongo:latest
     environment:
