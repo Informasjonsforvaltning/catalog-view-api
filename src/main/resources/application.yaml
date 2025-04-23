@@ -32,6 +32,18 @@ spring:
     issuer-uri: ${MASKINPORTEN_ISSUER:https://test.maskinporten.no/}
 ---
 spring:
+  config.activate.on-profile: develop
+  data.mongodb.uri: mongodb://admin:admin@localhost:27017/comments?authSource=admin&authMechanism=SCRAM-SHA-1
+  security.oauth2.resourceserver.jwt.jwk-set-uri: https://sso.staging.fellesdatakatalog.digdir.no/auth/realms/fdk/protocol/openid-connect/certs
+application:
+  scope: test.scope
+  elastic:
+    username: elastic
+    password: elasticpwd
+    host: localhost
+    ssl: false
+---
+spring:
   config.activate.on-profile: test
   data.mongodb.uri: mongodb://admin:admin@localhost:27017/?authSource=admin&authMechanism=SCRAM-SHA-1
   security.oauth2.resourceserver.jwt:
@@ -44,6 +56,4 @@ application:
     username: elastic
     password: elasticpwd
     ssl: false
-    storeName: keystore
     storePass: keystore
-    certPath: path
