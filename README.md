@@ -1,6 +1,10 @@
 # Catalog View API
 
-This application provides an API for viewing complete catalog data.
+This application provides an API for viewing your company catalog in the registration solution. Through this endpoint
+you will be able to retrieve all information about resources that are registered in the registration solution of your
+company. Currently, it is only possible to use this endpoint against the term catalog.
+
+The API is protected with [Maskinporten](https://samarbeid.digdir.no/maskinporten/maskinporten/25).
 
 For a broader understanding of the system’s context, refer to
 the [architecture documentation](https://github.com/Informasjonsforvaltning/architecture-documentation) wiki. For more
