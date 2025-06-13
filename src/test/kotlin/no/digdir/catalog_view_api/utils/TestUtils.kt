@@ -263,16 +263,16 @@ fun populateDB() {
 
     val client: MongoClient = MongoClients.create(connectionString)
 
-    val conceptCatalogDatabase = client.getDatabase("concept-catalogue").withCodecRegistry(pojoCodecRegistry)
-    val conceptCatalogCollection = conceptCatalogDatabase.getCollection("begrep")
+    val conceptCatalogDatabase = client.getDatabase("conceptCatalog").withCodecRegistry(pojoCodecRegistry)
+    val conceptCatalogCollection = conceptCatalogDatabase.getCollection("concepts")
     conceptCatalogCollection.insertOne(DB_CONCEPT.mongoDocument())
 
-    val adminDatabase = client.getDatabase("catalogAdminService").withCodecRegistry(pojoCodecRegistry)
+    val adminDatabase = client.getDatabase("catalogAdmin").withCodecRegistry(pojoCodecRegistry)
     val internalFieldsCollection = adminDatabase.getCollection("internalFields")
     internalFieldsCollection.insertMany(DB_INTERNAL_FIELDS.map { it.mongoDocument() })
     val codeListsCollection = adminDatabase.getCollection("codeLists")
     codeListsCollection.insertMany(DB_CODE_LISTS.map { it.mongoDocument() })
-    val usersCollection = adminDatabase.getCollection("users")
+    val usersCollection = adminDatabase.getCollection("catalogUsers")
     usersCollection.insertMany(DB_ADMIN_USERS.map { it.mongoDocument() })
     val editableFieldsCollection = adminDatabase.getCollection("editableFields")
     editableFieldsCollection.insertMany(DB_EDITABLE_FIELDS.map { it.mongoDocument() })

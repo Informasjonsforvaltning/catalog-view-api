@@ -10,11 +10,6 @@ import org.springframework.data.elasticsearch.client.ClientConfiguration
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.security.KeyStore
-import java.security.cert.Certificate
-import java.security.cert.CertificateFactory
 import java.time.Duration
 import javax.net.ssl.SSLContext
 
