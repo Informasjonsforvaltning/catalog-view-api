@@ -9,14 +9,14 @@ application:
   scope: ${MASKINPORTEN_SCOPE}
   conceptCatalogBaseURI: ${CONCEPT_CATALOG_BASE_URI}
   databases:
-    adminService: catalogAdminService
-    conceptCatalog: concept-catalogue
+    adminService: catalogAdmin
+    conceptCatalog: conceptCatalog
   collections:
-    concepts: begrep
+    concepts: concepts
     codeLists: codeLists
     editableFields: editableFields
     internalFields: internalFields
-    users: users
+    users: catalogUsers
   elastic:
     username: ${ELASTIC_USERNAME}
     password: ${ELASTIC_PASSWORD}
@@ -26,14 +26,14 @@ application:
     storePass: ${ELASTIC_KEYSTORE_PASSWORD}
 
 spring:
-  data.mongodb.uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/?authSource=admin&authMechanism=SCRAM-SHA-1
+  data.mongodb.uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGODB_HOST}/?authSource=${MONGODB_AUTH}&replicaSet=${MONGODB_REPLICASET}
   security.oauth2.resourceserver.jwt:
     jwk-set-uri: ${MASKINPORTEN_JWK:https://test.maskinporten.no/jwk}
     issuer-uri: ${MASKINPORTEN_ISSUER:https://test.maskinporten.no/}
 ---
 spring:
   config.activate.on-profile: develop
-  data.mongodb.uri: mongodb://admin:admin@localhost:27017/comments?authSource=admin&authMechanism=SCRAM-SHA-1
+  data.mongodb.uri: mongodb://admin:admin@localhost:27017/comments?authSource=admin
   security.oauth2.resourceserver.jwt.jwk-set-uri: https://sso.staging.fellesdatakatalog.digdir.no/auth/realms/fdk/protocol/openid-connect/certs
 application:
   scope: test.scope
@@ -45,7 +45,7 @@ application:
 ---
 spring:
   config.activate.on-profile: test
-  data.mongodb.uri: mongodb://admin:admin@localhost:27017/?authSource=admin&authMechanism=SCRAM-SHA-1
+  data.mongodb.uri: mongodb://admin:admin@localhost:27017/?authSource=admin
   security.oauth2.resourceserver.jwt:
     jwk-set-uri: http://localhost:5050/jwk
     issuer-uri: http://localhost:5050/

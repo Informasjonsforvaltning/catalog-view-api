@@ -20,7 +20,7 @@ data class CodeList(
     val codes: List<AdminCode>
 )
 
-@Document(collection = "users")
+@Document(collection = "catalogUsers")
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class AdminUser(
     @Id
