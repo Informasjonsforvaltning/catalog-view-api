@@ -28,8 +28,8 @@ application:
 spring:
   data.mongodb:
     host: ${MONGODB_HOST}
-    username: ${MONGODB_USER}
-    password: ${MONGODB_PASSWORD}
+    username: ${MONGO_USERNAME}
+    password: ${MONGO_PASSWORD}
     authentication-database: ${MONGODB_AUTH}
     replica-set-name: ${MONGODB_REPLICASET}
     port: 27017
