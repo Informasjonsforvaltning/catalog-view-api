@@ -14,7 +14,7 @@ open class MongoConf(
 
     @Bean
     open fun mongoClient(): MongoClient {
-        return MongoClients.create(connectionString.uri)
+        return MongoClients.create(connectionString.uri())
     }
 
     @Bean
