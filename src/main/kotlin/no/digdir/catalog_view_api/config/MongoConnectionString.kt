@@ -3,7 +3,7 @@ package no.digdir.catalog_view_api.config
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URLEncoder
 
-@ConfigurationProperties("spring.data.mongodb")
+@ConfigurationProperties("spring.mongodb")
 data class MongoConnectionString(
     val host: String,
     val port: String,
