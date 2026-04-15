@@ -26,7 +26,7 @@ application:
     storePass: ${ELASTIC_KEYSTORE_PASSWORD}
 
 spring:
-  data.mongodb:
+  mongodb:
     host: ${MONGODB_HOST}
     username: ${MONGO_USERNAME}
     password: ${MONGO_PASSWORD}
@@ -39,7 +39,7 @@ spring:
 ---
 spring:
   config.activate.on-profile: develop
-  data.mongodb:
+  mongodb:
     host: localhost
     username: admin
     password: admin
@@ -56,7 +56,7 @@ application:
 ---
 spring:
   config.activate.on-profile: test
-  data.mongodb:
+  mongodb:
     host: localhost
     username: testuser
     password: testpassword

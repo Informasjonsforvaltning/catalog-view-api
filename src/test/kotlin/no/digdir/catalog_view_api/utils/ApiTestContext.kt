@@ -18,7 +18,7 @@ abstract class ApiTestContext {
     internal class Initializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
         override fun initialize(configurableApplicationContext: ConfigurableApplicationContext) {
             TestPropertyValues.of(
-                "spring.data.mongodb.port=${mongoContainer.getMappedPort(MONGO_PORT)}",
+                "spring.mongodb.port=${mongoContainer.getMappedPort(MONGO_PORT)}",
                 "application.elastic.host=localhost:${elasticContainer.getMappedPort(9200)}"
             ).applyTo(configurableApplicationContext.environment)
         }
@@ -30,7 +30,7 @@ abstract class ApiTestContext {
             .withExposedPorts(MONGO_PORT)
             .waitingFor(Wait.forListeningPort())
 
-        val elasticContainer: ElasticsearchContainer = ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:8.10.2")
+        val elasticContainer: ElasticsearchContainer = ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:8.17.2")
             .withEnv(ELASTIC_ENV_VALUES)
 
         init {
