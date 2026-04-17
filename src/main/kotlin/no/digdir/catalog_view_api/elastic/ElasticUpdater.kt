@@ -19,18 +19,30 @@ class ElasticUpdater (
         launch {
             logger.info("starting update of concepts index")
 
-            // get updated list of concepts from concept-catalog db
-            val allConcepts = conceptsService.getAndMapAllConcepts()
-            // find all concepts currently in catalog-view concept-index
-            val viewConcepts = conceptViewRepository.findAll()
+            val allConcepts = try {
+                conceptsService.getAndMapAllConcepts()
+            } catch (e: Exception) {
+                logger.error("Failure in conceptsService.getAndMapAllConcepts when updating elastic index", e)
+                throw e
+            }
 
-            // concepts removed from concept-catalog is also removed from view-index
+            val viewConcepts = try {
+                conceptViewRepository.findAll()
+            } catch (e: Exception) {
+                logger.error("Failure in conceptViewRepository.findAll when updating elastic index", e)
+                throw e
+            }
+
             viewConcepts
                 .filter { viewConcept -> allConcepts.none { it.id == viewConcept.id } }
                 .run { conceptViewRepository.deleteAll(this) }
 
-            // update all concepts in view-index
-            conceptViewRepository.saveAll(allConcepts)
+            try {
+                conceptViewRepository.saveAll(allConcepts)
+            } catch (e: Exception) {
+                logger.error("Failure in conceptViewRepository.saveAll when updating elastic index", e)
+                throw e
+            }
 
             logger.info("finished update of concepts index")
         }
