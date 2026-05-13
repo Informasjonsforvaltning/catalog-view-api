@@ -11,12 +11,12 @@ application:
   postgresql:
     conceptCatalog:
       url: jdbc:postgresql://${POSTGRESQL_HOST}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_CONCEPT_DB}
-      username: ${POSTGRESQL_CONCEPT_USER}
-      password: ${POSTGRESQL_CONCEPT_PASSWORD}
+      username: ${POSTGRESQL_USER}
+      password: ${POSTGRESQL_PASSWORD}
     adminService:
       url: jdbc:postgresql://${POSTGRESQL_HOST}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_ADMIN_DB}
-      username: ${POSTGRESQL_ADMIN_USER}
-      password: ${POSTGRESQL_ADMIN_PASSWORD}
+      username: ${POSTGRESQL_USER}
+      password: ${POSTGRESQL_PASSWORD}
   elastic:
     username: ${ELASTIC_USERNAME}
     password: ${ELASTIC_PASSWORD}
