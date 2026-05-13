@@ -1,35 +1,26 @@
 package no.digdir.catalog_view_api.utils
 
-import com.mongodb.ConnectionString
-import com.mongodb.MongoClientSettings
-import com.mongodb.client.MongoClient
-import com.mongodb.client.MongoClients
-import no.digdir.catalog_view_api.model.AdminCode
 import no.digdir.catalog_view_api.model.AdminUser
-import no.digdir.catalog_view_api.model.BegrepsRelasjon
 import no.digdir.catalog_view_api.model.CodeList
-import no.digdir.catalog_view_api.model.Definisjon
 import no.digdir.catalog_view_api.model.EditableFields
 import no.digdir.catalog_view_api.model.Field
 import no.digdir.catalog_view_api.model.InternalConcept
-import no.digdir.catalog_view_api.model.InterntFelt
-import no.digdir.catalog_view_api.model.LocalizedStrings
-import no.digdir.catalog_view_api.model.URITekst
-import no.digdir.catalog_view_api.utils.ApiTestContext.Companion.mongoContainer
-import org.bson.Document
-import org.bson.codecs.configuration.CodecRegistries
-import org.bson.codecs.pojo.PojoCodecProvider
+import no.digdir.catalog_view_api.utils.ApiTestContext.Companion.adminContainer
+import no.digdir.catalog_view_api.utils.ApiTestContext.Companion.conceptContainer
+import org.postgresql.util.PGobject
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import java.io.BufferedReader
-import java.net.HttpURLConnection
-import java.net.URL
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
+import tools.jackson.module.kotlin.jacksonObjectMapper
+import java.io.BufferedReader
+import java.net.HttpURLConnection
+import java.net.URL
+import java.sql.DriverManager
 
 
 fun apiGet(port: Int, endpoint: String, acceptHeader: String?): Map<String, Any> {
@@ -104,178 +95,152 @@ private fun isOK(response: Int?): Boolean =
     if (response == null) false
     else HttpStatus.resolve(response)?.is2xxSuccessful == true
 
-private fun InternalConcept.mongoDocument(): Document {
-    val concept = Document()
-    concept.append("_id", id)
-    concept.append("originaltBegrep", originaltBegrep)
-    concept.append("erPublisert", erPublisert)
-    concept.append("statusURI", statusURI)
+private val objectMapper = jacksonObjectMapper()
 
-    val preferred = Document()
-    preferred.append("navn", anbefaltTerm?.navn)
-    concept.append("anbefaltTerm", preferred)
-    concept.append("tillattTerm", tillattTerm)
-    concept.append("frarådetTerm", frarådetTerm)
-
-    val semver = Document()
-    semver.append("major", versjonsnr.major)
-    semver.append("minor", versjonsnr.minor)
-    semver.append("patch", versjonsnr.patch)
-    concept.append("versjonsnr", semver)
-
-    val org = Document()
-    org.append("_id", ansvarligVirksomhet.id)
-    org.append("uri", ansvarligVirksomhet.uri)
-    org.append("navn", ansvarligVirksomhet.navn)
-    org.append("orgPath", ansvarligVirksomhet.orgPath)
-    org.append("prefLabel", ansvarligVirksomhet.prefLabel)
-    concept.append("ansvarligVirksomhet", org)
-
-    concept.append("definisjon", definisjon?.mongoDocument())
-    concept.append("definisjonForAllmennheten", definisjonForAllmennheten?.mongoDocument())
-    concept.append("definisjonForSpesialister", definisjonForSpesialister?.mongoDocument())
-
-    concept.append("merknad", merknad)
-    concept.append("eksempel", eksempel)
-    concept.append("omfang", omfang?.mongoDocument())
-
-    val contact = Document()
-    contact.append("harEpost", kontaktpunkt?.harEpost)
-    contact.append("harTelefon", kontaktpunkt?.harTelefon)
-    concept.append("kontaktpunkt", contact)
-    concept.append("abbreviatedLabel", abbreviatedLabel)
-    concept.append("gyldigTom", gyldigTom)
-    concept.append("gyldigFom", gyldigFom)
-
-    val edited = Document()
-    edited.append("endretAv", endringslogelement?.endretAv)
-    edited.append("endringstidspunkt", endringslogelement?.endringstidspunkt)
-    concept.append("endringslogelement", edited)
-    concept.append("opprettetAv", opprettetAv)
-    concept.append("opprettet", opprettet)
-
-    concept.append("interneFelt", interneFelt?.mapValues { it.value.mongoDocument() })
-    concept.append("fagområdeKoder", fagområdeKoder)
-    concept.append("assignedUser", assignedUser)
-
-    concept.append("seOgså", seOgså)
-    concept.append("erstattesAv", erstattesAv)
-    concept.append("begrepsRelasjon", begrepsRelasjon?.map { it.mongoDocument() })
-
-    concept.append("internSeOgså", internSeOgså)
-    concept.append("internErstattesAv", internErstattesAv)
-    concept.append("internBegrepsRelasjon", internBegrepsRelasjon?.map { it.mongoDocument() })
-
-    return concept
-}
-
-private fun Definisjon.mongoDocument(): Document {
-    val definition = Document()
-    definition.append("tekst", tekst)
-
-    val source = Document()
-    source.append("forholdTilKilde", kildebeskrivelse?.forholdTilKilde)
-    source.append("kilde", kildebeskrivelse?.kilde?.map { it.mongoDocument() })
-    definition.append("kildebeskrivelse", source)
-    return definition
-}
-
-private fun URITekst.mongoDocument(): Document {
-    val doc = Document()
-    doc.append("uri", uri)
-    doc.append("tekst", tekst)
-    return doc
-}
-
-private fun InterntFelt.mongoDocument(): Document {
-    val field = Document()
-    field.append("value", value)
-    return field
-}
-
-private fun LocalizedStrings.mongoDocument(): Document {
-    val strings = Document()
-    strings.append("nb", nb)
-    strings.append("nn", nn)
-    strings.append("en", en)
-    return strings
-}
-
-private fun Field.mongoDocument(): Document {
-    val field = Document()
-    field.append("_id", id)
-    field.append("label", label.mongoDocument())
-    field.append("description", description.mongoDocument())
-    field.append("catalogId", catalogId)
-    field.append("type", type)
-    field.append("codeListId", codeListId)
-    return field
-}
-
-private fun AdminCode.mongoDocument(): Document {
-    val list = Document()
-    list.append("_id", id)
-    list.append("parentID", parentID)
-    list.append("name", name.mongoDocument())
-    return list
-}
-
-private fun CodeList.mongoDocument(): Document {
-    val list = Document()
-    list.append("_id", id)
-    list.append("catalogId", catalogId)
-    list.append("codes", codes.map { it.mongoDocument() })
-    return list
-}
-
-private fun AdminUser.mongoDocument(): Document {
-    val list = Document()
-    list.append("_id", id)
-    list.append("catalogId", catalogId)
-    list.append("name", name)
-    list.append("email", email)
-    list.append("telephoneNumber", telephoneNumber)
-    return list
-}
-
-private fun EditableFields.mongoDocument(): Document {
-    val fields = Document()
-    fields.append("_id", catalogId)
-    fields.append("domainCodeListId", domainCodeListId)
-    return fields
-}
-
-private fun BegrepsRelasjon.mongoDocument(): Document {
-    val relation = Document()
-    relation.append("relasjon", relasjon)
-    relation.append("relasjonsType", relasjonsType)
-    relation.append("beskrivelse", beskrivelse)
-    relation.append("inndelingskriterium", inndelingskriterium)
-    relation.append("relatertBegrep", relatertBegrep)
-    return relation
+private fun jsonb(value: Any?): PGobject {
+    val pg = PGobject()
+    pg.type = "jsonb"
+    pg.value = if (value != null) objectMapper.writeValueAsString(value) else null
+    return pg
 }
 
 fun populateDB() {
-    val connectionString = ConnectionString("mongodb://${MONGO_USER}:${MONGO_PASSWORD}@localhost:${mongoContainer.getMappedPort(MONGO_PORT)}/?authSource=admin&authMechanism=SCRAM-SHA-1")
-    val pojoCodecRegistry = CodecRegistries.fromRegistries(
-        MongoClientSettings.getDefaultCodecRegistry(), CodecRegistries.fromProviders(
-            PojoCodecProvider.builder().automatic(true).build()))
+    populateConceptCatalog()
+    populateAdminService()
+}
 
-    val client: MongoClient = MongoClients.create(connectionString)
+private fun populateConceptCatalog() {
+    val conn = DriverManager.getConnection(
+        conceptContainer.getJdbcUrl(),
+        conceptContainer.getUsername(),
+        conceptContainer.getPassword()
+    )
+    conn.use { c ->
+        c.createStatement().execute("""
+            CREATE TABLE IF NOT EXISTS concepts (
+                id                       VARCHAR(255) PRIMARY KEY,
+                originalt_begrep         VARCHAR(255) NOT NULL,
+                ansvarlig_virksomhet_id  VARCHAR(255) NOT NULL,
+                status                   VARCHAR(50),
+                er_publisert             BOOLEAN DEFAULT FALSE,
+                is_archived              BOOLEAN DEFAULT FALSE,
+                data                     JSONB NOT NULL
+            )
+        """)
 
-    val conceptCatalogDatabase = client.getDatabase("conceptCatalog").withCodecRegistry(pojoCodecRegistry)
-    val conceptCatalogCollection = conceptCatalogDatabase.getCollection("concepts")
-    conceptCatalogCollection.insertOne(DB_CONCEPT.mongoDocument())
+        val stmt = c.prepareStatement(
+            "INSERT INTO concepts (id, originalt_begrep, ansvarlig_virksomhet_id, status, er_publisert, is_archived, data) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        )
+        insertConcept(stmt, DB_CONCEPT)
+        stmt.executeBatch()
+    }
+}
 
-    val adminDatabase = client.getDatabase("catalogAdmin").withCodecRegistry(pojoCodecRegistry)
-    val internalFieldsCollection = adminDatabase.getCollection("internalFields")
-    internalFieldsCollection.insertMany(DB_INTERNAL_FIELDS.map { it.mongoDocument() })
-    val codeListsCollection = adminDatabase.getCollection("codeLists")
-    codeListsCollection.insertMany(DB_CODE_LISTS.map { it.mongoDocument() })
-    val usersCollection = adminDatabase.getCollection("catalogUsers")
-    usersCollection.insertMany(DB_ADMIN_USERS.map { it.mongoDocument() })
-    val editableFieldsCollection = adminDatabase.getCollection("editableFields")
-    editableFieldsCollection.insertMany(DB_EDITABLE_FIELDS.map { it.mongoDocument() })
+private fun insertConcept(stmt: java.sql.PreparedStatement, concept: InternalConcept) {
+    stmt.setString(1, concept.id)
+    stmt.setString(2, concept.originaltBegrep)
+    stmt.setString(3, concept.ansvarligVirksomhet.id)
+    stmt.setString(4, null)
+    stmt.setBoolean(5, concept.erPublisert)
+    stmt.setBoolean(6, false)
+    stmt.setObject(7, jsonb(concept))
+    stmt.addBatch()
+}
 
-    client.close()
+private fun populateAdminService() {
+    val conn = DriverManager.getConnection(
+        adminContainer.getJdbcUrl(),
+        adminContainer.getUsername(),
+        adminContainer.getPassword()
+    )
+    conn.use { c ->
+        c.createStatement().execute("""
+            CREATE TABLE IF NOT EXISTS catalog_users (
+                id                VARCHAR(255) PRIMARY KEY,
+                catalog_id        VARCHAR(255) NOT NULL,
+                name              VARCHAR(500) NOT NULL,
+                email             VARCHAR(500),
+                telephone_number  VARCHAR(100)
+            )
+        """)
+        c.createStatement().execute("""
+            CREATE TABLE IF NOT EXISTS editable_fields (
+                catalog_id          VARCHAR(255) PRIMARY KEY,
+                domain_code_list_id VARCHAR(255)
+            )
+        """)
+        c.createStatement().execute("""
+            CREATE TABLE IF NOT EXISTS internal_fields (
+                id              VARCHAR(255) PRIMARY KEY,
+                catalog_id      VARCHAR(255) NOT NULL,
+                label           JSONB,
+                description     JSONB,
+                type            VARCHAR(50) NOT NULL,
+                location        VARCHAR(50) NOT NULL,
+                code_list_id    VARCHAR(255),
+                enable_filter   BOOLEAN
+            )
+        """)
+        c.createStatement().execute("""
+            CREATE TABLE IF NOT EXISTS code_lists (
+                id          VARCHAR(255) PRIMARY KEY,
+                name        VARCHAR(500) NOT NULL,
+                catalog_id  VARCHAR(255) NOT NULL,
+                description VARCHAR(2000) NOT NULL,
+                codes       JSONB
+            )
+        """)
+
+        val userStmt = c.prepareStatement(
+            "INSERT INTO catalog_users (id, catalog_id, name, email, telephone_number) VALUES (?, ?, ?, ?, ?)"
+        )
+        DB_ADMIN_USERS.forEach { u ->
+            userStmt.setString(1, u.id)
+            userStmt.setString(2, u.catalogId)
+            userStmt.setString(3, u.name)
+            userStmt.setString(4, u.email)
+            userStmt.setString(5, u.telephoneNumber)
+            userStmt.addBatch()
+        }
+        userStmt.executeBatch()
+
+        val efStmt = c.prepareStatement(
+            "INSERT INTO editable_fields (catalog_id, domain_code_list_id) VALUES (?, ?)"
+        )
+        DB_EDITABLE_FIELDS.forEach { ef ->
+            efStmt.setString(1, ef.catalogId)
+            efStmt.setString(2, ef.domainCodeListId)
+            efStmt.addBatch()
+        }
+        efStmt.executeBatch()
+
+        val ifStmt = c.prepareStatement(
+            "INSERT INTO internal_fields (id, catalog_id, label, description, type, location, code_list_id, enable_filter) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        )
+        DB_INTERNAL_FIELDS.forEach { f ->
+            ifStmt.setString(1, f.id)
+            ifStmt.setString(2, f.catalogId)
+            ifStmt.setObject(3, jsonb(f.label))
+            ifStmt.setObject(4, jsonb(f.description))
+            ifStmt.setString(5, f.type)
+            ifStmt.setString(6, "main_column")
+            ifStmt.setString(7, f.codeListId)
+            ifStmt.setNull(8, java.sql.Types.BOOLEAN)
+            ifStmt.addBatch()
+        }
+        ifStmt.executeBatch()
+
+        val clStmt = c.prepareStatement(
+            "INSERT INTO code_lists (id, name, catalog_id, description, codes) VALUES (?, ?, ?, ?, ?)"
+        )
+        DB_CODE_LISTS.forEach { cl ->
+            clStmt.setString(1, cl.id)
+            clStmt.setString(2, "")
+            clStmt.setString(3, cl.catalogId)
+            clStmt.setString(4, "")
+            clStmt.setObject(5, jsonb(cl.codes))
+            clStmt.addBatch()
+        }
+        clStmt.executeBatch()
+    }
 }

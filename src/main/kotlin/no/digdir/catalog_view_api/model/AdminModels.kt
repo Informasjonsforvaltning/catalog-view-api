@@ -1,8 +1,6 @@
 package no.digdir.catalog_view_api.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.Document
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class AdminCode(
@@ -11,19 +9,15 @@ data class AdminCode(
     val parentID: String?
 )
 
-@Document(collection = "codeLists")
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class CodeList(
-    @Id
     val id: String,
     val catalogId: String,
     val codes: List<AdminCode>
 )
 
-@Document(collection = "catalogUsers")
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class AdminUser(
-    @Id
     val id: String,
     val catalogId: String,
     val name: String,
@@ -31,10 +25,8 @@ data class AdminUser(
     val telephoneNumber: String?
 )
 
-@Document(collection = "internalFields")
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Field(
-    @Id
     val id: String,
     val label: LocalizedStrings,
     val description: LocalizedStrings,
@@ -43,10 +35,8 @@ data class Field(
     val codeListId: String?
 )
 
-@Document(collection = "editableFields")
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class EditableFields(
-    @Id
     val catalogId: String,
     val domainCodeListId: String?
 )
