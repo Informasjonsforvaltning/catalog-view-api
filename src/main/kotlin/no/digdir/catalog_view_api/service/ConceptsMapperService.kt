@@ -16,8 +16,8 @@ class ConceptsService(
 ) {
 
     fun getAndMapAllConcepts(): List<Concept> =
-        getAllConcepts()
-            .map { it.toExternalDTO(getAllAdminData(), applicationProperties.conceptCatalogBaseURI) }
+    val adminData = getAllAdminData()
+    return getAllConcepts().map { it.toExternalDTO(adminData, applicationProperties.conceptCatalogBaseURI) }
 
     private fun getAllConcepts(): List<InternalConcept> =
         conceptCatalogDB.query("SELECT data FROM concepts") { rs, _ ->
