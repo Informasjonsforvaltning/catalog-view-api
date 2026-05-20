@@ -1,23 +1,29 @@
 package no.digdir.catalog_view_api.service
 
 import no.digdir.catalog_view_api.config.ApplicationProperties
-import no.digdir.catalog_view_api.config.MongoCollections
+import tools.jackson.databind.ObjectMapper
 import no.digdir.catalog_view_api.model.*
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.findAll
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
 
 @Service
 class ConceptsService(
-    private val adminServiceDB: MongoTemplate,
-    private val conceptCatalogDB: MongoTemplate,
-    private val mongoCollections: MongoCollections,
+    @Qualifier("conceptCatalogJdbc") private val conceptCatalogDB: JdbcTemplate,
+    @Qualifier("adminServiceJdbc") private val adminServiceDB: JdbcTemplate,
+    private val objectMapper: ObjectMapper,
     private val applicationProperties: ApplicationProperties
 ) {
 
-    fun getAndMapAllConcepts(): List<Concept> =
-        conceptCatalogDB.findAll<InternalConcept>(mongoCollections.concepts)
-            .map { it.toExternalDTO(getAllAdminData(), applicationProperties.conceptCatalogBaseURI) }
+    fun getAndMapAllConcepts(): List<Concept> {
+        val adminData = getAllAdminData()
+        return getAllConcepts().map { it.toExternalDTO(adminData, applicationProperties.conceptCatalogBaseURI) }
+    }
+
+    private fun getAllConcepts(): List<InternalConcept> =
+        conceptCatalogDB.query("SELECT data FROM concepts") { rs, _ ->
+            objectMapper.readValue(rs.getString("data"), InternalConcept::class.java)
+        }
 
     private fun getAllAdminData(): CatalogAdminData =
         CatalogAdminData(
@@ -28,21 +34,51 @@ class ConceptsService(
         )
 
     private fun getCodeListsFromAdminService(): Map<String, CodeList> =
-        adminServiceDB.findAll<CodeList>(mongoCollections.codeLists)
-            .associateBy({ "${it.catalogId}-${it.id}" }, { it })
+        adminServiceDB.query("SELECT id, catalog_id, codes FROM code_lists") { rs, _ ->
+            val codes: List<AdminCode> = rs.getString("codes")
+                ?.let { objectMapper.readValue(it, objectMapper.typeFactory.constructCollectionType(List::class.java, AdminCode::class.java)) }
+                ?: emptyList()
+            CodeList(
+                id = rs.getString("id"),
+                catalogId = rs.getString("catalog_id"),
+                codes = codes
+            )
+        }.associateBy({ "${it.catalogId}-${it.id}" }, { it })
 
     private fun getInternalFieldsFromAdminService(): Map<String, Field> =
-        adminServiceDB.findAll<Field>(mongoCollections.internalFields)
-            .associateBy({ "${it.catalogId}-${it.id}" }, { it })
+        adminServiceDB.query("SELECT id, catalog_id, label, description, type, code_list_id FROM internal_fields") { rs, _ ->
+            Field(
+                id = rs.getString("id"),
+                catalogId = rs.getString("catalog_id"),
+                label = rs.getString("label")
+                    ?.let { objectMapper.readValue(it, LocalizedStrings::class.java) }
+                    ?: LocalizedStrings(null, null, null),
+                description = rs.getString("description")
+                    ?.let { objectMapper.readValue(it, LocalizedStrings::class.java) }
+                    ?: LocalizedStrings(null, null, null),
+                type = rs.getString("type"),
+                codeListId = rs.getString("code_list_id")
+            )
+        }.associateBy({ "${it.catalogId}-${it.id}" }, { it })
 
     private fun getDomainCodeListIdFromAdminService(): Map<String, String?> =
-        adminServiceDB.findAll<EditableFields>(mongoCollections.editableFields)
-            .associateBy({ it.catalogId }, { it.domainCodeListId })
+        adminServiceDB.query("SELECT catalog_id, domain_code_list_id FROM editable_fields") { rs, _ ->
+            EditableFields(
+                catalogId = rs.getString("catalog_id"),
+                domainCodeListId = rs.getString("domain_code_list_id")
+            )
+        }.associateBy({ it.catalogId }, { it.domainCodeListId })
 
     private fun getUsersFromAdminService(): Map<String, AdminUser> =
-        adminServiceDB.findAll<AdminUser>(mongoCollections.users)
-            .associateBy({ "${it.catalogId}-${it.id}" }, { it })
-
+        adminServiceDB.query("SELECT id, catalog_id, name, email, telephone_number FROM catalog_users") { rs, _ ->
+            AdminUser(
+                id = rs.getString("id"),
+                catalogId = rs.getString("catalog_id"),
+                name = rs.getString("name"),
+                email = rs.getString("email"),
+                telephoneNumber = rs.getString("telephone_number")
+            )
+        }.associateBy({ "${it.catalogId}-${it.id}" }, { it })
 }
 
 private fun AdminUser.toDTO(): User =
@@ -279,4 +315,3 @@ private fun InternalConcept.collectionURI(baseURI: String) =
 
 private fun conceptURI(conceptID: String, collectionURI: String) =
     "$collectionURI/concepts/$conceptID"
-

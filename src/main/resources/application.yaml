@@ -8,15 +8,15 @@ server:
 application:
   scope: ${MASKINPORTEN_SCOPE}
   conceptCatalogBaseURI: ${CONCEPT_CATALOG_BASE_URI}
-  databases:
-    adminService: catalogAdmin
-    conceptCatalog: conceptCatalog
-  collections:
-    concepts: concepts
-    codeLists: codeLists
-    editableFields: editableFields
-    internalFields: internalFields
-    users: catalogUsers
+  postgresql:
+    conceptCatalog:
+      url: jdbc:postgresql://${POSTGRESQL_HOST}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_CONCEPT_DB}
+      username: ${POSTGRESQL_USER}
+      password: ${POSTGRESQL_PASSWORD}
+    adminService:
+      url: jdbc:postgresql://${POSTGRESQL_HOST}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_ADMIN_DB}
+      username: ${POSTGRESQL_USER}
+      password: ${POSTGRESQL_PASSWORD}
   elastic:
     username: ${ELASTIC_USERNAME}
     password: ${ELASTIC_PASSWORD}
@@ -26,28 +26,24 @@ application:
     storePass: ${ELASTIC_KEYSTORE_PASSWORD}
 
 spring:
-  mongodb:
-    host: ${MONGODB_HOST}
-    username: ${MONGO_USERNAME}
-    password: ${MONGO_PASSWORD}
-    authentication-database: ${MONGODB_AUTH}
-    replica-set-name: ${MONGODB_REPLICASET}
-    port: 27017
   security.oauth2.resourceserver.jwt:
     jwk-set-uri: ${MASKINPORTEN_JWK:https://test.maskinporten.no/jwk}
     issuer-uri: ${MASKINPORTEN_ISSUER:https://test.maskinporten.no/}
 ---
 spring:
   config.activate.on-profile: develop
-  mongodb:
-    host: localhost
-    username: admin
-    password: admin
-    authentication-database: admin
-    replica-set-name: test
   security.oauth2.resourceserver.jwt.jwk-set-uri: https://sso.staging.fellesdatakatalog.digdir.no/auth/realms/fdk/protocol/openid-connect/certs
 application:
   scope: test.scope
+  postgresql:
+    conceptCatalog:
+      url: jdbc:postgresql://localhost:5432/concept_catalog
+      username: admin
+      password: admin
+    adminService:
+      url: jdbc:postgresql://localhost:5433/catalog_admin_service
+      username: admin
+      password: admin
   elastic:
     username: elastic
     password: elasticpwd
@@ -56,18 +52,21 @@ application:
 ---
 spring:
   config.activate.on-profile: test
-  mongodb:
-    host: localhost
-    username: testuser
-    password: testpassword
-    authentication-database: admin
-    replica-set-name: test
   security.oauth2.resourceserver.jwt:
     jwk-set-uri: http://localhost:5050/jwk
     issuer-uri: http://localhost:5050/
 application:
   scope: test.scope
   conceptCatalogBaseURI: http://localhost:5555
+  postgresql:
+    conceptCatalog:
+      url: jdbc:postgresql://localhost:5432/concept_catalog
+      username: testuser
+      password: testpassword
+    adminService:
+      url: jdbc:postgresql://localhost:5433/catalog_admin_service
+      username: testuser
+      password: testpassword
   elastic:
     username: elastic
     password: elasticpwd

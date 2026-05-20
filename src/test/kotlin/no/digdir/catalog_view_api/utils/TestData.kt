@@ -6,15 +6,6 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-const val MONGO_USER = "testuser"
-const val MONGO_PASSWORD = "testpassword"
-const val MONGO_PORT = 27017
-
-val MONGO_ENV_VALUES: Map<String, String> = ImmutableMap.of(
-    "MONGO_INITDB_ROOT_USERNAME", MONGO_USER,
-    "MONGO_INITDB_ROOT_PASSWORD", MONGO_PASSWORD
-)
-
 val ELASTIC_ENV_VALUES: Map<String, String> = ImmutableMap.of(
     "cluster.name", "elasticsearch",
     "discovery.type", "single-node",
@@ -256,16 +247,11 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
             description=LocalizedStrings(nb=null, nn=null, en="internal"),
             relatedConcept="http://localhost:5555/collections/111222333/concepts/related-original-id")),
     internalFields = listOf(
-        ShortTextField(
-            id="text-short-field-id",
-            label=LocalizedStrings(nb="text short nb", nn="text short nn", en="text short en"),
-            type="text_short",
-            value="short text"),
-        LongTextField(
-            id="text-long-field-id",
-            label=LocalizedStrings(nb="text long nb", nn="text long nn", en="text long en"),
-            type="text_long",
-            value="long text"),
+        BooleanField(
+            id="boolean-field-id",
+            label=LocalizedStrings(nb="bool nb", nn="bool nn", en="bool en"),
+            type="bool",
+            value=true),
         CodeField(id="code-list-field-id",
             label=LocalizedStrings(nb="code list nb", nn="code list nn", en="code list en"),
             type="code",
@@ -274,6 +260,11 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
                 codeListId="code-list-0",
                 codeLabel=LocalizedStrings(nb="Kode 0.1", nn="Kode 0.1", en="Code 0.1"),
                 codeParent = null)),
+        LongTextField(
+            id="text-long-field-id",
+            label=LocalizedStrings(nb="text long nb", nn="text long nn", en="text long en"),
+            type="text_long",
+            value="long text"),
         UserField(
             id="user-list-field-id",
             label=LocalizedStrings(nb="user list nb", nn="user list nn", en="user list en"),
@@ -281,11 +272,11 @@ val MAPPED_DB_CONCEPT = EMPTY_CONCEPT.copy(
             value=User(
                 name="John Doe",
                 email="fdk@digdir.no")),
-        BooleanField(
-            id="boolean-field-id",
-            label=LocalizedStrings(nb="bool nb", nn="bool nn", en="bool en"),
-            type="bool",
-            value=true)),
+        ShortTextField(
+            id="text-short-field-id",
+            label=LocalizedStrings(nb="text short nb", nn="text short nn", en="text short en"),
+            type="text_short",
+            value="short text")),
     domainCodes = listOf(Code(codeId="1", codeListId="code-list-1", codeLabel=LocalizedStrings(nb="Kode 1.1", nn="Kode 1.1", en="Code 1.1"), codeParent = null)),
     assignedUser = User(
         name="Jane Doe",

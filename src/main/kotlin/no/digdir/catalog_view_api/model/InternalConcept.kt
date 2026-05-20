@@ -3,17 +3,15 @@ package no.digdir.catalog_view_api.model
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonSetter
 import com.fasterxml.jackson.annotation.JsonValue
-import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.Document
+import com.fasterxml.jackson.annotation.Nulls
 import java.time.Instant
 import java.time.LocalDate
 
-@Document
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class InternalConcept(
-    @Id
     val id: String,
     val originaltBegrep: String,
     val versjonsnr: SemVer,
@@ -33,6 +31,7 @@ data class InternalConcept(
     val ansvarligVirksomhet: Virksomhet,
     val eksempel: Map<String, String>?,
     val fagområde: Map<String, List<String>>?,
+    @JsonSetter(contentNulls = Nulls.SKIP)
     val fagområdeKoder: List<String>?,
     val omfang: URITekst?,
     val kontaktpunkt: Kontaktpunkt?,
