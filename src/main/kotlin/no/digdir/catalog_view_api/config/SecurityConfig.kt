@@ -11,9 +11,9 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.config.annotation.web.invoke
 
 @Configuration
-open class SecurityConfig {
+class SecurityConfig {
     @Bean
-    open fun filterChain(http: HttpSecurity, applicationProperties: ApplicationProperties): SecurityFilterChain {
+    fun filterChain(http: HttpSecurity, applicationProperties: ApplicationProperties): SecurityFilterChain {
         http {
             authorizeHttpRequests {
                 authorize(HttpMethod.OPTIONS, "/**", permitAll)
@@ -27,12 +27,20 @@ open class SecurityConfig {
     }
 
     @Bean
-    open fun jwtDecoder(properties: OAuth2ResourceServerProperties): JwtDecoder {
-        val jwtDecoder = NimbusJwtDecoder.withJwkSetUri(properties.jwt.jwkSetUri).build()
+    fun jwtDecoder(properties: OAuth2ResourceServerProperties): JwtDecoder {
+        val jwkSetUri =
+            requireNotNull(properties.jwt.jwkSetUri) {
+                "spring.security.oauth2.resourceserver.jwt.jwk-set-uri is required"
+            }
+        val issuerUri =
+            requireNotNull(properties.jwt.issuerUri) {
+                "spring.security.oauth2.resourceserver.jwt.issuer-uri is required"
+            }
+        val jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build()
         jwtDecoder.setJwtValidator(
             DelegatingOAuth2TokenValidator(
                 JwtTimestampValidator(),
-                JwtIssuerValidator(properties.jwt.issuerUri)
+                JwtIssuerValidator(issuerUri)
             )
         )
         return jwtDecoder
