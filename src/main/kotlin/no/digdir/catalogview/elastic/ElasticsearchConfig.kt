@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.elasticsearch.client.ClientConfiguration
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration
+import org.springframework.data.elasticsearch.core.convert.ElasticsearchCustomConversions
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories
 import java.io.File
 import java.time.Duration
@@ -58,4 +59,12 @@ open class ElasticsearchConfig(private val elasticProperties: ElasticProperties)
 
         return Rest5ClientOptions(requestOptions, false)
     }
+
+    @Bean
+    override fun elasticsearchCustomConversions(): ElasticsearchCustomConversions = ElasticsearchCustomConversions(
+        listOf(
+            FieldInterfaceReadConverter(),
+            FieldInterfaceWriteConverter(),
+        ),
+    )
 }

@@ -41,7 +41,7 @@ class ElasticUpdaterTest {
 
     private fun conceptWithId(id: String) = EMPTY_CONCEPT.copy(id = id)
 
-    private fun searchHitOf(id: String): SearchHit<Concept> = SearchHit(
+    private fun searchHitOf(id: String): SearchHit<Map<*, *>> = SearchHit(
         "catalog-view-concepts",
         id,
         null,
@@ -52,7 +52,7 @@ class ElasticUpdaterTest {
         null,
         null,
         null,
-        conceptWithId(id),
+        emptyMap<Any?, Any?>(),
     )
 
     private fun stubSourceConcepts(vararg ids: String) {
@@ -65,7 +65,7 @@ class ElasticUpdaterTest {
         whenever(
             elasticsearchOperations.searchForStream(
                 any<Query>(),
-                eq(Concept::class.java),
+                eq(Map::class.java),
                 any<IndexCoordinates>(),
             ),
         ).thenReturn(iterator)
@@ -122,7 +122,7 @@ class ElasticUpdaterTest {
         updater.updateConceptsViewIndex()
 
         verify(elasticsearchOperations, never())
-            .searchForStream(any<Query>(), eq(Concept::class.java), any<IndexCoordinates>())
+            .searchForStream(any<Query>(), eq(Map::class.java), any<IndexCoordinates>())
         verify(conceptViewRepository, never()).saveAll(any<List<Concept>>())
         verify(conceptViewRepository, never()).deleteAllById(any())
     }
@@ -133,7 +133,7 @@ class ElasticUpdaterTest {
         whenever(
             elasticsearchOperations.searchForStream(
                 any<Query>(),
-                eq(Concept::class.java),
+                eq(Map::class.java),
                 any<IndexCoordinates>(),
             ),
         ).thenThrow(RuntimeException("elastic down"))
@@ -203,12 +203,12 @@ class ElasticUpdaterTest {
     fun `Closes the search stream even when iteration fails`() {
         stubSourceConcepts("a")
 
-        val mockIterator = mock<SearchHitsIterator<Concept>>()
+        val mockIterator = mock<SearchHitsIterator<Map<*, *>>>()
         whenever(mockIterator.hasNext()).thenThrow(RuntimeException("stream error"))
         whenever(
             elasticsearchOperations.searchForStream(
                 any<Query>(),
-                eq(Concept::class.java),
+                eq(Map::class.java),
                 any<IndexCoordinates>(),
             ),
         ).thenReturn(mockIterator)
@@ -219,7 +219,7 @@ class ElasticUpdaterTest {
         verify(conceptViewRepository, never()).saveAll(any<List<Concept>>())
     }
 
-    private class FakeSearchHitsIterator(private val hits: List<SearchHit<Concept>>) : SearchHitsIterator<Concept> {
+    private class FakeSearchHitsIterator(private val hits: List<SearchHit<Map<*, *>>>) : SearchHitsIterator<Map<*, *>> {
         private val delegate = hits.iterator()
 
         override fun hasNext() = delegate.hasNext()
