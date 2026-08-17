@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.elasticsearch.client.elc.NativeQuery
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates
+import org.springframework.data.elasticsearch.core.query.FetchSourceFilter
 import org.springframework.data.elasticsearch.core.searchForStream
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -65,9 +66,10 @@ class ElasticUpdater(
                 .builder()
                 .withQuery { q -> q.matchAll { ma -> ma } }
                 .withPageable(PageRequest.of(0, BATCH_SIZE))
+                .withSourceFilter(FetchSourceFilter.of(false, null, null))
                 .build()
 
-        elasticsearchOperations.searchForStream<Concept>(query, INDEX).use { iterator ->
+        elasticsearchOperations.searchForStream<Map<*, *>>(query, INDEX).use { iterator ->
             iterator.forEach { hit -> hit.id?.let { ids.add(it) } }
         }
 
