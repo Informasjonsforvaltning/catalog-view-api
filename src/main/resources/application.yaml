@@ -5,6 +5,9 @@ logging:
   level.org.springframework.web: WARN
 server:
   port: 8080
+  compression:
+    enabled: true
+    min-response-size: 1024
 application:
   scope: ${MASKINPORTEN_SCOPE}
   conceptCatalogBaseURI: ${CONCEPT_CATALOG_BASE_URI}
