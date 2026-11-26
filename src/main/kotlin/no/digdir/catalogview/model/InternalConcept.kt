@@ -27,6 +27,7 @@ data class InternalConcept(
     val definisjonForAllmennheten: Definisjon?,
     val definisjonForSpesialister: Definisjon?,
     val merknad: Map<String, String>?,
+    @JsonSetter(contentNulls = Nulls.SKIP)
     val merkelapp: List<String>?,
     val ansvarligVirksomhet: Virksomhet,
     val eksempel: Map<String, String>?,
@@ -40,14 +41,18 @@ data class InternalConcept(
     val endringslogelement: Endringslogelement?,
     val opprettet: Instant? = null,
     val opprettetAv: String? = null,
+    @JsonSetter(contentNulls = Nulls.SKIP)
     val seOgså: List<String>?,
+    @JsonSetter(contentNulls = Nulls.SKIP)
     val internSeOgså: List<String>?,
+    @JsonSetter(contentNulls = Nulls.SKIP)
     val erstattesAv: List<String>?,
     val assignedUser: String?,
     val abbreviatedLabel: String?,
     val begrepsRelasjon: List<BegrepsRelasjon>?,
     val internBegrepsRelasjon: List<BegrepsRelasjon>?,
     val interneFelt: Map<String, InterntFelt>?,
+    @JsonSetter(contentNulls = Nulls.SKIP)
     val internErstattesAv: List<String>?,
 )
 
